@@ -1,41 +1,32 @@
+// src/lib/db.ts
 import mongoose from "mongoose";
-import { logger } from "@/utils/logger";
 
-const uri = process.env.MONGODB_URI!;
-if (!uri) {
-  throw new Error("MONGODB_URI não configurado em .env.local");
-}
-
-// Cache de conexão entre reloads no dev
-type MongooseCache = { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null };
-declare global { // evita duplicidade em hot-reload
+declare global {
   // eslint-disable-next-line no-var
-  var __mongooseCache: MongooseCache | undefined;
+  var _mongoose: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
 }
-const globalWithMongoose = global as any;
-const cache: MongooseCache = globalWithMongoose.__mongooseCache ?? { conn: null, promise: null };
-globalWithMongoose.__mongooseCache = cache;
+
+if (!global._mongoose) {
+  global._mongoose = { conn: null, promise: null };
+}
 
 export async function dbConnect() {
-  try {
-    if (cache.conn) return cache.conn;
-    if (!cache.promise) {
-      cache.promise = mongoose.connect(uri, {
-        dbName: uri.split("/").pop() || "varejoflex",
-        maxPoolSize: 10,
-      }).then((m) => {
-        logger.info("Mongo conectado");
-        return m;
-      }).catch((err) => {
-        logger.error("Falha ao conectar Mongo:", err);
-        cache.promise = null;
-        throw err;
-      });
-    }
-    cache.conn = await cache.promise;
-    return cache.conn;
-  } catch (err) {
-    logger.error("dbConnect error:", err);
-    throw err;
+  const uri = process.env.MONGODB_URI; // não lance erro no topo do módulo
+  if (!uri) {
+    // log claro e erro somente quando a função for chamada
+    console.error("[DB] MONGODB_URI ausente. Configure na Vercel (Production/Preview) ou .env.local no dev.");
+    throw new Error("MONGODB_URI ausente");
   }
+
+  if (global._mongoose!.conn) return global._mongoose!.conn;
+
+  if (!global._mongoose!.promise) {
+    global._mongoose!.promise = mongoose.connect(uri, {
+      // opções se necessário
+      // serverSelectionTimeoutMS: 15000,
+    }).then((m) => m);
+  }
+
+  global._mongoose!.conn = await global._mongoose!.promise;
+  return global._mongoose!.conn;
 }
