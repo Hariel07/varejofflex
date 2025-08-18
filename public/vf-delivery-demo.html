@@ -284,6 +284,33 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .upsell-item-enhanced:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 8px 25px rgba(0,0,0,0.1)}
 .upsell-item-enhanced:active{transform:scale(0.95)}
 
+/* Botão Adicionar ao Carrinho da Tela de Detalhes */
+.product-add-to-cart{margin-top:20px}
+.product-cart-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;
+  border:none;
+  padding:16px 20px;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3);
+}
+.product-cart-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb),0.4)}
+.product-cart-btn:active{transform:translateY(0);box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3)}
+.btn-content{display:flex;align-items:center;gap:12px;flex:1}
+.btn-content .btn-icon{font-size:18px}
+.btn-content .btn-text{flex:1;text-align:left}
+.btn-price{font-size:18px;font-weight:900;background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:8px}
+.product-cart-btn .btn-arrow{font-size:18px;transition:transform 0.2s ease}
+.product-cart-btn:hover .btn-arrow{transform:translateX(4px)}
+
 .upsell-image-enhanced{position:relative;width:100%;height:100px;overflow:hidden;background:var(--bg)}
 .upsell-image-enhanced img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s ease}
 .upsell-item-enhanced:hover .upsell-image-enhanced img{transform:scale(1.1)}
@@ -637,6 +664,18 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
       <div class="form-group-enhanced">
         <label class="form-label-enhanced">Observações especiais</label>
         <textarea class="observations-input-enhanced" id="observations" placeholder="Ex: sem cebola, ponto da carne, capricha no molho..."></textarea>
+      </div>
+      
+      <!-- Botão Adicionar ao Carrinho da Tela de Detalhes -->
+      <div class="product-add-to-cart">
+        <button class="product-cart-btn" onclick="addToCart()">
+          <div class="btn-content">
+            <span class="btn-icon">🛒</span>
+            <span class="btn-text">Adicionar ao carrinho</span>
+            <div class="btn-price" id="product-cart-price">R$ 0,00</div>
+          </div>
+          <span class="btn-arrow">→</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1424,6 +1463,9 @@ function updatePrice(){
   });
   const qty=parseInt(document.getElementById('quantity').textContent); const total=price*qty;
   document.getElementById('total-price').textContent=`R$ ${total.toFixed(2).replace('.',',')}`;
+  // Atualizar também o botão da tela de detalhes
+  const productCartPrice = document.getElementById('product-cart-price');
+  if(productCartPrice) productCartPrice.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
 }
 function changeQuantity(d){const el=document.getElementById('quantity');let q=parseInt(el.textContent);q=Math.max(1,q+d);el.textContent=q;updatePrice()}
 function addToCart(){
