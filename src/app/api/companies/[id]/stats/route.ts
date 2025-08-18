@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -21,7 +21,7 @@ export async function GET(
     }
 
     const user = session.user as any;
-    const companyId = params.id;
+    const { id: companyId } = await params;
 
     // Verificar se o usuário pode acessar esta empresa
     if (user.userType === "lojista" && user.companyId !== companyId) {
@@ -76,7 +76,7 @@ export async function GET(
     });
 
   } catch (error) {
-    logger.error(`GET /api/companies/${params.id}/stats failed:`, error);
+    logger.error(`GET /api/companies/[id]/stats failed:`, error);
     return errorResponse(error);
   }
 }
