@@ -244,40 +244,52 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 }
 
 /* CTA Section Aprimorada - Compacta */
-.cta-section-enhanced{position:sticky;bottom:0;background:white;padding:16px;border-top:1px solid var(--light);box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:100}
-.price-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 12px;background:var(--bg);border-radius:8px}
-.price-label{font-size:14px;font-weight:600;color:var(--medium)}
-.price-value{font-size:20px;font-weight:900;color:var(--primary)}
+.cta-section-enhanced{
+  position:sticky !important;
+  bottom:0 !important;
+  background:white !important;
+  padding:16px !important;
+  border-top:1px solid #e2e8f0 !important;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.1) !important;
+  z-index:100 !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+.price-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 12px;background:#f8fafc;border-radius:8px}
+.price-label{font-size:14px;font-weight:600;color:#64748b}
+.price-value{font-size:20px;font-weight:900;color:#007AFF}
 
-/* Botão Sutil e Visível */
+/* Botão Ultra Visível */
 .add-to-cart-btn-enhanced{
-  width:100%;
-  background:linear-gradient(135deg,#007AFF,#0056CC);
-  color:white;
-  border:none;
-  padding:14px 18px;
-  border-radius:12px;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  box-shadow:0 3px 15px rgba(0,122,255,0.25);
+  width:100% !important;
+  background:#007AFF !important;
+  color:white !important;
+  border:none !important;
+  padding:16px 20px !important;
+  border-radius:12px !important;
+  font-size:16px !important;
+  font-weight:600 !important;
+  cursor:pointer !important;
+  transition:all 0.3s ease !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  box-shadow:0 4px 15px rgba(0,122,255,0.3) !important;
+  opacity:1 !important;
+  visibility:visible !important;
 }
 .add-to-cart-btn-enhanced:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 20px rgba(0,122,255,0.35);
-  background:linear-gradient(135deg,#1A84FF,#0062DD);
+  background:#0056CC !important;
+  transform:translateY(-1px) !important;
+  box-shadow:0 6px 20px rgba(0,122,255,0.4) !important;
 }
-.add-to-cart-btn-enhanced:active{transform:translateY(0);box-shadow:0 3px 15px rgba(0,122,255,0.25)}
-.btn-content{display:flex;align-items:center;gap:10px;flex:1}
-.btn-icon{font-size:16px;color:white !important;opacity:1}
-.btn-text{font-size:15px;font-weight:600;color:white !important}
-.btn-arrow{font-size:14px;color:white !important;opacity:1;transition:transform 0.2s ease}
-.btn-arrow{font-size:14px;color:white !important;opacity:1;transition:transform 0.2s ease}
-.add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(3px)}
+.add-to-cart-btn-enhanced:active{transform:translateY(0) !important;box-shadow:0 4px 15px rgba(0,122,255,0.3) !important}
+.btn-content{display:flex !important;align-items:center !important;gap:12px !important;flex:1 !important}
+.btn-icon{font-size:18px !important;color:white !important}
+.btn-text{font-size:16px !important;font-weight:600 !important;color:white !important}
+.btn-arrow{font-size:16px !important;color:white !important;transition:transform 0.2s ease !important}
+.add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px) !important}
 
 /* Upsell Section Aprimorada */
 .upsell-section-enhanced{background:white;margin:16px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
