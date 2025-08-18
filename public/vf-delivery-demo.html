@@ -760,8 +760,8 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
   <div style="padding-top:70px;" class="center-wrap">
     <div id="acc-header" style="text-align:center;margin-bottom:12px;"></div>
     <div class="list-menu">
-      <div class="list-item" onclick="showScreen('profile')">📱 Meus Dados <span>›</span></div>
-      <div class="list-item" onclick="showScreen('addresses')">📍 Meus Endereços <span>›</span></div>
+      <div class="list-item" onclick="showProfile()">📱 Meus Dados <span>›</span></div>
+      <div class="list-item" onclick="showAddresses()">📍 Meus Endereços <span>›</span></div>
       <div class="list-item" onclick="showOrders()">📋 Meus Pedidos <span>›</span></div>
       <div class="list-item" onclick="showPayments()">💳 Meus Pagamentos <span>›</span></div>
       <div class="list-item" onclick="showCoupons()">🎟️ Cupons <span>›</span></div>
@@ -792,7 +792,7 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     <div class="detail-title">Meus Endereços</div>
   </div>
   <div style="padding-top:70px;" class="center-wrap">
-    <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="showScreen('address-form')">+ Adicionar Endereço</button>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="showAddressForm()">+ Adicionar Endereço</button>
     <div id="addr-list"></div>
   </div>
 </div>
@@ -1418,11 +1418,42 @@ function handleSignup(){
 function handleForgot(){const e=val('fp-email'); if(!isValidEmail(e)){showToast('E-mail inválido');return} showToast('Enviamos um link (simulado)'); showScreen('reset')}
 function handleReset(){const p=val('rp-pass'), p2=val('rp-pass2'); if(!p||p!==p2){showToast('Senhas não conferem');return} showToast('Senha alterada!'); showScreen('login')}
 function renderAccountHeader(){if(!user) return;document.getElementById('acc-header').innerHTML=`<div style="font-weight:900;font-size:18px">${user.name||'Cliente'}</div><div style="color:var(--medium)">${user.email||''}</div><div class="badge">Cliente desde 2024</div>`}
+
+function showProfile(){
+  if(!user) {
+    showToast('Faça login primeiro', 'warning');
+    showScreen('login');
+    return;
+  }
+  
+  // Preenche os campos com os dados do usuário
+  setVal('pr-name', user.name || '');
+  setVal('pr-email', user.email || '');
+  setVal('pr-phone', user.phone || '');
+  setVal('pr-cpf', user.cpf || '');
+  setVal('pr-dob', user.dob || '');
+  
+  showScreen('profile');
+  trackEvent('view_profile');
+}
+
+function showAddresses(){
+  if(!user) {
+    showToast('Faça login primeiro', 'warning');
+    showScreen('login');
+    return;
+  }
+  
+  renderAddresses();
+  showScreen('addresses');
+  trackEvent('view_addresses');
+}
+
 function saveProfile(){
   if(!user) return;
   const name=val('pr-name'), email=val('pr-email'), phone=val('pr-phone'), dob=val('pr-dob'), np=val('pr-newpass');
-  if(!name||!isValidEmail(email)||!isValidPhone(phone)){showToast('Dados inválidos');return}
-  user={...user,name,email,phone,dob}; localStorage.setItem('vf-user',JSON.stringify(user)); showToast('Dados atualizados'); showScreen('account'); renderAccountHeader(); updateUserButton();
+  if(!name||!isValidEmail(email)||!isValidPhone(phone)){showToast('Dados inválidos', 'error');return}
+  user={...user,name,email,phone,dob}; localStorage.setItem('vf-user',JSON.stringify(user)); showToast('Dados atualizados', 'success'); showScreen('account'); renderAccountHeader(); updateUserButton();
 }
 function showOrders(){renderOrdersList(); showScreen('orders')}
 function renderOrdersList(){
@@ -1475,6 +1506,26 @@ function applyCouponFromList(code){applyCouponWithCode(code); showScreen('cart')
 function logout(){user=null;localStorage.removeItem('vf-user');updateUserButton();showToast('Você saiu');showCatalog()}
 
 /* ========== ENDEREÇOS ========= */
+function showAddressForm(){
+  // Limpa o formulário para novo endereço
+  sessionStorage.removeItem('edit-addr-idx');
+  document.getElementById('addr-form-title').textContent = 'Novo Endereço';
+  
+  // Limpa todos os campos
+  setVal('ad-nickname', '');
+  setVal('ad-cep', '');
+  setVal('ad-address', '');
+  setVal('ad-number', '');
+  setVal('ad-complement', '');
+  setVal('ad-neighborhood', '');
+  setVal('ad-city', '');
+  setVal('ad-state', '');
+  document.getElementById('ad-main').checked = false;
+  
+  showScreen('address-form');
+  trackEvent('add_address_form');
+}
+
 function renderAddresses(){
   const box=document.getElementById('addr-list');
   if(addresses.length===0){box.innerHTML='<div style="color:var(--medium);text-align:center">Nenhum endereço salvo</div>';return}
@@ -1495,22 +1546,43 @@ function saveAddress(){
     nickname:val('ad-nickname'), cep:val('ad-cep'), address:val('ad-address'), number:val('ad-number'), complement:val('ad-complement'),
     neighborhood:val('ad-neighborhood'), city:val('ad-city'), state:val('ad-state'), main:document.getElementById('ad-main').checked
   };
-  if(!a.nickname||!isValidCEP(a.cep)||!a.address||!a.number||!a.neighborhood||!a.city||!a.state){showToast('Preencha os campos obrigatórios');return}
+  if(!a.nickname||!isValidCEP(a.cep)||!a.address||!a.number||!a.neighborhood||!a.city||!a.state){showToast('Preencha os campos obrigatórios', 'error');return}
   if(a.main) addresses=addresses.map(x=>({...x,main:false}));
   const idx=Number(sessionStorage.getItem('edit-addr-idx'));
   if(Number.isInteger(idx) && idx>=0){addresses[idx]=a;sessionStorage.removeItem('edit-addr-idx')}
   else addresses.push(a);
   localStorage.setItem('vf-addresses',JSON.stringify(addresses));
-  showToast('Endereço salvo'); renderAddresses(); showScreen('addresses');
+  showToast('Endereço salvo', 'success'); renderAddresses(); showScreen('addresses');
+  trackEvent('save_address', {isEdit: Number.isInteger(idx) && idx>=0});
 }
+
 function editAddress(i){
-  const a=addresses[i]; if(!a) return; sessionStorage.setItem('edit-addr-idx',i);
+  const a=addresses[i]; if(!a) return; 
+  sessionStorage.setItem('edit-addr-idx',i);
   document.getElementById('addr-form-title').textContent='Editar Endereço';
-  setVal('ad-nickname',a.nickname); setVal('ad-cep',a.cep); setVal('ad-address',a.address); setVal('ad-number',a.number);
-  setVal('ad-complement',a.complement); setVal('ad-neighborhood',a.neighborhood); setVal('ad-city',a.city); setVal('ad-state',a.state);
-  document.getElementById('ad-main').checked=!!a.main; showScreen('address-form');
+  setVal('ad-nickname',a.nickname || ''); 
+  setVal('ad-cep',a.cep || ''); 
+  setVal('ad-address',a.address || ''); 
+  setVal('ad-number',a.number || '');
+  setVal('ad-complement',a.complement || ''); 
+  setVal('ad-neighborhood',a.neighborhood || ''); 
+  setVal('ad-city',a.city || ''); 
+  setVal('ad-state',a.state || '');
+  document.getElementById('ad-main').checked=!!a.main; 
+  showScreen('address-form');
+  trackEvent('edit_address', {addressId: i});
 }
-function delAddress(i){addresses.splice(i,1);localStorage.setItem('vf-addresses',JSON.stringify(addresses));renderAddresses()}
+
+function delAddress(i){
+  if(confirm('Tem certeza que deseja excluir este endereço?')) {
+    const deletedAddress = addresses[i];
+    addresses.splice(i,1);
+    localStorage.setItem('vf-addresses',JSON.stringify(addresses));
+    renderAddresses();
+    showToast('Endereço excluído', 'success');
+    trackEvent('delete_address', {addressNickname: deletedAddress?.nickname});
+  }
+}
 function autoFillAddress(prefix){const cep=val(prefix+'cep').replace(/\D/g,''); if(cep.length===8){setTimeout(()=>{setVal(prefix+'address','Rua Exemplo');setVal(prefix+'neighborhood','Centro');setVal(prefix+'city','São Paulo');setVal(prefix+'state','SP')},300)}}
 
 /* ========== UTIL / VALIDACOES / MELHORIAS ========= */
@@ -1767,6 +1839,14 @@ function setupMasks(){
   const cep=document.getElementById('cep'); 
   if(cep){
     cep.addEventListener('input',e=>{
+      e.target.value=e.target.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
+    });
+  }
+  
+  // CEP mask para formulário de endereço
+  const adCep=document.getElementById('ad-cep'); 
+  if(adCep){
+    adCep.addEventListener('input',e=>{
       e.target.value=e.target.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
     });
   }
