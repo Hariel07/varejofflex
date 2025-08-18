@@ -255,9 +255,36 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .btn-text{flex:1;text-align:center}
 .btn-arrow{font-size:18px;transition:transform 0.2s ease}
 .add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
+
+/* Upsell Section Aprimorada */
+.upsell-section-enhanced{background:white;margin:16px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.upsell-header{padding:20px 20px 0}
+.upsell-title-enhanced{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.upsell-subtitle{font-size:14px;color:var(--medium);margin-bottom:16px}
+.upsell-items-enhanced{display:flex;gap:12px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none;-ms-overflow-style:none}
+.upsell-items-enhanced::-webkit-scrollbar{display:none}
+
+.upsell-item-enhanced{flex-shrink:0;width:160px;background:white;border:2px solid var(--light);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.3s ease;position:relative}
+.upsell-item-enhanced:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 8px 25px rgba(0,0,0,0.1)}
+
+.upsell-image-enhanced{position:relative;width:100%;height:100px;overflow:hidden;background:var(--bg)}
+.upsell-image-enhanced img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s ease}
+.upsell-item-enhanced:hover .upsell-image-enhanced img{transform:scale(1.1)}
+
+.upsell-content{padding:12px}
+.upsell-name-enhanced{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;line-height:1.2}
+.upsell-price-enhanced{font-size:14px;color:var(--primary);font-weight:900;margin-bottom:8px}
+
+.upsell-add-enhanced{width:100%;background:var(--primary);color:white;border:none;padding:8px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;gap:4px}
+.upsell-add-enhanced:hover{background:var(--primary-dark);transform:scale(1.05)}
+
+.upsell-badge{position:absolute;top:8px;left:8px;background:var(--primary);color:white;padding:2px 6px;border-radius:6px;font-size:10px;font-weight:600}
+
+/* Placeholder para imagem quebrada */
+.upsell-placeholder{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--bg);color:var(--medium);font-size:24px}
 @media(max-width:767px){.product-detail-wrap{flex-direction:column}}
 
-.variation-section,.complements-section,.quantity-section,.upsell-section{margin:14px 16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:16px}
+.variation-section,.complements-section,.quantity-section{margin:14px 16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:16px}
 .variation-title{font-weight:800;margin-bottom:12px}
 .required-indicator{color:var(--error)}
 .variation-options{display:flex;flex-direction:column;gap:10px}
@@ -274,6 +301,8 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .cta-section{padding:0 16px 18px}
 .add-to-cart-btn{width:100%;background:var(--primary);color:#fff;border:none;padding:16px;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
 .btn-total{font-size:18px}
+/* Estilos antigos do upsell - substituídos pela versão aprimorada */
+/*
 .upsell-title{font-weight:800;margin-bottom:12px}
 .upsell-items{display:flex;gap:12px;overflow-x:auto}
 .upsell-item{flex-shrink:0;width:140px;text-align:center;background:#fff;border:1px solid #EDF2F7;border-radius:12px;padding:10px;cursor:pointer;transition:transform .15s}
@@ -283,6 +312,7 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .upsell-name{font-size:14px;font-weight:700;margin-bottom:4px}
 .upsell-price{font-size:14px;color:var(--success);font-weight:900;margin-bottom:8px}
 .upsell-add{width:32px;height:32px;background:var(--primary);color:#fff;border:none;border-radius:50%;cursor:pointer;margin:0 auto;display:flex;align-items:center;justify-content:center}
+*/
 
 /* ========= CARRINHO / CHECKOUT ========= */
 .cart-items{padding:16px;padding-top:70px}
@@ -594,21 +624,14 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     </div>
   </div>
 
-  <div class="upsell-section">
-    <div class="upsell-title">Combine com</div>
-    <div class="upsell-items">
-      <div class="upsell-item" onclick="showProductDetail(3)">
-        <div class="upsell-image"><img src="https://images.unsplash.com/photo-1541592553160-82008b127ccb?q=80&w=1200&auto=format&fit=crop" alt="Batata Frita"></div>
-        <div class="upsell-name">Batata Frita</div>
-        <div class="upsell-price">+R$ 8,90</div>
-        <button class="upsell-add" onclick="event.stopPropagation(); addUpsell(3)">+</button>
-      </div>
-      <div class="upsell-item" onclick="showProductDetail(4)">
-        <div class="upsell-image"><img src="https://images.unsplash.com/photo-1541976076758-347942db1970?q=80&w=1200&auto=format&fit=crop" alt="Refrigerante"></div>
-        <div class="upsell-name">Refrigerante</div>
-        <div class="upsell-price">+R$ 5,50</div>
-        <button class="upsell-add" onclick="event.stopPropagation(); addUpsell(4)">+</button>
-      </div>
+  <!-- Seção Combine Com Aprimorada -->
+  <div class="upsell-section-enhanced">
+    <div class="upsell-header">
+      <div class="upsell-title-enhanced">🍟 Combine com</div>
+      <div class="upsell-subtitle">Torne seu pedido ainda melhor</div>
+    </div>
+    <div class="upsell-items-enhanced" id="upsell-items">
+      <!-- Produtos serão carregados dinamicamente -->
     </div>
   </div>
 
@@ -1352,6 +1375,7 @@ function showProductDetail(id){
   showScreen('product-detail');
   updatePrice();
   updateCartBadges();
+  loadUpsellProducts(product.id);
   
   // Atualizar estado do favorito
   const isFavorited = favoriteProducts.includes(product.id);
@@ -1387,6 +1411,105 @@ function addToCart(){
 function addSimpleItem(id){const p=products.find(x=>x.id===id);if(!p) return;const item={id:Date.now(),productId:p.id,name:p.name,basePrice:p.price,quantity:1,variations:{},complements:[],observations:'',totalPrice:p.price};appState.cart.push(item);saveCart();updateCartBadges();showToast('✓ Adicionado ao carrinho')}
 function addUpsell(id){addSimpleItem(id)}
 function calculateItemUnitPrice(item){let t=item.basePrice;Object.values(item.variations).forEach(v=>t+=v.price);item.complements.forEach(c=>t+=c.price);return t}
+
+/* ========== UPSELL INTELIGENTE ========= */
+function loadUpsellProducts(currentProductId) {
+  const currentProduct = products.find(p => p.id === currentProductId);
+  if (!currentProduct) return;
+  
+  // Lógica inteligente de recomendações
+  let recommendations = [];
+  
+  // Regras de combinação por categoria
+  if (currentProduct.category === 'burgers') {
+    recommendations = products.filter(p => 
+      p.category === 'sides' || p.category === 'drinks'
+    ).slice(0, 3);
+  } else if (currentProduct.category === 'pizzas') {
+    recommendations = products.filter(p => 
+      p.category === 'drinks' || p.category === 'desserts'
+    ).slice(0, 3);
+  } else if (currentProduct.category === 'sides') {
+    recommendations = products.filter(p => 
+      p.category === 'burgers' || p.category === 'drinks'
+    ).slice(0, 3);
+  } else if (currentProduct.category === 'drinks') {
+    recommendations = products.filter(p => 
+      p.category === 'desserts' || p.category === 'sides'
+    ).slice(0, 3);
+  } else {
+    // Fallback: produtos populares
+    recommendations = products.filter(p => 
+      p.id !== currentProductId && (p.tags?.includes('promo') || p.rating >= 4.5)
+    ).slice(0, 3);
+  }
+  
+  // Se não encontrou recomendações suficientes, adicionar produtos aleatórios
+  if (recommendations.length < 2) {
+    const fallback = products.filter(p => p.id !== currentProductId).slice(0, 3);
+    recommendations = [...recommendations, ...fallback].slice(0, 3);
+  }
+  
+  renderUpsellItems(recommendations);
+}
+
+function renderUpsellItems(recommendations) {
+  const container = document.getElementById('upsell-items');
+  if (!container || recommendations.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'flex';
+  container.innerHTML = recommendations.map(product => `
+    <div class="upsell-item-enhanced" onclick="showProductDetail(${product.id})">
+      ${product.tags?.includes('promo') ? '<div class="upsell-badge">🔥 Oferta</div>' : ''}
+      <div class="upsell-image-enhanced">
+        <img src="${product.imageUrl}" 
+             alt="${product.name}" 
+             onerror="this.parentElement.innerHTML='<div class=\\"upsell-placeholder\\">${getProductEmoji(product.category)}</div>'">
+      </div>
+      <div class="upsell-content">
+        <div class="upsell-name-enhanced">${product.name}</div>
+        <div class="upsell-price-enhanced">+R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+        <button class="upsell-add-enhanced" onclick="event.stopPropagation(); addUpsellWithAnimation(${product.id})">
+          <span>➕</span>
+          <span>Adicionar</span>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getProductEmoji(category) {
+  const emojis = {
+    'burgers': '🍔',
+    'pizzas': '🍕',
+    'sides': '🍟',
+    'drinks': '🥤',
+    'desserts': '🍨'
+  };
+  return emojis[category] || '🍽️';
+}
+
+function addUpsellWithAnimation(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  
+  // Adicionar ao carrinho
+  addSimpleItem(productId);
+  
+  // Feedback visual melhorado
+  showToast(`✅ ${product.name} adicionado!`, 'success');
+  
+  // Analytics
+  trackEvent('upsell_add', {
+    productId: productId,
+    productName: product.name,
+    currentProduct: appState.currentProduct?.name,
+    price: product.price
+  });
+}
 
 /* ========== MENU DE AÇÕES DO PRODUTO ========= */
 let favoriteProducts = JSON.parse(localStorage.getItem('vf-favorites') || '[]');
