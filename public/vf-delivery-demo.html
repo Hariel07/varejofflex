@@ -1375,7 +1375,9 @@ function showProductDetail(id){
   showScreen('product-detail');
   updatePrice();
   updateCartBadges();
-  loadUpsellProducts(product.id);
+  
+  // Carregar upsells inteligente - mantém lista se navegando em produtos relacionados
+  loadUpsellProductsSmart(product.id);
   
   // Atualizar estado do favorito
   const isFavorited = favoriteProducts.includes(product.id);
@@ -1413,15 +1415,57 @@ function addUpsell(id){addSimpleItem(id)}
 function calculateItemUnitPrice(item){let t=item.basePrice;Object.values(item.variations).forEach(v=>t+=v.price);item.complements.forEach(c=>t+=c.price);return t}
 
 /* ========== UPSELL INTELIGENTE ========= */
-function loadUpsellProducts(currentProductId) {
+// Cache global da lista de upsell
+let currentUpsellList = [];
+let originalProductId = null;
+
+function loadUpsellProductsSmart(currentProductId) {
   const currentProduct = products.find(p => p.id === currentProductId);
   if (!currentProduct) return;
   
-  // Evitar recarregar se já está carregado para o mesmo produto
-  if (window.lastUpsellProductId === currentProductId) return;
-  window.lastUpsellProductId = currentProductId;
+  // Se é o primeiro produto ou se mudamos de categoria principal, recarregar
+  const shouldReload = !originalProductId || 
+                       !currentUpsellList.length ||
+                       !isRelatedProduct(currentProductId, originalProductId);
   
-  // Lógica inteligente de recomendações
+  if (shouldReload) {
+    originalProductId = currentProductId;
+    currentUpsellList = generateUpsellRecommendations(currentProductId);
+    renderUpsellItems(currentUpsellList);
+  }
+  // Caso contrário, mantém a lista atual (não recarrega)
+}
+
+function isRelatedProduct(productId1, productId2) {
+  const product1 = products.find(p => p.id === productId1);
+  const product2 = products.find(p => p.id === productId2);
+  
+  if (!product1 || !product2) return false;
+  
+  // Define produtos como relacionados se:
+  // 1. São da mesma categoria
+  // 2. Ou se um está na lista de recomendações do outro
+  if (product1.category === product2.category) return true;
+  
+  const relatedCategories = getRelatedCategories(product1.category);
+  return relatedCategories.includes(product2.category);
+}
+
+function getRelatedCategories(category) {
+  const relations = {
+    'burgers': ['sides', 'drinks'],
+    'pizzas': ['drinks', 'desserts'],
+    'sides': ['burgers', 'drinks'],
+    'drinks': ['burgers', 'pizzas', 'sides', 'desserts'],
+    'desserts': ['drinks', 'pizzas']
+  };
+  return relations[category] || [];
+}
+
+function generateUpsellRecommendations(currentProductId) {
+  const currentProduct = products.find(p => p.id === currentProductId);
+  if (!currentProduct) return [];
+  
   let recommendations = [];
   
   // Regras de combinação por categoria
@@ -1454,7 +1498,12 @@ function loadUpsellProducts(currentProductId) {
     recommendations = [...recommendations, ...fallback].slice(0, 3);
   }
   
-  renderUpsellItems(recommendations);
+  return recommendations;
+}
+
+// Função legacy mantida para compatibilidade
+function loadUpsellProducts(currentProductId) {
+  return loadUpsellProductsSmart(currentProductId);
 }
 
 function renderUpsellItems(recommendations) {
