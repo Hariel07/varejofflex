@@ -270,8 +270,14 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .btn-content-main{display:flex;align-items:center;gap:10px;flex:1}
 .btn-icon{font-size:18px}
 .btn-text{font-size:16px;font-weight:700}
-.btn-arrow{font-size:16px;transition:transform 0.2s ease}
-.add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
+.btn-price-indicator{
+  font-size:16px;
+  font-weight:900;
+  background:rgba(255,255,255,0.2);
+  padding:6px 12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.3);
+}
 .add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
 
 /* Upsell Section Aprimorada */
@@ -665,7 +671,7 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
         <span class="btn-icon">🛒</span>
         <span class="btn-text">Adicionar ao carrinho</span>
       </div>
-      <span class="btn-arrow">→</span>
+      <div class="btn-price-indicator" id="total-price-indicator">R$ 0,00</div>
     </button>
   </div>
 </div>
@@ -1427,7 +1433,11 @@ function updatePrice(){
     const c=appState.currentProduct.complements?.find(x=>x.value===cb.value); if(c) price+=c.price;
   });
   const qty=parseInt(document.getElementById('quantity').textContent); const total=price*qty;
-  document.getElementById('total-price').textContent=`R$ ${total.toFixed(2).replace('.',',')}`;
+  const formattedPrice = `R$ ${total.toFixed(2).replace('.',',')}`;
+  document.getElementById('total-price').textContent = formattedPrice;
+  // Atualizar também o indicador do botão
+  const priceIndicator = document.getElementById('total-price-indicator');
+  if(priceIndicator) priceIndicator.textContent = formattedPrice;
 }
 function changeQuantity(d){const el=document.getElementById('quantity');let q=parseInt(el.textContent);q=Math.max(1,q+d);el.textContent=q;updatePrice()}
 function addToCart(){
