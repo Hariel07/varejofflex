@@ -181,6 +181,80 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .detail-title{font-size:22px;font-weight:900}
 .detail-description{color:var(--medium)}
 .detail-price{font-size:18px;font-weight:900;color:var(--success);margin-top:6px}
+
+/* ========= DETALHES DO PRODUTO APRIMORADO ========= */
+.product-hero{padding:80px 16px 0;background:linear-gradient(135deg,var(--bg) 0%,#f8fafc 100%)}
+.product-gallery-enhanced{margin-bottom:24px}
+.gallery-main{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.1);background:white}
+.gallery-main img{width:100%;height:320px;object-fit:cover;transition:transform 0.3s ease}
+.gallery-main:hover img{transform:scale(1.05)}
+.image-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.2) 100%);pointer-events:none}
+.product-badges{position:absolute;top:16px;left:16px;display:flex;gap:8px;flex-wrap:wrap}
+.product-badge{background:white;color:var(--dark);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;gap:4px}
+.product-badge.promo{background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:white}
+.product-badge.new{background:linear-gradient(135deg,#4ECDC4,#44A08D);color:white}
+.product-badge.veggie{background:linear-gradient(135deg,#A8E6CF,#7FCDCD);color:white}
+
+.product-info-card{background:white;border-radius:20px;padding:24px;margin:0 16px;transform:translateY(-20px);box-shadow:0 8px 32px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.2)}
+.product-header{margin-bottom:16px}
+.product-name{font-size:28px;font-weight:900;color:var(--dark);margin:0 0 8px 0;line-height:1.2}
+.product-rating{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.stars{font-size:16px;letter-spacing:1px}
+.rating-text{font-size:14px;color:var(--medium);font-weight:500}
+
+.product-description{font-size:16px;color:var(--medium);line-height:1.6;margin-bottom:20px}
+.product-meta{display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--medium)}
+.meta-icon{font-size:16px}
+
+.price-section{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.current-price{font-size:32px;font-weight:900;color:var(--primary)}
+.original-price{font-size:18px;color:var(--medium);text-decoration:line-through}
+.discount-badge{background:var(--primary);color:white;padding:4px 8px;border-radius:12px;font-size:12px;font-weight:600}
+
+/* Seções de configuração melhoradas */
+.config-section{background:white;margin:16px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.config-header{padding:20px 20px 0;border-bottom:1px solid var(--light)}
+.config-title{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.config-subtitle{font-size:14px;color:var(--medium)}
+.config-content{padding:20px}
+
+/* Controles de quantidade aprimorados */
+.quantity-controls-enhanced{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:16px;background:var(--bg);border-radius:12px}
+.quantity-label{font-size:16px;font-weight:600;color:var(--dark)}
+.quantity-stepper-enhanced{display:flex;align-items:center;gap:16px;background:white;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.stepper-btn-enhanced{background:var(--primary);color:white;border:none;width:36px;height:36px;border-radius:8px;font-size:18px;font-weight:600;cursor:pointer;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center}
+.stepper-btn-enhanced:hover{background:var(--primary-dark);transform:scale(1.05)}
+.stepper-btn-enhanced:active{transform:scale(0.95)}
+.quantity-display-enhanced{font-size:18px;font-weight:700;color:var(--dark);min-width:40px;text-align:center}
+
+/* Form aprimorado */
+.form-group-enhanced{margin-bottom:16px}
+.form-label-enhanced{display:block;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px}
+.observations-input-enhanced{width:100%;padding:12px 16px;border:2px solid var(--light);border-radius:12px;font-size:14px;color:var(--dark);background:white;transition:all 0.2s ease;resize:vertical;min-height:80px;font-family:inherit}
+.observations-input-enhanced:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(var(--primary-rgb),0.1)}
+.observations-input-enhanced::placeholder{color:var(--medium)}
+
+@media(max-width:767px){
+  .product-hero{padding-top:70px}
+  .product-name{font-size:24px}
+  .current-price{font-size:28px}
+  .product-meta{gap:16px}
+  .quantity-controls-enhanced{flex-direction:column;gap:12px;align-items:flex-start}
+}
+
+/* CTA Section Aprimorada */
+.cta-section-enhanced{position:sticky;bottom:0;background:white;padding:20px 16px;border-top:1px solid var(--light);box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:50}
+.price-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:16px;background:var(--bg);border-radius:12px}
+.price-label{font-size:16px;font-weight:600;color:var(--medium)}
+.price-value{font-size:24px;font-weight:900;color:var(--primary)}
+.add-to-cart-btn-enhanced{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;padding:16px 24px;border-radius:16px;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3)}
+.add-to-cart-btn-enhanced:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb),0.4)}
+.add-to-cart-btn-enhanced:active{transform:translateY(0);box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3)}
+.btn-icon{font-size:20px}
+.btn-text{flex:1;text-align:center}
+.btn-arrow{font-size:18px;transition:transform 0.2s ease}
+.add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
 @media(max-width:767px){.product-detail-wrap{flex-direction:column}}
 
 .variation-section,.complements-section,.quantity-section,.upsell-section{margin:14px 16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:16px}
@@ -435,37 +509,88 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     </div>
   </div>
 
-  <div class="product-detail-wrap">
-    <div class="product-gallery" id="detail-gallery"></div>
-    <div class="product-details">
-      <div class="detail-title" id="detail-product-name">Produto</div>
-      <div class="detail-description" id="detail-product-description">Descrição</div>
-      <div class="detail-price" id="detail-product-price">R$ 0,00</div>
-    </div>
-  </div>
-
-  <div id="variation-section" class="variation-section hidden">
-    <div class="variation-title">Escolha o tamanho <span class="required-indicator">*</span></div>
-    <div class="variation-options" id="variation-options"></div>
-  </div>
-
-  <div id="complements-section" class="complements-section hidden">
-    <div class="variation-title">Complementos extras</div>
-    <div class="variation-options" id="complements-options"></div>
-  </div>
-
-  <div class="quantity-section">
-    <div class="quantity-controls">
-      <span class="quantity-label">Quantidade</span>
-      <div class="quantity-stepper">
-        <button class="stepper-btn" onclick="changeQuantity(-1)">−</button>
-        <span class="quantity-display" id="quantity">1</span>
-        <button class="stepper-btn" onclick="changeQuantity(1)">+</button>
+  <!-- Hero Section -->
+  <div class="product-hero">
+    <div class="product-gallery-enhanced" id="detail-gallery-enhanced">
+      <div class="gallery-main">
+        <img id="main-product-image" src="" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22 viewBox=%220 0 300 300%22%3E%3Crect fill=%22%23E2E8F0%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23A0AEC0%22 font-size=%2224%22%3E🍽️%3C/text%3E%3C/svg%3E'">
+        <div class="image-overlay">
+          <div class="product-badges" id="product-badges"></div>
+        </div>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Observações (opcional)</label>
-      <textarea class="observations-input" id="observations" placeholder="Ex: sem cebola, ponto da carne"></textarea>
+    
+    <div class="product-info-card">
+      <div class="product-header">
+        <h1 class="product-name" id="detail-product-name">Produto</h1>
+        <div class="product-rating" id="product-rating">
+          <div class="stars" id="rating-stars">⭐⭐⭐⭐⭐</div>
+          <span class="rating-text" id="rating-text">(0 avaliações)</span>
+        </div>
+      </div>
+      
+      <p class="product-description" id="detail-product-description">Descrição</p>
+      
+      <div class="product-meta">
+        <div class="meta-item">
+          <span class="meta-icon">⏱️</span>
+          <span class="meta-text" id="estimated-time">15-20 min</span>
+        </div>
+        <div class="meta-item" id="delivery-info">
+          <span class="meta-icon">🚚</span>
+          <span class="meta-text">Entrega grátis</span>
+        </div>
+      </div>
+      
+      <div class="price-section">
+        <div class="current-price" id="detail-product-price">R$ 0,00</div>
+        <div class="original-price" id="original-price" style="display:none">R$ 0,00</div>
+        <div class="discount-badge" id="discount-badge" style="display:none">-0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seções de Configuração -->
+  <div id="variation-section" class="config-section hidden">
+    <div class="config-header">
+      <div class="config-title">Escolha o tamanho <span style="color:var(--primary)">*</span></div>
+      <div class="config-subtitle">Selecione uma opção</div>
+    </div>
+    <div class="config-content">
+      <div class="variation-options" id="variation-options"></div>
+    </div>
+  </div>
+
+  <div id="complements-section" class="config-section hidden">
+    <div class="config-header">
+      <div class="config-title">Complementos extras</div>
+      <div class="config-subtitle">Personalize como desejar</div>
+    </div>
+    <div class="config-content">
+      <div class="variation-options" id="complements-options"></div>
+    </div>
+  </div>
+
+  <!-- Seção Quantidade e Observações -->
+  <div class="config-section">
+    <div class="config-header">
+      <div class="config-title">Quantidade e observações</div>
+      <div class="config-subtitle">Finalize sua escolha</div>
+    </div>
+    <div class="config-content">
+      <div class="quantity-controls-enhanced">
+        <label class="quantity-label">Quantidade</label>
+        <div class="quantity-stepper-enhanced">
+          <button class="stepper-btn-enhanced" onclick="changeQuantity(-1)">−</button>
+          <span class="quantity-display-enhanced" id="quantity">1</span>
+          <button class="stepper-btn-enhanced" onclick="changeQuantity(1)">+</button>
+        </div>
+      </div>
+      
+      <div class="form-group-enhanced">
+        <label class="form-label-enhanced">Observações especiais</label>
+        <textarea class="observations-input-enhanced" id="observations" placeholder="Ex: sem cebola, ponto da carne, capricha no molho..."></textarea>
+      </div>
     </div>
   </div>
 
@@ -487,10 +612,16 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     </div>
   </div>
 
-  <div class="cta-section">
-    <button class="add-to-cart-btn" onclick="addToCart()">
-      <span>Adicionar ao carrinho</span>
-      <span class="btn-total" id="total-price">R$ 0,00</span>
+  <!-- CTA Section Aprimorada -->
+  <div class="cta-section-enhanced">
+    <div class="price-summary">
+      <div class="price-label">Total</div>
+      <div class="price-value" id="total-price">R$ 0,00</div>
+    </div>
+    <button class="add-to-cart-btn-enhanced" onclick="addToCart()">
+      <span class="btn-icon">🛒</span>
+      <span class="btn-text">Adicionar ao carrinho</span>
+      <span class="btn-arrow">→</span>
     </button>
   </div>
 </div>
@@ -1139,12 +1270,56 @@ function retryConnection(){
 function showProductDetail(id){
   const product=products.find(p=>p.id===id); if(!product) return;
   appState.currentProduct=product;
-  document.getElementById('detail-gallery').innerHTML=`<img src="${product.imageUrl||PLACEHOLDER}" alt="${product.name}" onerror="this.src='${PLACEHOLDER}'">`;
+  
+  // Nova galeria aprimorada
+  document.getElementById('main-product-image').src = product.imageUrl || PLACEHOLDER;
+  document.getElementById('main-product-image').alt = product.name;
+  
+  // Badges do produto
+  const badgesHtml = [];
+  if(product.badge) badgesHtml.push(`<span class="product-badge">${product.badge}</span>`);
+  if(product.tags?.includes('promo')) badgesHtml.push(`<span class="product-badge promo">🔥 Promoção</span>`);
+  if(product.tags?.includes('new')) badgesHtml.push(`<span class="product-badge new">✨ Novo</span>`);
+  if(product.tags?.includes('veggie')) badgesHtml.push(`<span class="product-badge veggie">🌱 Vegetariano</span>`);
+  document.getElementById('product-badges').innerHTML = badgesHtml.join('');
+  
+  // Informações do produto
   document.getElementById('detail-product-name').textContent=product.name;
   document.getElementById('detail-product-description').textContent=product.description;
-  document.getElementById('detail-product-price').textContent=`${product.variations?.size?'A partir de ':''}R$ ${product.price.toFixed(2).replace('.',',')}`;
-  document.getElementById('quantity').textContent='1'; document.getElementById('observations').value='';
-  const varSec=document.getElementById('variation-section'); const varOpts=document.getElementById('variation-options');
+  
+  // Rating
+  const rating = product.rating || 4.5;
+  const reviewCount = product.reviewCount || 0;
+  const starsHtml = Array.from({length: 5}, (_, i) => i < Math.floor(rating) ? '⭐' : '☆').join('');
+  document.getElementById('rating-stars').innerHTML = starsHtml;
+  document.getElementById('rating-text').textContent = `${rating.toFixed(1)} (${reviewCount} avaliações)`;
+  
+  // Meta informações
+  document.getElementById('estimated-time').textContent = product.estimatedTime || '15-20 min';
+  
+  // Preço
+  const priceText = `${product.variations?.size?'A partir de ':''}R$ ${product.price.toFixed(2).replace('.',',')}`;
+  document.getElementById('detail-product-price').textContent = priceText;
+  
+  // Preço original e desconto
+  if(product.originalPrice && product.originalPrice > product.price) {
+    document.getElementById('original-price').textContent = `R$ ${product.originalPrice.toFixed(2).replace('.',',')}`;
+    document.getElementById('original-price').style.display = 'block';
+    const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+    document.getElementById('discount-badge').textContent = `-${discount}%`;
+    document.getElementById('discount-badge').style.display = 'block';
+  } else {
+    document.getElementById('original-price').style.display = 'none';
+    document.getElementById('discount-badge').style.display = 'none';
+  }
+  
+  // Reset quantidade e observações
+  document.getElementById('quantity').textContent='1'; 
+  document.getElementById('observations').value='';
+  
+  // Variações
+  const varSec=document.getElementById('variation-section'); 
+  const varOpts=document.getElementById('variation-options');
   if(product.variations?.size){
     varOpts.innerHTML=product.variations.size.options.map(opt=>`
       <label class="variation-option">
@@ -1153,8 +1328,14 @@ function showProductDetail(id){
         <span class="option-price">(+R$ ${opt.price.toFixed(2).replace('.',',')})</span>
       </label>`).join('');
     varSec.classList.remove('hidden');
-  }else{varOpts.innerHTML='';varSec.classList.add('hidden')}
-  const compSec=document.getElementById('complements-section'); const compOpts=document.getElementById('complements-options');
+  }else{
+    varOpts.innerHTML='';
+    varSec.classList.add('hidden');
+  }
+  
+  // Complementos
+  const compSec=document.getElementById('complements-section'); 
+  const compOpts=document.getElementById('complements-options');
   if(product.complements?.length){
     compOpts.innerHTML=product.complements.map(c=>`
       <label class="complement-option">
@@ -1163,8 +1344,14 @@ function showProductDetail(id){
         <span class="option-price">(+R$ ${c.price.toFixed(2).replace('.',',')})</span>
       </label>`).join('');
     compSec.classList.remove('hidden');
-  }else{compOpts.innerHTML='';compSec.classList.add('hidden')}
-  showScreen('product-detail');updatePrice();updateCartBadges();
+  }else{
+    compOpts.innerHTML='';
+    compSec.classList.add('hidden');
+  }
+  
+  showScreen('product-detail');
+  updatePrice();
+  updateCartBadges();
   
   // Atualizar estado do favorito
   const isFavorited = favoriteProducts.includes(product.id);
