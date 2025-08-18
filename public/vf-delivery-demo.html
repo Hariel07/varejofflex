@@ -253,23 +253,25 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
   background:linear-gradient(135deg,var(--primary),var(--primary-dark));
   color:white;
   border:none;
-  padding:12px 20px;
-  border-radius:12px;
+  padding:14px 20px;
+  border-radius:14px;
   font-size:16px;
   font-weight:700;
   cursor:pointer;
   transition:all 0.3s ease;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:space-between;
   gap:8px;
   box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3);
 }
 .add-to-cart-btn-enhanced:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb),0.4)}
 .add-to-cart-btn-enhanced:active{transform:translateY(0);box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3)}
-.btn-icon{font-size:16px}
-.btn-text{flex:1;text-align:center}
+.btn-content-main{display:flex;align-items:center;gap:10px;flex:1}
+.btn-icon{font-size:18px}
+.btn-text{font-size:16px;font-weight:700}
 .btn-arrow{font-size:16px;transition:transform 0.2s ease}
+.add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
 .add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
 
 /* Upsell Section Aprimorada */
@@ -283,77 +285,6 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .upsell-item-enhanced{flex-shrink:0;width:160px;background:white;border:2px solid var(--light);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.3s ease;position:relative;transform-origin:center}
 .upsell-item-enhanced:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 8px 25px rgba(0,0,0,0.1)}
 .upsell-item-enhanced:active{transform:scale(0.95)}
-
-/* Botão Adicionar ao Carrinho da Tela de Detalhes - Design Premium */
-.product-add-to-cart{margin-top:24px}
-.product-cart-btn{
-  width:100%;
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-  color:white;
-  border:none;
-  padding:18px 24px;
-  border-radius:20px;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  box-shadow:0 6px 25px rgba(var(--primary-rgb),0.3);
-  position:relative;
-  overflow:hidden;
-}
-.product-cart-btn::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
-  transition:left 0.5s ease;
-}
-.product-cart-btn:hover::before{left:100%}
-.product-cart-btn:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(var(--primary-rgb),0.4)}
-.product-cart-btn:active{transform:translateY(-1px);box-shadow:0 6px 25px rgba(var(--primary-rgb),0.3)}
-
-.btn-main-content{display:flex;align-items:center;gap:16px;flex:1}
-.btn-icon-section{
-  background:rgba(255,255,255,0.2);
-  border-radius:12px;
-  padding:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.cart-icon{font-size:20px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2))}
-.btn-text-section{display:flex;flex-direction:column;align-items:flex-start}
-.btn-label{font-size:16px;font-weight:700;line-height:1.2}
-.btn-sublabel{font-size:12px;opacity:0.8;font-weight:400;margin-top:2px}
-
-.btn-price-section{display:flex;align-items:center;gap:12px}
-.btn-price{
-  font-size:18px;
-  font-weight:900;
-  background:rgba(255,255,255,0.25);
-  padding:8px 16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.3);
-  backdrop-filter:blur(10px);
-}
-.product-cart-btn .btn-arrow{
-  font-size:18px;
-  transition:transform 0.3s ease;
-  background:rgba(255,255,255,0.2);
-  border-radius:50%;
-  width:32px;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.product-cart-btn:hover .btn-arrow{transform:translateX(4px) scale(1.1)}
 
 .upsell-image-enhanced{position:relative;width:100%;height:100px;overflow:hidden;background:var(--bg)}
 .upsell-image-enhanced img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s ease}
@@ -709,25 +640,6 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
         <label class="form-label-enhanced">Observações especiais</label>
         <textarea class="observations-input-enhanced" id="observations" placeholder="Ex: sem cebola, ponto da carne, capricha no molho..."></textarea>
       </div>
-      
-      <!-- Botão Adicionar ao Carrinho da Tela de Detalhes -->
-      <div class="product-add-to-cart">
-        <button class="product-cart-btn" onclick="addToCart()">
-          <div class="btn-main-content">
-            <div class="btn-icon-section">
-              <span class="cart-icon">🛒</span>
-            </div>
-            <div class="btn-text-section">
-              <span class="btn-label">Adicionar ao carrinho</span>
-              <span class="btn-sublabel">Personalizado para você</span>
-            </div>
-          </div>
-          <div class="btn-price-section">
-            <span class="btn-price" id="product-cart-price">R$ 0,00</span>
-            <span class="btn-arrow">→</span>
-          </div>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -749,8 +661,10 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
       <div class="price-value" id="total-price">R$ 0,00</div>
     </div>
     <button class="add-to-cart-btn-enhanced" onclick="addToCart()">
-      <span class="btn-icon">🛒</span>
-      <span class="btn-text">Adicionar ao carrinho</span>
+      <div class="btn-content-main">
+        <span class="btn-icon">🛒</span>
+        <span class="btn-text">Adicionar ao carrinho</span>
+      </div>
       <span class="btn-arrow">→</span>
     </button>
   </div>
@@ -1514,9 +1428,6 @@ function updatePrice(){
   });
   const qty=parseInt(document.getElementById('quantity').textContent); const total=price*qty;
   document.getElementById('total-price').textContent=`R$ ${total.toFixed(2).replace('.',',')}`;
-  // Atualizar também o botão da tela de detalhes
-  const productCartPrice = document.getElementById('product-cart-price');
-  if(productCartPrice) productCartPrice.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
 }
 function changeQuantity(d){const el=document.getElementById('quantity');let q=parseInt(el.textContent);q=Math.max(1,q+d);el.textContent=q;updatePrice()}
 function addToCart(){
