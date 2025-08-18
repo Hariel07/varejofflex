@@ -52,6 +52,17 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .logo{font-weight:900;font-size:20px;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:8px}
 .logo::before{content:"🛒";font-size:24px;-webkit-text-fill-color:var(--primary)}
 .header-actions{display:flex;align-items:center;gap:10px}
+
+/* ========= DROPDOWN MENU ========= */
+.dropdown{position:relative;display:inline-block}
+.dropdown-toggle{background:none;border:none;font-size:18px;padding:8px;border-radius:50%;cursor:pointer;color:var(--dark);transition:all 0.2s ease}
+.dropdown-toggle:hover{background:var(--light);transform:scale(1.1)}
+.dropdown-menu{position:absolute;top:100%;right:0;background:white;border:1px solid var(--light);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:160px;z-index:1000;opacity:0;visibility:hidden;transform:translateY(-10px);transition:all 0.2s ease}
+.dropdown-menu.show{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--bg);transition:background 0.2s ease;font-size:14px;display:flex;align-items:center;gap:8px}
+.dropdown-item:last-child{border-bottom:none}
+.dropdown-item:hover{background:var(--bg)}
+.dropdown-item:active{background:var(--light)}
 .cart-btn,.user-btn{background:none;border:none;font-size:22px;cursor:pointer;position:relative;padding:8px;border-radius:50%;transition:var(--transition)}
 .cart-btn:hover,.user-btn:hover{background:rgba(255, 107, 53, 0.1);transform:scale(1.1)}
 .cart-badge{position:absolute;top:-2px;right:-2px;background:var(--gradient-primary);color:#fff;border-radius:999px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;padding:0 6px;box-shadow:0 2px 8px rgba(255, 107, 53, 0.3);animation:pulse 2s infinite}
@@ -407,7 +418,20 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     <button class="back-btn" onclick="showCatalog()">← Voltar</button>
     <div class="header-actions">
       <button class="cart-btn" onclick="showCart()">🛒<span id="detail-cart-badge" class="cart-badge hidden">0</span></button>
-      <button title="Mais">⋮</button>
+      <div class="dropdown">
+        <button class="dropdown-toggle" onclick="toggleProductMenu()" title="Mais opções">⋮</button>
+        <div class="dropdown-menu" id="product-menu">
+          <div class="dropdown-item" onclick="toggleFavorite()">
+            <span id="favorite-icon">🤍</span> <span id="favorite-text">Favoritar</span>
+          </div>
+          <div class="dropdown-item" onclick="shareProduct()">
+            📤 Compartilhar
+          </div>
+          <div class="dropdown-item" onclick="reportProduct()">
+            ⚠️ Reportar problema
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1141,6 +1165,11 @@ function showProductDetail(id){
     compSec.classList.remove('hidden');
   }else{compOpts.innerHTML='';compSec.classList.add('hidden')}
   showScreen('product-detail');updatePrice();updateCartBadges();
+  
+  // Atualizar estado do favorito
+  const isFavorited = favoriteProducts.includes(product.id);
+  document.getElementById('favorite-icon').textContent = isFavorited ? '❤️' : '🤍';
+  document.getElementById('favorite-text').textContent = isFavorited ? 'Favoritado' : 'Favoritar';
 }
 function updatePrice(){
   if(!appState.currentProduct) return; let price=appState.currentProduct.price;
@@ -1171,6 +1200,128 @@ function addToCart(){
 function addSimpleItem(id){const p=products.find(x=>x.id===id);if(!p) return;const item={id:Date.now(),productId:p.id,name:p.name,basePrice:p.price,quantity:1,variations:{},complements:[],observations:'',totalPrice:p.price};appState.cart.push(item);saveCart();updateCartBadges();showToast('✓ Adicionado ao carrinho')}
 function addUpsell(id){addSimpleItem(id)}
 function calculateItemUnitPrice(item){let t=item.basePrice;Object.values(item.variations).forEach(v=>t+=v.price);item.complements.forEach(c=>t+=c.price);return t}
+
+/* ========== MENU DE AÇÕES DO PRODUTO ========= */
+let favoriteProducts = JSON.parse(localStorage.getItem('vf-favorites') || '[]');
+
+function toggleProductMenu(){
+  const menu = document.getElementById('product-menu');
+  menu.classList.toggle('show');
+  
+  // Fechar ao clicar fora
+  if(menu.classList.contains('show')){
+    setTimeout(() => {
+      document.addEventListener('click', closeMenuOutside);
+    }, 10);
+  }
+}
+
+function closeMenuOutside(e){
+  const menu = document.getElementById('product-menu');
+  const toggle = document.querySelector('.dropdown-toggle');
+  if(!menu.contains(e.target) && !toggle.contains(e.target)){
+    menu.classList.remove('show');
+    document.removeEventListener('click', closeMenuOutside);
+  }
+}
+
+function toggleFavorite(){
+  if(!appState.currentProduct) return;
+  
+  const productId = appState.currentProduct.id;
+  const isFavorited = favoriteProducts.includes(productId);
+  
+  if(isFavorited){
+    favoriteProducts = favoriteProducts.filter(id => id !== productId);
+    document.getElementById('favorite-icon').textContent = '🤍';
+    document.getElementById('favorite-text').textContent = 'Favoritar';
+    showToast('❤️ Removido dos favoritos');
+  } else {
+    favoriteProducts.push(productId);
+    document.getElementById('favorite-icon').textContent = '❤️';
+    document.getElementById('favorite-text').textContent = 'Favoritado';
+    showToast('❤️ Adicionado aos favoritos');
+  }
+  
+  localStorage.setItem('vf-favorites', JSON.stringify(favoriteProducts));
+  document.getElementById('product-menu').classList.remove('show');
+  
+  // Analytics
+  trackEvent('toggle_favorite', {
+    productId: productId,
+    productName: appState.currentProduct.name,
+    action: isFavorited ? 'remove' : 'add'
+  });
+}
+
+function shareProduct(){
+  if(!appState.currentProduct) return;
+  
+  const product = appState.currentProduct;
+  const shareData = {
+    title: `${product.name} - VarejoFlex`,
+    text: `Confira este produto: ${product.name} - ${product.description}`,
+    url: window.location.href
+  };
+  
+  if(navigator.share){
+    navigator.share(shareData).then(() => {
+      showToast('📤 Produto compartilhado!');
+    }).catch(() => {
+      fallbackShare(product);
+    });
+  } else {
+    fallbackShare(product);
+  }
+  
+  document.getElementById('product-menu').classList.remove('show');
+  
+  // Analytics
+  trackEvent('share_product', {
+    productId: product.id,
+    productName: product.name,
+    method: navigator.share ? 'native' : 'fallback'
+  });
+}
+
+function fallbackShare(product){
+  const text = `Confira este produto: ${product.name} - ${product.description}`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('📋 Link copiado para a área de transferência!');
+    });
+  } else {
+    showToast('📤 Compartilhamento não disponível neste dispositivo');
+  }
+}
+
+function reportProduct(){
+  if(!appState.currentProduct) return;
+  
+  const product = appState.currentProduct;
+  const reasons = [
+    'Informações incorretas',
+    'Imagem inadequada', 
+    'Preço incorreto',
+    'Produto indisponível',
+    'Outro motivo'
+  ];
+  
+  const reason = prompt(`Reportar problema com "${product.name}":\n\nEscolha o motivo:\n${reasons.map((r, i) => `${i+1}. ${r}`).join('\n')}\n\nDigite o número (1-5):`);
+  
+  if(reason && reason >= 1 && reason <= 5){
+    showToast('⚠️ Problema reportado. Obrigado pelo feedback!');
+    
+    // Analytics
+    trackEvent('report_product', {
+      productId: product.id,
+      productName: product.name,
+      reason: reasons[reason-1]
+    });
+  }
+  
+  document.getElementById('product-menu').classList.remove('show');
+}
 
 /* ========== CARRINHO ========= */
 function loadCartItems(){
