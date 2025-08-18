@@ -4,9 +4,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
+import Company from "@/models/Company";
+import { createTenantContext } from "@/lib/permissions";
+import type { AuthUser, UserType, Role } from "@/types/auth";
 
 /**
- * Configuração do NextAuth (v4) com provider de credenciais.
+ * Configuração do NextAuth (v4) com provider de credenciais e multi-tenancy.
  * Exportamos como *named export* para uso com getServerSession(authOptions).
  */
 export const authOptions: AuthOptions = {
@@ -18,8 +21,8 @@ export const authOptions: AuthOptions = {
         password: { label: "Senha", type: "password" },
       },
       /**
-       * Autenticação via e-mail/senha no MongoDB.
-       * Retorne `null` para falha, ou um objeto com id/name/email/role/companyId para sucesso.
+       * Autenticação via e-mail/senha no MongoDB com contexto multi-tenant.
+       * Retorne `null` para falha, ou um objeto AuthUser para sucesso.
        */
       async authorize(credentials) {
         try {
@@ -27,28 +30,59 @@ export const authOptions: AuthOptions = {
 
           await dbConnect();
 
-          const doc = await User.findOne({
+          // Busca o usuário e popula a company se existir
+          const userDoc = await User.findOne({
             email: credentials.email.toLowerCase(),
-          }).lean();
+            isActive: true, // Apenas usuários ativos
+          }).populate('companyId').lean();
 
-          if (!doc) return null;
+          if (!userDoc) return null;
 
           const ok = await bcrypt.compare(
             credentials.password,
-            (doc as any).passwordHash
+            (userDoc as any).passwordHash
           );
           if (!ok) return null;
 
-          return {
-            id: String((doc as any)._id),
-            name: (doc as any).name,
-            email: (doc as any).email,
-            role: (doc as any).role,
-            companyId: (doc as any).companyId
-              ? String((doc as any).companyId)
+          // Atualiza último login
+          await User.updateOne(
+            { _id: (userDoc as any)._id },
+            { lastLoginAt: new Date() }
+          );
+
+          // Determina o tipo de usuário baseado no role
+          const userType: UserType = (userDoc as any).role === "owner_saas" ? "owner_saas" : "lojista";
+          
+          // Cria o contexto de tenant
+          const tenantContext = createTenantContext(
+            (userDoc as any).role,
+            userType,
+            (userDoc as any).companyId ? String((userDoc as any).companyId._id || (userDoc as any).companyId) : undefined
+          );
+
+          // Verifica se a company está ativa (para lojistas)
+          if (userType === "lojista" && (userDoc as any).companyId) {
+            const company = (userDoc as any).companyId;
+            if (company && !company.isActive) {
+              return null; // Company inativa
+            }
+          }
+
+          const authUser: AuthUser = {
+            id: String((userDoc as any)._id),
+            name: (userDoc as any).name,
+            email: (userDoc as any).email,
+            role: (userDoc as any).role,
+            userType,
+            companyId: (userDoc as any).companyId 
+              ? String((userDoc as any).companyId._id || (userDoc as any).companyId)
               : undefined,
-          } as any;
-        } catch {
+            tenantContext,
+          };
+
+          return authUser as any;
+        } catch (error) {
+          console.error("Auth error:", error);
           // Nunca vaze detalhes de erro na authorize
           return null;
         }
@@ -64,23 +98,78 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     /**
-     * Injeta role e companyId no token JWT quando o usuário faz login.
+     * Injeta dados completos do usuário no token JWT quando faz login.
      */
     async jwt({ token, user }) {
       if (user) {
-        (token as any).role = (user as any).role;
-        (token as any).companyId = (user as any).companyId;
+        const authUser = user as AuthUser;
+        (token as any).role = authUser.role;
+        (token as any).userType = authUser.userType;
+        (token as any).companyId = authUser.companyId;
+        (token as any).tenantContext = authUser.tenantContext;
       }
       return token;
     },
 
     /**
-     * Disponibiliza role e companyId no objeto session no client/server.
+     * Disponibiliza dados completos do usuário no objeto session.
      */
     async session({ session, token }) {
-      (session.user as any).role = (token as any).role;
-      (session.user as any).companyId = (token as any).companyId;
-      return session;
+      const authSession = session as any;
+      authSession.user.role = (token as any).role;
+      authSession.user.userType = (token as any).userType;
+      authSession.user.companyId = (token as any).companyId;
+      authSession.user.tenantContext = (token as any).tenantContext;
+      return authSession;
     },
   },
 };
+
+/**
+ * Utilitário para obter a sessão tipada
+ */
+export async function getAuthSession() {
+  const { getServerSession } = await import("next-auth");
+  return getServerSession(authOptions) as Promise<{
+    user: AuthUser;
+  } | null>;
+}
+
+/**
+ * Hook para verificar permissões no servidor
+ */
+export async function requireAuth() {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    throw new Error("Authentication required");
+  }
+  return session.user;
+}
+
+/**
+ * Hook para verificar permissões específicas
+ */
+export async function requirePermission(permission: string) {
+  const user = await requireAuth();
+  const { hasPermission } = await import("@/lib/permissions");
+  
+  if (!hasPermission(user.tenantContext, permission)) {
+    throw new Error(`Permission denied: ${permission}`);
+  }
+  
+  return user;
+}
+
+/**
+ * Hook para verificar acesso à company
+ */
+export async function requireCompanyAccess(companyId: string) {
+  const user = await requireAuth();
+  const { canAccessCompany } = await import("@/lib/permissions");
+  
+  if (!canAccessCompany(user.tenantContext, companyId)) {
+    throw new Error(`Access denied to company: ${companyId}`);
+  }
+  
+  return user;
+}
