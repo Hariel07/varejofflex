@@ -5,7 +5,8 @@ export type ApiErrorCode =
   | "E_CONFLICT"
   | "E_AUTH"
   | "E_NOT_FOUND"
-  | "E_INTERNAL";
+  | "E_INTERNAL"
+  | "E_FORBIDDEN";
 
 export class ApiError extends Error {
   code: ApiErrorCode;
