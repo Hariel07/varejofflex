@@ -244,39 +244,85 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 }
 
 /* CTA Section Aprimorada - Compacta */
-.cta-section-enhanced{position:sticky;bottom:0;background:white;padding:12px 16px;border-top:1px solid var(--light);box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:50}
-.price-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:8px 12px;background:var(--bg);border-radius:8px}
+.cta-section-enhanced{position:sticky;bottom:0;background:white;padding:16px;border-top:1px solid var(--light);box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:50}
+.price-summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 12px;background:var(--bg);border-radius:8px}
 .price-label{font-size:14px;font-weight:600;color:var(--medium)}
 .price-value{font-size:20px;font-weight:900;color:var(--primary)}
+
+/* Botão Super Chamativo */
 .add-to-cart-btn-enhanced{
   width:100%;
-  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  background:linear-gradient(135deg,#FF6B35,#FF8E53);
   color:white;
   border:none;
-  padding:14px 20px;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:700;
+  padding:20px 24px;
+  border-radius:20px;
+  font-size:18px;
+  font-weight:800;
   cursor:pointer;
   transition:all 0.3s ease;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
-  box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3);
+  gap:16px;
+  box-shadow:0 8px 30px rgba(255,107,53,0.4);
+  position:relative;
+  overflow:hidden;
+  text-transform:uppercase;
+  letter-spacing:1px;
 }
-.add-to-cart-btn-enhanced:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb),0.4)}
-.add-to-cart-btn-enhanced:active{transform:translateY(0);box-shadow:0 4px 20px rgba(var(--primary-rgb),0.3)}
-.btn-content-main{display:flex;align-items:center;gap:10px;flex:1}
-.btn-icon{font-size:18px}
-.btn-text{font-size:16px;font-weight:700}
-.btn-price-indicator{
-  font-size:16px;
-  font-weight:900;
+
+.add-to-cart-btn-enhanced::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  transition:left 0.6s ease;
+}
+
+.add-to-cart-btn-enhanced:hover::before{left:100%}
+.add-to-cart-btn-enhanced:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 12px 40px rgba(255,107,53,0.5);
+  background:linear-gradient(135deg,#FF8E53,#FFA726);
+}
+.add-to-cart-btn-enhanced:active{
+  transform:translateY(-2px) scale(1.01);
+  box-shadow:0 8px 30px rgba(255,107,53,0.4);
+}
+
+.btn-main-section{display:flex;align-items:center;gap:16px;flex:1}
+.btn-icon-large{
+  font-size:28px;
   background:rgba(255,255,255,0.2);
-  padding:6px 12px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.3);
+  border-radius:50%;
+  width:50px;
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+.btn-text-large{
+  font-size:18px;
+  font-weight:900;
+  text-shadow:0 2px 4px rgba(0,0,0,0.2);
+  line-height:1.2;
+}
+.btn-price-large{
+  font-size:20px;
+  font-weight:900;
+  background:rgba(255,255,255,0.3);
+  padding:12px 20px;
+  border-radius:15px;
+  border:2px solid rgba(255,255,255,0.4);
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  min-width:80px;
+  text-align:center;
 }
 .add-to-cart-btn-enhanced:hover .btn-arrow{transform:translateX(4px)}
 
@@ -667,11 +713,11 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
       <div class="price-value" id="total-price">R$ 0,00</div>
     </div>
     <button class="add-to-cart-btn-enhanced" onclick="addToCart()">
-      <div class="btn-content-main">
-        <span class="btn-icon">🛒</span>
-        <span class="btn-text">Adicionar ao carrinho</span>
+      <div class="btn-main-section">
+        <div class="btn-icon-large">🛒</div>
+        <div class="btn-text-large">ADICIONAR AO CARRINHO</div>
       </div>
-      <div class="btn-price-indicator" id="total-price-indicator">R$ 0,00</div>
+      <div class="btn-price-large" id="total-price-indicator">R$ 0,00</div>
     </button>
   </div>
 </div>
