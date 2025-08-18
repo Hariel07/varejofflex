@@ -29,5 +29,7 @@ export interface AuthUser {
   role: Role;
   userType: UserType;
   companyId?: string;
+  segment?: string;
+  companyName?: string;
   tenantContext: TenantContext;
 }

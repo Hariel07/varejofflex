@@ -7,11 +7,19 @@ export default async function AdminHome() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login?callbackUrl=/admin");
 
-  return (
-    <main className="container py-4">
-      <h1 className="h4">Admin — Varejofflex</h1>
-      <p className="text-muted">Bem-vindo, {session.user?.name}</p>
-      {/* cards/atalhos do painel */}
-    </main>
-  );
+  const user = session.user as any;
+
+  // Redirecionar para o dashboard apropriado
+  if (user?.userType === "owner_saas") {
+    redirect("/dashboard/owner");
+  } else if (user?.userType === "lojista") {
+    redirect("/dashboard/lojista");
+  } else {
+    // Fallback para roles antigas
+    if (user?.role === "owner_saas") {
+      redirect("/dashboard/owner");
+    } else {
+      redirect("/dashboard/lojista");
+    }
+  }
 }
