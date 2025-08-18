@@ -803,6 +803,10 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
     <div class="detail-title" id="addr-form-title">Novo Endereço</div>
   </div>
   <div class="center-wrap" style="padding-top:70px;">
+    <div class="info-box" style="background:var(--primary-light);padding:12px;border-radius:8px;margin-bottom:16px;border-left:4px solid var(--primary);">
+      <div style="font-size:14px;color:var(--dark);margin-bottom:4px;">💡 <strong>Múltiplos Endereços</strong></div>
+      <div style="font-size:13px;color:var(--medium);">Você pode salvar vários endereços (casa, trabalho, etc.) e escolher qual usar em cada pedido.</div>
+    </div>
     <div class="form-group"><label class="form-label">Apelido *</label><input id="ad-nickname" class="form-input" placeholder="Casa, Trabalho..."></div>
     <div class="form-group"><label class="form-label">CEP *</label><input id="ad-cep" class="form-input" placeholder="00000-000" onblur="autoFillAddress('ad-')"></div>
     <div class="form-group"><label class="form-label">Endereço *</label><input id="ad-address" class="form-input"></div>
@@ -909,37 +913,37 @@ const COUPONS = [
 
 const products=[{
   id:1,name:'X-Burguer Especial',description:'Hambúrguer artesanal com blend especial, queijo cheddar, alface, tomate e molho especial da casa',
-  price:18.90,originalPrice:22.90,category:'burgers',badge:'🔥',tags:['promo','new'],imageUrl:'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop',
+  price:18.90,originalPrice:22.90,category:'burgers',badge:'🔥',tags:['promo','new'],imageUrl:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop',
   rating:4.8,reviewCount:127,estimatedTime:'15-20 min',
   variations:{size:{required:true,options:[{value:'small',label:'Pequeno',price:0},{value:'medium',label:'Médio',price:3},{value:'large',label:'Grande',price:6}]}},
   complements:[{value:'cheese',label:'Queijo extra',price:2.50},{value:'bacon',label:'Bacon',price:4.00},{value:'onion',label:'Cebola caramelizada',price:1.50}]
 },{
   id:2,name:'Pizza Margherita Gourmet',description:'Molho especial, mussarela de búfala, tomate e manjericão fresco em massa artesanal',
-  price:32.90,category:'pizzas',badge:'⭐',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1548365328-76bc3997d9ea?q=80&w=1200&auto=format&fit=crop',
+  price:32.90,category:'pizzas',badge:'⭐',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=1200&auto=format&fit=crop',
   rating:4.9,reviewCount:89,estimatedTime:'25-30 min'
 },{
   id:3,name:'Batata Frita Especial',description:'Batata sequinha cortada na hora, temperada com sal especial e ervas',
-  price:8.90,category:'sides',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1541592553160-82008b127ccb?q=80&w=1200&auto=format&fit=crop',
+  price:8.90,category:'sides',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1576107232684-1279f390859f?q=80&w=1200&auto=format&fit=crop',
   rating:4.6,reviewCount:203,estimatedTime:'10-15 min'
 },{
   id:4,name:'Refrigerante Coca-Cola',description:'Lata 350ml gelada',
-  price:5.50,category:'drinks',imageUrl:'https://images.unsplash.com/photo-1541976076758-347942db1970?q=80&w=1200&auto=format&fit=crop',
+  price:5.50,category:'drinks',imageUrl:'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?q=80&w=1200&auto=format&fit=crop',
   rating:4.5,reviewCount:156,estimatedTime:'Imediato'
 },{
   id:5,name:'Açaí Premium 500ml',description:'Açaí puro com granola, banana, mel e frutas da estação',
-  price:12.90,category:'desserts',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?q=80&w=1200&auto=format&fit=crop',
+  price:12.90,category:'desserts',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop',
   rating:4.7,reviewCount:74,estimatedTime:'5-10 min'
 },{
   id:6,name:'Pizza Pepperoni Suprema',description:'Molho de tomate, mussarela, pepperoni, pimentão e cebola roxa',
-  price:36.90,category:'pizzas',tags:['spicy'],imageUrl:'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=1200&auto=format&fit=crop',
+  price:36.90,category:'pizzas',tags:['spicy'],imageUrl:'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop',
   rating:4.8,reviewCount:112,estimatedTime:'25-30 min'
 },{
   id:7,name:'Hambúrguer Vegetariano',description:'Hambúrguer de grão-de-bico, queijo, alface, tomate e molho vegano',
-  price:19.90,category:'burgers',badge:'🌱',tags:['veggie','gluten-free','new'],imageUrl:'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop',
+  price:19.90,category:'burgers',badge:'🌱',tags:['veggie','gluten-free','new'],imageUrl:'https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=1200&auto=format&fit=crop',
   rating:4.4,reviewCount:67,estimatedTime:'18-25 min'
 },{
   id:8,name:'Suco Natural de Laranja',description:'Suco natural de laranja espremido na hora - 500ml',
-  price:7.90,category:'drinks',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1200&auto=format&fit=crop',
+  price:7.90,category:'drinks',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1200&auto=format&fit=crop',
   rating:4.6,reviewCount:89,estimatedTime:'5 min'
 }];
 
@@ -1563,7 +1567,7 @@ function logout(){user=null;localStorage.removeItem('vf-user');updateUserButton(
 function showAddressForm(){
   // Limpa o formulário para novo endereço
   sessionStorage.removeItem('edit-addr-idx');
-  document.getElementById('addr-form-title').textContent = 'Novo Endereço';
+  document.getElementById('addr-form-title').textContent = 'Adicionar Novo Endereço';
   
   // Limpa todos os campos
   setVal('ad-nickname', '');
@@ -1574,10 +1578,12 @@ function showAddressForm(){
   setVal('ad-neighborhood', '');
   setVal('ad-city', '');
   setVal('ad-state', '');
-  document.getElementById('ad-main').checked = false;
+  document.getElementById('ad-main').checked = addresses.length === 0; // Primeiro endereço é principal
   
   showScreen('address-form');
-  trackEvent('add_address_form');
+  
+  // Analytics
+  trackEvent('add_address_form', {currentAddressCount: addresses.length});
 }
 
 function renderAddresses(){
@@ -1643,13 +1649,31 @@ function saveAddress(){
     a.main = true;
   }
   
+  // Se marcou como principal, remove de todos os outros
   if(a.main) addresses=addresses.map(x=>({...x,main:false}));
+  
   const idx=Number(sessionStorage.getItem('edit-addr-idx'));
-  if(Number.isInteger(idx) && idx>=0){addresses[idx]=a;sessionStorage.removeItem('edit-addr-idx')}
-  else addresses.push(a);
+  const isEditing = Number.isInteger(idx) && idx>=0;
+  
+  if(isEditing){
+    addresses[idx]=a;
+    sessionStorage.removeItem('edit-addr-idx');
+    showToast('Endereço atualizado com sucesso! 📍', 'success');
+  } else {
+    addresses.push(a);
+    showToast(`Novo endereço "${a.nickname}" adicionado! 🏠`, 'success');
+  }
+  
   localStorage.setItem('vf-addresses',JSON.stringify(addresses));
-  showToast('Endereço salvo', 'success'); renderAddresses(); showScreen('addresses');
-  trackEvent('save_address', {isEdit: Number.isInteger(idx) && idx>=0});
+  renderAddresses(); 
+  showScreen('addresses');
+  
+  // Analytics
+  trackEvent('save_address', {
+    isEdit: isEditing,
+    addressCount: addresses.length,
+    isMain: a.main
+  });
 }
 
 function editAddress(i){
