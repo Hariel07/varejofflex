@@ -1417,6 +1417,10 @@ function loadUpsellProducts(currentProductId) {
   const currentProduct = products.find(p => p.id === currentProductId);
   if (!currentProduct) return;
   
+  // Evitar recarregar se já está carregado para o mesmo produto
+  if (window.lastUpsellProductId === currentProductId) return;
+  window.lastUpsellProductId = currentProductId;
+  
   // Lógica inteligente de recomendações
   let recommendations = [];
   
@@ -1456,29 +1460,35 @@ function loadUpsellProducts(currentProductId) {
 function renderUpsellItems(recommendations) {
   const container = document.getElementById('upsell-items');
   if (!container || recommendations.length === 0) {
-    container.style.display = 'none';
+    if (container) container.style.display = 'none';
     return;
   }
   
   container.style.display = 'flex';
-  container.innerHTML = recommendations.map(product => `
-    <div class="upsell-item-enhanced" onclick="showProductDetail(${product.id})">
-      ${product.tags?.includes('promo') ? '<div class="upsell-badge">🔥 Oferta</div>' : ''}
-      <div class="upsell-image-enhanced">
-        <img src="${product.imageUrl}" 
-             alt="${product.name}" 
-             onerror="this.parentElement.innerHTML='<div class=\\"upsell-placeholder\\">${getProductEmoji(product.category)}</div>'">
+  container.innerHTML = recommendations.map(product => {
+    const badgeHtml = product.tags?.includes('promo') ? '<div class="upsell-badge">🔥 Oferta</div>' : '';
+    const productEmoji = getProductEmoji(product.category);
+    const productName = product.name.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+    
+    return `
+      <div class="upsell-item-enhanced" onclick="showProductDetail(${product.id})">
+        ${badgeHtml}
+        <div class="upsell-image-enhanced">
+          <img src="${product.imageUrl}" 
+               alt="${productName}" 
+               onerror="this.parentElement.innerHTML='<div class=&quot;upsell-placeholder&quot;>${productEmoji}</div>'">
+        </div>
+        <div class="upsell-content">
+          <div class="upsell-name-enhanced">${productName}</div>
+          <div class="upsell-price-enhanced">+R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+          <button class="upsell-add-enhanced" onclick="event.stopPropagation(); addUpsellWithAnimation(${product.id})">
+            <span>➕</span>
+            <span>Adicionar</span>
+          </button>
+        </div>
       </div>
-      <div class="upsell-content">
-        <div class="upsell-name-enhanced">${product.name}</div>
-        <div class="upsell-price-enhanced">+R$ ${product.price.toFixed(2).replace('.', ',')}</div>
-        <button class="upsell-add-enhanced" onclick="event.stopPropagation(); addUpsellWithAnimation(${product.id})">
-          <span>➕</span>
-          <span>Adicionar</span>
-        </button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function getProductEmoji(category) {
