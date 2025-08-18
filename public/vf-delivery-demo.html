@@ -871,6 +871,35 @@ let user = JSON.parse(localStorage.getItem('vf-user')||'null');
 let addresses = JSON.parse(localStorage.getItem('vf-addresses')||'[]');
 const USED_COUPONS = JSON.parse(localStorage.getItem('vf-coupons-used')||'[]');
 
+// Dados de demonstração - cria usuário e endereço padrão se não existir
+function initDemoData(){
+  if(!user) {
+    user = {
+      name: 'João Silva',
+      email: 'joao.silva@email.com',
+      phone: '(11) 99999-9999',
+      cpf: '123.456.789-00',
+      dob: '01/01/1990'
+    };
+    localStorage.setItem('vf-user', JSON.stringify(user));
+  }
+  
+  if(addresses.length === 0) {
+    addresses = [{
+      nickname: 'Casa',
+      cep: '01310-100',
+      address: 'Avenida Paulista',
+      number: '1000',
+      complement: 'Apto 123',
+      neighborhood: 'Bela Vista',
+      city: 'São Paulo',
+      state: 'SP',
+      main: true
+    }];
+    localStorage.setItem('vf-addresses', JSON.stringify(addresses));
+  }
+}
+
 const COUPONS = [
   {code:'PRIMEIRA10', label:'R$ 10 OFF (min R$ 30)', type:'value', amount:10, min:30, expires:'2025-08-20'},
   {code:'BURGER20', label:'20% OFF em lanches', type:'percent', amount:20, category:'burgers', expires:'2025-08-25'},
@@ -1237,12 +1266,21 @@ function prefillCheckoutFromProfile(){
     if(user.email) document.getElementById('email').value=user.email;
     if(user.phone) document.getElementById('whatsapp').value=user.phone;
   }
+  
+  // Busca primeiro o endereço principal, depois o primeiro endereço disponível
   const mainAddr = addresses.find(a=>a.main) || addresses[0];
   if(mainAddr){
     setVal('cep', mainAddr.cep||'');
-    setVal('address', (mainAddr.address||'') + (mainAddr.number?`, ${mainAddr.number}`:''));
+    setVal('address', mainAddr.address||'');
     setVal('number', mainAddr.number||'');
     setVal('complement', mainAddr.complement||'');
+    
+    // Feedback visual mostrando que usou o endereço principal
+    if(mainAddr.main) {
+      setTimeout(() => {
+        showToast(`Usando endereço principal: ${mainAddr.nickname}`, 'info', 2000);
+      }, 500);
+    }
   }
 }
 
@@ -1432,9 +1470,19 @@ function showProfile(){
   setVal('pr-phone', user.phone || '');
   setVal('pr-cpf', user.cpf || '');
   setVal('pr-dob', user.dob || '');
+  setVal('pr-newpass', ''); // Sempre limpar o campo de senha
   
   showScreen('profile');
   trackEvent('view_profile');
+  
+  // Garantir que os campos sejam preenchidos após a tela carregar
+  setTimeout(() => {
+    setVal('pr-name', user.name || '');
+    setVal('pr-email', user.email || '');
+    setVal('pr-phone', user.phone || '');
+    setVal('pr-cpf', user.cpf || '');
+    setVal('pr-dob', user.dob || '');
+  }, 100);
 }
 
 function showAddresses(){
@@ -1442,6 +1490,12 @@ function showAddresses(){
     showToast('Faça login primeiro', 'warning');
     showScreen('login');
     return;
+  }
+  
+  // Se não há endereço principal definido e existem endereços, marca o primeiro como principal
+  if(addresses.length > 0 && !addresses.some(a => a.main)) {
+    addresses[0].main = true;
+    localStorage.setItem('vf-addresses', JSON.stringify(addresses));
   }
   
   renderAddresses();
@@ -1528,25 +1582,67 @@ function showAddressForm(){
 
 function renderAddresses(){
   const box=document.getElementById('addr-list');
-  if(addresses.length===0){box.innerHTML='<div style="color:var(--medium);text-align:center">Nenhum endereço salvo</div>';return}
+  if(addresses.length===0){
+    box.innerHTML='<div style="color:var(--medium);text-align:center;padding:20px;">Nenhum endereço salvo<br><small>Adicione um endereço para entregas</small></div>';
+    return;
+  }
+  
   box.innerHTML=addresses.map((a,i)=>`
-    <div class="list-item">
-      <div>
-        <div style="font-weight:900">${a.nickname} ${a.main?'<span class="badge">Principal</span>':''}</div>
-        <div style="color:var(--medium);font-size:12px">${a.address}, ${a.number} — ${a.city||'—'}/${a.state||'—'} • ${a.cep||''}</div>
+    <div class="list-item" style="border-left:${a.main?'4px solid var(--primary)':'4px solid transparent'}">
+      <div style="flex:1">
+        <div style="font-weight:900;display:flex;align-items:center;gap:8px;">
+          ${a.nickname} 
+          ${a.main?'<span class="badge" style="background:var(--primary);color:#fff">📍 Principal</span>':''}
+        </div>
+        <div style="color:var(--medium);font-size:12px;margin:4px 0;">
+          ${a.address}, ${a.number}${a.complement?` (${a.complement})`:''}<br>
+          ${a.neighborhood} - ${a.city||'—'}/${a.state||'—'} • ${a.cep||''}
+        </div>
+        ${a.main?'<small style="color:var(--success);font-weight:600">🚚 Endereço de entrega atual</small>':''}
       </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-outline" onclick="editAddress(${i})">Editar</button>
-        <button class="btn btn-danger" onclick="delAddress(${i})">Excluir</button>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        ${!a.main?`<button class="btn btn-primary" style="font-size:11px;padding:4px 8px;" onclick="setMainAddress(${i})">Tornar Principal</button>`:''}
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-outline" onclick="editAddress(${i})">Editar</button>
+          <button class="btn btn-danger" onclick="delAddress(${i})">Excluir</button>
+        </div>
       </div>
     </div>`).join('');
 }
+function setMainAddress(i){
+  if(i < 0 || i >= addresses.length) return;
+  
+  // Remove principal de todos os endereços
+  addresses = addresses.map(addr => ({...addr, main: false}));
+  
+  // Define o endereço selecionado como principal
+  addresses[i].main = true;
+  
+  // Salva no localStorage
+  localStorage.setItem('vf-addresses', JSON.stringify(addresses));
+  
+  // Atualiza a lista
+  renderAddresses();
+  
+  // Feedback para o usuário
+  showToast(`"${addresses[i].nickname}" agora é seu endereço principal`, 'success');
+  
+  // Analytics
+  trackEvent('set_main_address', {addressNickname: addresses[i].nickname});
+}
+
 function saveAddress(){
   const a={
     nickname:val('ad-nickname'), cep:val('ad-cep'), address:val('ad-address'), number:val('ad-number'), complement:val('ad-complement'),
     neighborhood:val('ad-neighborhood'), city:val('ad-city'), state:val('ad-state'), main:document.getElementById('ad-main').checked
   };
   if(!a.nickname||!isValidCEP(a.cep)||!a.address||!a.number||!a.neighborhood||!a.city||!a.state){showToast('Preencha os campos obrigatórios', 'error');return}
+  
+  // Se for o primeiro endereço, automaticamente torna principal
+  if(addresses.length === 0) {
+    a.main = true;
+  }
+  
   if(a.main) addresses=addresses.map(x=>({...x,main:false}));
   const idx=Number(sessionStorage.getItem('edit-addr-idx'));
   if(Number.isInteger(idx) && idx>=0){addresses[idx]=a;sessionStorage.removeItem('edit-addr-idx')}
@@ -1574,14 +1670,39 @@ function editAddress(i){
 }
 
 function delAddress(i){
-  if(confirm('Tem certeza que deseja excluir este endereço?')) {
-    const deletedAddress = addresses[i];
-    addresses.splice(i,1);
-    localStorage.setItem('vf-addresses',JSON.stringify(addresses));
-    renderAddresses();
-    showToast('Endereço excluído', 'success');
-    trackEvent('delete_address', {addressNickname: deletedAddress?.nickname});
+  if(i < 0 || i >= addresses.length) return;
+  
+  const addressToDelete = addresses[i];
+  
+  // Se for o único endereço principal e há outros endereços, perguntar se quer definir outro como principal
+  if(addressToDelete.main && addresses.length > 1) {
+    if(!confirm(`"${addressToDelete.nickname}" é seu endereço principal. Tem certeza que deseja excluí-lo? Você precisará definir outro endereço como principal.`)) {
+      return;
+    }
+  } else if(addresses.length === 1) {
+    if(!confirm(`Tem certeza que deseja excluir seu único endereço? Você precisará adicionar um novo endereço para fazer pedidos.`)) {
+      return;
+    }
+  } else {
+    if(!confirm(`Tem certeza que deseja excluir "${addressToDelete.nickname}"?`)) {
+      return;
+    }
   }
+  
+  // Remove o endereço
+  addresses.splice(i,1);
+  
+  // Se era principal e ainda há endereços, define o primeiro como principal
+  if(addressToDelete.main && addresses.length > 0) {
+    addresses[0].main = true;
+    showToast(`Endereço excluído. "${addresses[0].nickname}" agora é o principal`, 'info');
+  } else {
+    showToast('Endereço excluído', 'success');
+  }
+  
+  localStorage.setItem('vf-addresses',JSON.stringify(addresses));
+  renderAddresses();
+  trackEvent('delete_address', {addressNickname: addressToDelete?.nickname, wasMain: addressToDelete?.main});
 }
 function autoFillAddress(prefix){const cep=val(prefix+'cep').replace(/\D/g,''); if(cep.length===8){setTimeout(()=>{setVal(prefix+'address','Rua Exemplo');setVal(prefix+'neighborhood','Centro');setVal(prefix+'city','São Paulo');setVal(prefix+'state','SP')},300)}}
 
@@ -1787,6 +1908,9 @@ function updateCartBadges(){const n=appState.cart.reduce((s,i)=>s+i.quantity,0);
 
 /* ========== INIT + MÁSCARAS + MELHORIAS ========= */
 document.addEventListener('DOMContentLoaded',()=>{
+  // Inicializar dados de demonstração
+  initDemoData();
+  
   // Carregamento inicial
   loadCart();
   loadCatalogData();
@@ -1832,6 +1956,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   setupTouchGestures();
   
   console.log('🛒 Varejofflex Demo carregado com sucesso!');
+  console.log('👤 Usuário demo:', user?.name || 'Nenhum');
+  console.log('📍 Endereços carregados:', addresses.length);
 });
 
 function setupMasks(){
