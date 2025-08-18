@@ -101,14 +101,59 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 @media(min-width:768px){.main-content{padding-left:5%;padding-right:5%}}
 @media(min-width:1200px){.main-content{padding-left:10%;padding-right:10%}}
 .products-grid{display:flex;flex-direction:column;gap:16px}
-.product-card{display:flex;align-items:flex-start;gap:12px;background:#fff;border-radius:var(--border-radius);padding:14px;box-shadow:var(--shadow-soft);transition:var(--transition);cursor:pointer;border:2px solid transparent;position:relative;overflow:hidden}
-.product-card::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:var(--gradient-primary);opacity:0;transition:opacity 0.3s ease;z-index:-1}
-.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-strong);border-color:rgba(255, 107, 53, 0.2)}
-.product-card:hover::before{opacity:0.02}
-.product-card:active{transform:scale(0.98)}
+/* Cards do Cardápio Modernos */
+.product-card{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  background:white;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor:pointer;
+  border:2px solid transparent;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+}
+.product-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:linear-gradient(135deg,rgba(0,122,255,0.03),rgba(0,122,255,0.01));
+  opacity:0;
+  transition:opacity 0.3s ease;
+  z-index:0;
+}
+.product-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 35px rgba(0,0,0,0.15);
+  border-color:rgba(0,122,255,0.2);
+  background:rgba(255,255,255,0.95);
+}
+.product-card:hover::before{opacity:1}
+.product-card:active{transform:translateY(-4px) scale(0.98)}
 .thumb-wrap{position:relative;flex-shrink:0}
-.product-thumb{width:100px;height:100px;border-radius:var(--border-radius);object-fit:cover;display:block;background:linear-gradient(135deg, #E2E8F0 0%, #CBD5E0 100%);transition:var(--transition)}
-.product-card:hover .product-thumb{transform:scale(1.05)}
+.product-thumb{
+  width:110px;
+  height:110px;
+  border-radius:16px;
+  object-fit:cover;
+  display:block;
+  background:linear-gradient(135deg, #E2E8F0 0%, #CBD5E0 100%);
+  transition:all 0.3s ease;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  position:relative;
+  z-index:1;
+}
+.product-card:hover .product-thumb{
+  transform:scale(1.05);
+  box-shadow:0 8px 25px rgba(0,0,0,0.2);
+}
 .badge-pill{position:absolute;top:6px;right:6px;background:var(--gradient-primary);color:#fff;padding:3px 8px;border-radius:15px;font-size:11px;font-weight:800;box-shadow:0 2px 8px rgba(255, 107, 53, 0.3);animation:float 3s ease-in-out infinite}
 .product-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .product-name{font-weight:800;font-size:16px;margin-bottom:4px;color:var(--dark)}
@@ -188,6 +233,42 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);li
 .gallery-main{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.1);background:white}
 .gallery-main img{width:100%;height:320px;object-fit:cover;transition:transform 0.3s ease}
 .gallery-main:hover img{transform:scale(1.05)}
+.gallery-thumbnails{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  overflow-x:auto;
+  padding:8px 0;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.gallery-thumbnails::-webkit-scrollbar{display:none}
+.thumbnail-item{
+  flex-shrink:0;
+  width:80px;
+  height:80px;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  border:2px solid transparent;
+  position:relative;
+}
+.thumbnail-item.active{
+  border-color:#007AFF;
+  box-shadow:0 4px 15px rgba(0,122,255,0.3);
+}
+.thumbnail-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+.thumbnail-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform 0.3s ease;
+}
+.thumbnail-item:hover img{transform:scale(1.1)}
 .image-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.2) 100%);pointer-events:none}
 .product-badges{position:absolute;top:16px;left:16px;display:flex;gap:8px;flex-wrap:wrap}
 .product-badge{background:white;color:var(--dark);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;gap:4px}
@@ -583,6 +664,9 @@ hr.sep{border:none;border-top:1px solid #E2E8F0;margin:12px 0}
         <div class="image-overlay">
           <div class="product-badges" id="product-badges"></div>
         </div>
+      </div>
+      <div class="gallery-thumbnails" id="gallery-thumbnails">
+        <!-- Miniaturas serão carregadas dinamicamente -->
       </div>
     </div>
     
@@ -1129,37 +1213,90 @@ const COUPONS = [
 
 const products=[{
   id:1,name:'X-Burguer Especial',description:'Hambúrguer artesanal com blend especial, queijo cheddar, alface, tomate e molho especial da casa',
-  price:18.90,originalPrice:22.90,category:'burgers',badge:'🔥',tags:['promo','new'],imageUrl:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop',
+  price:18.90,originalPrice:22.90,category:'burgers',badge:'🔥',tags:['promo','new'],
+  imageUrl:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.8,reviewCount:127,estimatedTime:'15-20 min',
   variations:{size:{required:true,options:[{value:'small',label:'Pequeno',price:0},{value:'medium',label:'Médio',price:3},{value:'large',label:'Grande',price:6}]}},
   complements:[{value:'cheese',label:'Queijo extra',price:2.50},{value:'bacon',label:'Bacon',price:4.00},{value:'onion',label:'Cebola caramelizada',price:1.50}]
 },{
   id:2,name:'Pizza Margherita Gourmet',description:'Molho especial, mussarela de búfala, tomate e manjericão fresco em massa artesanal',
-  price:32.90,category:'pizzas',badge:'⭐',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=1200&auto=format&fit=crop',
+  price:32.90,category:'pizzas',badge:'⭐',tags:['veggie'],
+  imageUrl:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.9,reviewCount:89,estimatedTime:'25-30 min'
 },{
   id:3,name:'Batata Frita Especial',description:'Batata sequinha cortada na hora, temperada com sal especial e ervas',
-  price:8.90,category:'sides',tags:['veggie'],imageUrl:'https://images.unsplash.com/photo-1576107232684-1279f390859f?q=80&w=1200&auto=format&fit=crop',
+  price:8.90,category:'sides',tags:['veggie'],
+  imageUrl:'https://images.unsplash.com/photo-1576107232684-1279f390859f?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1576107232684-1279f390859f?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1585109649750-ef07b3a4ddc9?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.6,reviewCount:203,estimatedTime:'10-15 min'
 },{
   id:4,name:'Refrigerante Coca-Cola',description:'Lata 350ml gelada',
-  price:5.50,category:'drinks',imageUrl:'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?q=80&w=1200&auto=format&fit=crop',
+  price:5.50,category:'drinks',
+  imageUrl:'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1622543925917-763c34455039?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.5,reviewCount:156,estimatedTime:'Imediato'
 },{
   id:5,name:'Açaí Premium 500ml',description:'Açaí puro com granola, banana, mel e frutas da estação',
-  price:12.90,category:'desserts',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop',
+  price:12.90,category:'desserts',badge:'🌱',tags:['veggie','new'],
+  imageUrl:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1612526735116-b5c1c14b5b41?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1616833570741-b2e6ce82af95?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.7,reviewCount:74,estimatedTime:'5-10 min'
 },{
   id:6,name:'Pizza Pepperoni Suprema',description:'Molho de tomate, mussarela, pepperoni, pimentão e cebola roxa',
-  price:36.90,category:'pizzas',tags:['spicy'],imageUrl:'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop',
+  price:36.90,category:'pizzas',tags:['spicy'],
+  imageUrl:'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1594007654729-407eedc4be65?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.8,reviewCount:112,estimatedTime:'25-30 min'
 },{
   id:7,name:'Hambúrguer Vegetariano',description:'Hambúrguer de grão-de-bico, queijo, alface, tomate e molho vegano',
-  price:19.90,category:'burgers',badge:'🌱',tags:['veggie','gluten-free','new'],imageUrl:'https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=1200&auto=format&fit=crop',
+  price:19.90,category:'burgers',badge:'🌱',tags:['veggie','gluten-free','new'],
+  imageUrl:'https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1558030006-450675393462?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.4,reviewCount:67,estimatedTime:'18-25 min'
 },{
   id:8,name:'Suco Natural de Laranja',description:'Suco natural de laranja espremido na hora - 500ml',
-  price:7.90,category:'drinks',badge:'🌱',tags:['veggie','new'],imageUrl:'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1200&auto=format&fit=crop',
+  price:7.90,category:'drinks',badge:'🌱',tags:['veggie','new'],
+  imageUrl:'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1200&auto=format&fit=crop',
+  images:[
+    'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1577003833619-76bbd7f82948?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1581484397921-5cae76054da6?q=80&w=1200&auto=format&fit=crop'
+  ],
   rating:4.6,reviewCount:89,estimatedTime:'5 min'
 }];
 
@@ -1336,6 +1473,20 @@ function showProductDetail(id){
   document.getElementById('main-product-image').src = product.imageUrl || PLACEHOLDER;
   document.getElementById('main-product-image').alt = product.name;
   
+  // Galeria de miniaturas
+  const thumbnailsContainer = document.getElementById('gallery-thumbnails');
+  if(product.images && product.images.length > 1) {
+    const thumbnailsHtml = product.images.map((img, index) => `
+      <div class="thumbnail-item ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', ${index})">
+        <img src="${img}" alt="${product.name} - Imagem ${index + 1}" onerror="this.src='${PLACEHOLDER}'">
+      </div>
+    `).join('');
+    thumbnailsContainer.innerHTML = thumbnailsHtml;
+    thumbnailsContainer.style.display = 'flex';
+  } else {
+    thumbnailsContainer.style.display = 'none';
+  }
+  
   // Badges do produto
   const badgesHtml = [];
   if(product.badge) badgesHtml.push(`<span class="product-badge">${product.badge}</span>`);
@@ -1463,6 +1614,18 @@ function addToCart(){
 function addSimpleItem(id){const p=products.find(x=>x.id===id);if(!p) return;const item={id:Date.now(),productId:p.id,name:p.name,basePrice:p.price,quantity:1,variations:{},complements:[],observations:'',totalPrice:p.price};appState.cart.push(item);saveCart();updateCartBadges();showToast('✓ Adicionado ao carrinho')}
 function addUpsell(id){addSimpleItem(id)}
 function calculateItemUnitPrice(item){let t=item.basePrice;Object.values(item.variations).forEach(v=>t+=v.price);item.complements.forEach(c=>t+=c.price);return t}
+
+// Função para trocar imagem principal na galeria
+function changeMainImage(imageSrc, activeIndex) {
+  const mainImage = document.getElementById('main-product-image');
+  mainImage.src = imageSrc;
+  
+  // Atualizar thumbnails ativos
+  const thumbnails = document.querySelectorAll('.thumbnail-item');
+  thumbnails.forEach((thumb, index) => {
+    thumb.classList.toggle('active', index === activeIndex);
+  });
+}
 
 /* ========== UPSELL INTELIGENTE ========= */
 // Cache global da lista de upsell
