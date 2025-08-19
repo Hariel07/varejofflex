@@ -96,11 +96,17 @@ export const authOptions: AuthOptions = {
     }),
   ],
 
-  // JWT para sessões (App Router)
-  session: { strategy: "jwt" },
+  // Configurações importantes para produção
+  session: { 
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 horas
+  },
 
-  // Página de login customizada
-  pages: { signIn: "/login" },
+  // Páginas customizadas
+  pages: { 
+    signIn: "/login",
+    error: "/login",
+  },
 
   callbacks: {
     /**
@@ -128,17 +134,6 @@ export const authOptions: AuthOptions = {
       authSession.user.tenantContext = (token as any).tenantContext;
       return authSession;
     },
-  },
-  
-  // Configurações importantes para produção
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  
-  session: {
-    strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 24 horas
   },
   
   secret: process.env.NEXTAUTH_SECRET,
