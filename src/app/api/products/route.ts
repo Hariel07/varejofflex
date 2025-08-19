@@ -42,7 +42,7 @@ export const GET = withTenantApi(async (user) => {
 /**
  * POST /api/products - Cria novo produto
  */
-export const POST = withTenantApi(async (user, request: NextRequest) => {
+export const POST = withTenantApi(async (user, request) => {
   try {
     // Verifica permissão para criar produtos
     const { hasPermission } = await import("@/lib/permissions");
