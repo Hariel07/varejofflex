@@ -38,11 +38,11 @@ function LoginInner() {
 
   return (
     <div className="container py-5" style={{ maxWidth: 440 }}>
-      <h1 className="h4 mb-3">Entrar — Varejofflex</h1>
+      <h1 className="h4 mb-3 text-dark">Entrar — Varejofflex</h1>
       {err && <div className="alert alert-danger py-2">{err}</div>}
       <form onSubmit={onSubmit} /* sem action/method */>
         <div className="mb-3">
-          <label className="form-label">E-mail</label>
+          <label className="form-label text-dark fw-medium">E-mail</label>
           <input
             className="form-control"
             type="email"
@@ -54,7 +54,7 @@ function LoginInner() {
         </div>
 
         <div className="mb-2">
-          <label className="form-label">Senha</label>
+          <label className="form-label text-dark fw-medium">Senha</label>
           <input
             className="form-control"
             type="password"

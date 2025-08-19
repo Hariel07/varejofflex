@@ -1,8 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function RegisterPage() {
+  const [showOwnerOption, setShowOwnerOption] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Verificar se ainda é possível cadastrar Owner
+    fetch('/api/platform/owner-status')
+      .then(res => res.json())
+      .then(data => {
+        setShowOwnerOption(data.available);
+        setLoading(false);
+      })
+      .catch(() => {
+        setShowOwnerOption(false);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-vh-100 bg-light d-flex align-items-center justify-content-center">
+        <div className="text-center">
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+          <p className="text-muted">Verificando opções de cadastro...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-vh-100 bg-light d-flex align-items-center">
       <div className="container">
@@ -21,9 +51,9 @@ export default function RegisterPage() {
             </div>
 
             {/* Cards de Opção */}
-            <div className="row g-4">
+            <div className="row g-4 justify-content-center">
               {/* Cadastro Lojista */}
-              <div className="col-md-6">
+              <div className={`col-md-6 ${!showOwnerOption ? 'col-lg-8' : ''}`}>
                 <div className="card h-100 border-success border-2 shadow-lg">
                   <div className="card-header bg-success text-white text-center py-4">
                     <div className="fs-1 mb-2">🏪</div>
@@ -109,7 +139,8 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Cadastro Owner SaaS */}
+              {/* Cadastro Owner SaaS - Só mostra se disponível */}
+              {showOwnerOption && (
               <div className="col-md-6">
                 <div className="card h-100 border-danger border-2 shadow-lg">
                   <div className="card-header bg-danger text-white text-center py-4">
@@ -171,6 +202,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
               </div>
+              )}
             </div>
 
             {/* Footer Info */}

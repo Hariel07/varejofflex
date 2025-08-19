@@ -26,7 +26,10 @@ export const authOptions: AuthOptions = {
        */
       async authorize(credentials) {
         try {
-          if (!credentials?.email || !credentials.password) return null;
+          if (!credentials?.email || !credentials.password) {
+            console.log('[AUTH] Missing credentials');
+            return null;
+          }
 
           await dbConnect();
 
@@ -36,12 +39,15 @@ export const authOptions: AuthOptions = {
             isActive: true, // Apenas usuários ativos
           }).populate('companyId').lean();
 
+          console.log('[AUTH] User found:', !!userDoc);
           if (!userDoc) return null;
 
           const ok = await bcrypt.compare(
             credentials.password,
             (userDoc as any).passwordHash
           );
+          
+          console.log('[AUTH] Password match:', ok);
           if (!ok) return null;
 
           // Atualiza último login
