@@ -1,10 +1,12 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import type { AuthUser, TenantContext } from "@/types/auth";
 
 /**
  * Hook para acessar informações do usuário autenticado
+ * Versão SSR-safe
  */
 export function useAuthUser(): {
   user: AuthUser | null;
@@ -13,9 +15,29 @@ export function useAuthUser(): {
   isLojista: boolean;
   tenantContext: TenantContext | null;
 } {
-  const { data: session, status } = useSession();
+  const [mounted, setMounted] = useState(false);
+  const session = useSession();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Durante SSR ou antes do mount, retorna valores padrão
+  if (!mounted) {
+    return {
+      user: null,
+      isLoading: true,
+      isOwnerSaas: false,
+      isLojista: false,
+      tenantContext: null,
+    };
+  }
+
+  // Proteção contra destructuring undefined
+  const sessionData = session?.data;
+  const status = session?.status || "loading";
   
-  const user = session?.user as AuthUser | null;
+  const user = sessionData?.user as AuthUser | null;
   const isLoading = status === "loading";
   
   return {
