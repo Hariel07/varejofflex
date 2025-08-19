@@ -39,6 +39,7 @@ const PUBLIC_ROUTES = [
   "/reset-password",
   "/demo",
   "/api/auth",
+  "/api/debug", // Adicionar rota de debug
 ];
 
 /**
