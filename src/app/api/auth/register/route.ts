@@ -29,22 +29,36 @@ export async function POST(req: NextRequest) {
 
     // OWNER DO SAAS (único)
     if (mode === "owner_saas") {
+      console.log('[REGISTER] Attempting Owner SaaS registration');
+      
       // Validar chave secreta
       const secretKey = body?.secretKey;
+      console.log('[REGISTER] Secret key provided:', !!secretKey);
+      
       if (secretKey !== "VAREJOFLEX_OWNER_2025") {
+        console.log('[REGISTER] Invalid secret key');
         throw new ApiError("E_FORBIDDEN", "Chave secreta inválida", 403);
       }
 
+      console.log('[REGISTER] Checking existing Owner...');
       const existsOwner = await User.exists({ role: "owner_saas" });
       if (existsOwner) {
+        console.log('[REGISTER] Owner already exists');
         throw new ApiError("E_CONFLICT", "Já existe um Owner do SaaS cadastrado", 409);
       }
+      
+      console.log('[REGISTER] Checking existing email...');
       const existsEmail = await User.exists({ email: user.email.toLowerCase() });
-      if (existsEmail) throw new ApiError("E_CONFLICT", "E-mail já cadastrado", 409);
+      if (existsEmail) {
+        console.log('[REGISTER] Email already exists');
+        throw new ApiError("E_CONFLICT", "E-mail já cadastrado", 409);
+      }
 
+      console.log('[REGISTER] Creating password hash...');
       const passwordHash = await bcrypt.hash(user.password, 10);
       const permissions = ROLE_PERMISSIONS["owner_saas"];
       
+      console.log('[REGISTER] Creating Owner user...');
       const created = await User.create({
         name: user.name,
         email: user.email.toLowerCase(),
@@ -55,6 +69,7 @@ export async function POST(req: NextRequest) {
         isActive: true,
       });
 
+      console.log('[REGISTER] Owner created successfully:', created._id);
       logger.info(`Owner SaaS created: ${user.email}`);
       return NextResponse.json({ 
         ok: true, 
