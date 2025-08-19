@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -71,7 +71,7 @@ const SEGMENTS = [
   }
 ];
 
-export default function RegisterLojista() {
+function RegisterLojistaForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
@@ -620,5 +620,22 @@ export default function RegisterLojista() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterLojista() {
+  return (
+    <Suspense fallback={
+      <div className="container py-5">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+          <p className="mt-3 text-muted">Carregando formulário de registro...</p>
+        </div>
+      </div>
+    }>
+      <RegisterLojistaForm />
+    </Suspense>
   );
 }
