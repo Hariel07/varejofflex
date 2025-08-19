@@ -2,7 +2,7 @@
 
 import { useAuthUser, usePermissions, useTenantApi, useCompanyAccess } from "@/hooks/useAuth";
 import { ProtectedContent, LojistaOnly } from "@/components/auth/ProtectedContent";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 // Força renderização do lado do cliente
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,7 @@ const segmentInfo = {
   conveniencia: { name: "Conveniência", icon: "🏪", color: "dark" }
 };
 
-export default function LojistaDashboard() {
+function LojistaDashboardContent() {
   const { user } = useAuthUser();
   const { hasPermission } = usePermissions();
   const { getCurrentCompanyId } = useCompanyAccess();
@@ -309,5 +309,23 @@ export default function LojistaDashboard() {
         )}
       </div>
     </LojistaOnly>
+  );
+}
+
+// Export default com renderização client-side only
+export default function LojistaDashboard() {
+  return (
+    <Suspense fallback={
+      <div className="container py-5">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Carregando dashboard...</span>
+          </div>
+          <p className="mt-3 text-muted">Carregando seu dashboard...</p>
+        </div>
+      </div>
+    }>
+      <LojistaDashboardContent />
+    </Suspense>
   );
 }

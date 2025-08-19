@@ -2,7 +2,7 @@
 
 import { useAuthUser, usePermissions, useTenantApi } from "@/hooks/useAuth";
 import { ProtectedContent } from "@/components/auth/ProtectedContent";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 // Força renderização do lado do cliente
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ interface DashboardStats {
   segmentDistribution: { [key: string]: number };
 }
 
-export default function OwnerDashboard() {
+function OwnerDashboardContent() {
   const { user } = useAuthUser();
   const { hasPermission } = usePermissions();
   const { get } = useTenantApi();
@@ -225,5 +225,21 @@ export default function OwnerDashboard() {
         )}
       </div>
     </ProtectedContent>
+  );
+}
+
+export default function OwnerDashboard() {
+  return (
+    <Suspense fallback={
+      <div className="container mt-4">
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    }>
+      <OwnerDashboardContent />
+    </Suspense>
   );
 }

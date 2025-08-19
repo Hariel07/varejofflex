@@ -2,12 +2,12 @@
 
 import { useAuthUser } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
 // Força renderização do lado do cliente
 export const dynamic = 'force-dynamic';
 
-export default function DashboardRouter() {
+function DashboardRouterContent() {
   const { user, isLoading } = useAuthUser();
   const router = useRouter();
 
@@ -48,4 +48,20 @@ export default function DashboardRouter() {
   }
 
   return null;
+}
+
+export default function DashboardRouter() {
+  return (
+    <Suspense fallback={
+      <div className="container mt-4">
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    }>
+      <DashboardRouterContent />
+    </Suspense>
+  );
 }
