@@ -25,28 +25,7 @@ export default function LoginClient() {
     console.log('[LOGIN] Starting login process for:', email);
 
     try {
-      console.log('[LOGIN] Testing direct authentication first...');
-      
-      // Primeiro, teste direto da API
-      const testResponse = await fetch('/api/auth/test-signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const testResult = await testResponse.json();
-      console.log('[LOGIN] Direct test result:', testResult);
-      
-      if (!testResult.success) {
-        console.log('[LOGIN] Direct test failed:', testResult);
-        setErr("E-mail ou senha inválidos.");
-        setLoading(false);
-        return;
-      }
-
-      console.log('[LOGIN] Direct test successful, trying NextAuth...');
-
-      // Agora tenta com NextAuth
+      // Login direto com NextAuth
       const res = await signIn("credentials", {
         email,
         password,
@@ -57,7 +36,7 @@ export default function LoginClient() {
 
       if (res?.error) {
         console.log('[LOGIN] NextAuth error:', res.error);
-        setErr(`Erro NextAuth: ${res.error}`);
+        setErr(`Erro de autenticação: ${res.error}`);
         setLoading(false);
         return;
       }
@@ -76,6 +55,8 @@ export default function LoginClient() {
           // Determinar dashboard baseado no tipo de usuário
           if (sessionData?.user) {
             const userType = sessionData.user.userType || sessionData.user.role;
+            console.log('[LOGIN] User type detected:', userType);
+            
             if (userType === 'owner_saas') {
               redirectTo = '/dashboard/owner';
             } else if (userType === 'lojista' || userType === 'admin_company') {
@@ -83,7 +64,7 @@ export default function LoginClient() {
             }
           }
           
-          console.log('[LOGIN] Redirecting to:', redirectTo);
+          console.log('[LOGIN] Final redirect to:', redirectTo);
           router.push(redirectTo);
         } catch (error) {
           console.log('[LOGIN] Error getting session, using fallback redirect');
