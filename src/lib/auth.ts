@@ -20,23 +20,22 @@ export const authOptions: AuthOptions = {
         email: { label: "E-mail", type: "text" },
         password: { label: "Senha", type: "password" },
       },
-      /**
-       * Autenticação via e-mail/senha no MongoDB com contexto multi-tenant.
-       * Retorne `null` para falha, ou um objeto AuthUser para sucesso.
-       */
       async authorize(credentials) {
         try {
+          console.log('[AUTH] Starting authorization for:', credentials?.email);
+          
           if (!credentials?.email || !credentials.password) {
             console.log('[AUTH] Missing credentials');
             return null;
           }
 
           await dbConnect();
+          console.log('[AUTH] Connected to database');
 
           // Busca o usuário e popula a company se existir
           const userDoc = await User.findOne({
             email: credentials.email.toLowerCase(),
-            isActive: true, // Apenas usuários ativos
+            isActive: true,
           }).populate('companyId').lean();
 
           console.log('[AUTH] User found:', !!userDoc);
@@ -50,107 +49,50 @@ export const authOptions: AuthOptions = {
           console.log('[AUTH] Password match:', ok);
           if (!ok) return null;
 
-          // Atualiza último login
-          await User.updateOne(
-            { _id: (userDoc as any)._id },
-            { lastLoginAt: new Date() }
-          );
-
-          // Determina o tipo de usuário baseado no role
-          const userType: UserType = (userDoc as any).role === "owner_saas" ? "owner_saas" : "lojista";
-          
-          // Cria o contexto de tenant
-          const tenantContext = createTenantContext(
-            (userDoc as any).role,
-            userType,
-            (userDoc as any).companyId ? String((userDoc as any).companyId._id || (userDoc as any).companyId) : undefined
-          );
-
-          // Verifica se a company está ativa (para lojistas)
-          if (userType === "lojista" && (userDoc as any).companyId) {
-            const company = (userDoc as any).companyId;
-            if (company && !company.isActive) {
-              return null; // Company inativa
-            }
-          }
-
-          const authUser: AuthUser = {
+          // Retorna o objeto de usuário simples
+          return {
             id: String((userDoc as any)._id),
             name: (userDoc as any).name,
             email: (userDoc as any).email,
             role: (userDoc as any).role,
-            userType,
-            companyId: (userDoc as any).companyId 
-              ? String((userDoc as any).companyId._id || (userDoc as any).companyId)
-              : undefined,
-            tenantContext,
           };
-
-          return authUser as any;
         } catch (error) {
           console.error("Auth error:", error);
-          // Nunca vaze detalhes de erro na authorize
           return null;
         }
       },
     }),
   ],
 
-  // Configurações importantes para produção
   session: { 
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 horas
   },
 
-  // Páginas customizadas
   pages: { 
     signIn: "/login",
   },
 
   callbacks: {
-    /**
-     * Injeta dados completos do usuário no token JWT quando faz login.
-     */
     async jwt({ token, user }) {
       if (user) {
-        const authUser = user as AuthUser;
-        (token as any).role = authUser.role;
-        (token as any).userType = authUser.userType;
-        (token as any).companyId = authUser.companyId;
-        (token as any).tenantContext = authUser.tenantContext;
+        token.role = user.role;
       }
       return token;
     },
 
-    /**
-     * Disponibiliza dados completos do usuário no objeto session.
-     */
     async session({ session, token }) {
-      const authSession = session as any;
-      authSession.user.id = token.sub;
-      authSession.user.role = (token as any).role;
-      authSession.user.userType = (token as any).userType;
-      authSession.user.companyId = (token as any).companyId;
-      authSession.user.tenantContext = (token as any).tenantContext;
-      return authSession;
-    },
-
-    /**
-     * Controla para onde redirecionar após login bem-sucedido
-     */
-    async redirect({ url, baseUrl }) {
-      // Se é uma URL relativa, concatena com baseUrl
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Se é uma URL da mesma origem, permite
-      else if (new URL(url).origin === baseUrl) return url;
-      // Caso contrário, redireciona para dashboard padrão
-      return `${baseUrl}/dashboard`;
+      if (session.user) {
+        (session.user as any).id = token.sub;
+        (session.user as any).role = token.role;
+      }
+      return session;
     },
   },
   
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-only',
   
-  debug: process.env.NODE_ENV === 'development',
+  debug: true, // Ativar debug para ver logs
 };
 
 /**

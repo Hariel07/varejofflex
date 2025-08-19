@@ -23,12 +23,32 @@ export default function LoginClient() {
     setLoading(true);
 
     try {
-      // Usa signIn com redirect: false para controlar manualmente
+      console.log('[LOGIN] Attempting login with NextAuth signIn');
+      
+      // Primeiro, teste direto da API
+      const testResponse = await fetch('/api/auth/test-signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      const testResult = await testResponse.json();
+      console.log('[LOGIN] Test signin result:', testResult);
+      
+      if (!testResult.success) {
+        setErr("E-mail ou senha inválidos.");
+        setLoading(false);
+        return;
+      }
+
+      // Agora tenta com NextAuth
       const res = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+
+      console.log('[LOGIN] NextAuth result:', res);
 
       if (res?.error) {
         setErr("E-mail ou senha inválidos.");
