@@ -33,7 +33,7 @@ const CompanySchema = new Schema<ICompany>({
   name: { type: String, required: true, trim: true },
   personType: { type: String, enum: ["PF", "PJ"], required: true },
   documentType: { type: String, enum: ["CPF", "CNPJ"], required: true },
-  documentNumber: { type: String, required: true, index: true }, // normalizado (só dígitos)
+  documentNumber: { type: String, required: true }, // normalizado (só dígitos)
   email: { type: String, trim: true },
   phone: { type: String, trim: true },
   address: { type: AddressSchema },

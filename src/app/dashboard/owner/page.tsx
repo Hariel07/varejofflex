@@ -4,6 +4,9 @@ import { useAuthUser, usePermissions, useTenantApi } from "@/hooks/useAuth";
 import { ProtectedContent } from "@/components/auth/ProtectedContent";
 import { useEffect, useState } from "react";
 
+// Força renderização do lado do cliente
+export const dynamic = 'force-dynamic';
+
 interface DashboardStats {
   totalCompanies: number;
   activeCompanies: number;

@@ -1,6 +1,51 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
 
-const OrderItem = new Schema({
+export interface IOrderItem {
+  productId: string;
+  name: string;
+  qty: number;
+  unitPrice: number;
+  total: number;
+}
+
+export interface IOrder {
+  _id: Types.ObjectId;
+  companyId: Types.ObjectId;    // referência para Company
+  tenantId?: string;            // mantido para compatibilidade
+  customer: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    cpf?: string;
+  };
+  address?: {
+    street?: string;
+    number?: string;
+    district?: string;
+    city?: string;
+    zip?: string;
+    complement?: string;
+    lat?: number;
+    lng?: number;
+  };
+  items: IOrderItem[];
+  subtotal: number;
+  discount: number;
+  couponCode?: string;
+  deliveryFee: number;
+  total: number;
+  payment: {
+    method: "pix" | "debit" | "credit" | "cash";
+    changeFor?: number;
+    status: "pending" | "paid" | "failed" | "refunded";
+    txId?: string;
+  };
+  status: "received" | "preparing" | "ready" | "dispatched" | "delivered" | "cancelled";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const OrderItem = new Schema<IOrderItem>({
   productId: String,
   name: String,
   qty: Number,
@@ -8,9 +53,10 @@ const OrderItem = new Schema({
   total: Number,
 });
 
-const OrderSchema = new Schema(
+const OrderSchema = new Schema<IOrder>(
   {
-    tenantId: { type: String, required: true },
+    companyId: { type: Schema.Types.ObjectId, ref: "Company", required: true },
+    tenantId: { type: String }, // mantido para compatibilidade
     customer: {
       name: String,
       email: String,
@@ -39,5 +85,9 @@ const OrderSchema = new Schema(
   { timestamps: true }
 );
 
-OrderSchema.index({ tenantId: 1, createdAt: -1 });
-export default models.Order || model("Order", OrderSchema);
+OrderSchema.index({ companyId: 1, createdAt: -1 });
+OrderSchema.index({ tenantId: 1, createdAt: -1 }); // mantido para compatibilidade
+OrderSchema.index({ status: 1 });
+OrderSchema.index({ "payment.status": 1 });
+
+export default models.Order || model<IOrder>("Order", OrderSchema);

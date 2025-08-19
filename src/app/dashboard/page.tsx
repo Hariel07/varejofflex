@@ -4,6 +4,9 @@ import { useAuthUser } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+// Força renderização do lado do cliente
+export const dynamic = 'force-dynamic';
+
 export default function DashboardRouter() {
   const { user, isLoading } = useAuthUser();
   const router = useRouter();

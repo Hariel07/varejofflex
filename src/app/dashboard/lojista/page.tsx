@@ -4,6 +4,9 @@ import { useAuthUser, usePermissions, useTenantApi, useCompanyAccess } from "@/h
 import { ProtectedContent, LojistaOnly } from "@/components/auth/ProtectedContent";
 import { useEffect, useState } from "react";
 
+// Força renderização do lado do cliente
+export const dynamic = 'force-dynamic';
+
 interface CompanyStats {
   totalProducts: number;
   totalOrders: number;
