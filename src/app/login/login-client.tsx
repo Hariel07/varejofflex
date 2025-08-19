@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 export default function LoginClient() {
   const router = useRouter();
   const search = useSearchParams();
-  const callbackUrl = search?.get("callbackUrl") || "/admin";
+  const callbackUrl = search?.get("callbackUrl") || "/dashboard";
   const errorQuery = search?.get("error");
 
   const [email, setEmail] = useState("");
@@ -63,9 +63,32 @@ export default function LoginClient() {
       }
 
       if (res?.ok) {
-        console.log('[LOGIN] NextAuth success, redirecting to:', callbackUrl);
-        // Login bem-sucedido, redireciona manualmente
-        router.push(callbackUrl);
+        console.log('[LOGIN] NextAuth success, determining redirect...');
+        
+        // Buscar informações da sessão para redirecionamento inteligente
+        try {
+          const sessionResponse = await fetch('/api/auth/session');
+          const sessionData = await sessionResponse.json();
+          console.log('[LOGIN] Session data:', sessionData);
+          
+          let redirectTo = callbackUrl;
+          
+          // Determinar dashboard baseado no tipo de usuário
+          if (sessionData?.user) {
+            const userType = sessionData.user.userType || sessionData.user.role;
+            if (userType === 'owner_saas') {
+              redirectTo = '/dashboard/owner';
+            } else if (userType === 'lojista' || userType === 'admin_company') {
+              redirectTo = '/dashboard/lojista';
+            }
+          }
+          
+          console.log('[LOGIN] Redirecting to:', redirectTo);
+          router.push(redirectTo);
+        } catch (error) {
+          console.log('[LOGIN] Error getting session, using fallback redirect');
+          router.push(callbackUrl);
+        }
         return;
       }
 
