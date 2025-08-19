@@ -22,8 +22,10 @@ export default function LoginClient() {
     setErr(null);
     setLoading(true);
 
+    console.log('[LOGIN] Starting login process for:', email);
+
     try {
-      console.log('[LOGIN] Attempting login with NextAuth signIn');
+      console.log('[LOGIN] Testing direct authentication first...');
       
       // Primeiro, teste direto da API
       const testResponse = await fetch('/api/auth/test-signin', {
@@ -33,13 +35,16 @@ export default function LoginClient() {
       });
       
       const testResult = await testResponse.json();
-      console.log('[LOGIN] Test signin result:', testResult);
+      console.log('[LOGIN] Direct test result:', testResult);
       
       if (!testResult.success) {
+        console.log('[LOGIN] Direct test failed:', testResult);
         setErr("E-mail ou senha inválidos.");
         setLoading(false);
         return;
       }
+
+      console.log('[LOGIN] Direct test successful, trying NextAuth...');
 
       // Agora tenta com NextAuth
       const res = await signIn("credentials", {
@@ -48,25 +53,28 @@ export default function LoginClient() {
         redirect: false,
       });
 
-      console.log('[LOGIN] NextAuth result:', res);
+      console.log('[LOGIN] NextAuth signIn result:', res);
 
       if (res?.error) {
-        setErr("E-mail ou senha inválidos.");
+        console.log('[LOGIN] NextAuth error:', res.error);
+        setErr(`Erro NextAuth: ${res.error}`);
         setLoading(false);
         return;
       }
 
       if (res?.ok) {
+        console.log('[LOGIN] NextAuth success, redirecting to:', callbackUrl);
         // Login bem-sucedido, redireciona manualmente
         router.push(callbackUrl);
         return;
       }
 
       // Fallback - se não há erro nem ok, algo deu errado
-      setErr("Erro inesperado durante login.");
+      console.log('[LOGIN] Unexpected NextAuth result:', res);
+      setErr("Resultado inesperado do NextAuth. Verifique o console.");
     } catch (error) {
-      console.error("Login error:", error);
-      setErr("Falha ao autenticar. Tente novamente.");
+      console.error("[LOGIN] Exception during login:", error);
+      setErr(`Erro durante login: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     } finally {
       setLoading(false);
     }
