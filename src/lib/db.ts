@@ -1,5 +1,6 @@
 // src/lib/db.ts
 import mongoose from "mongoose";
+import { logEnvironmentVariables, validateMongoUri } from "./debug";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -11,20 +12,34 @@ if (!global._mongoose) {
 }
 
 export async function dbConnect() {
-  const uri = process.env.MONGODB_URI; // não lance erro no topo do módulo
-  if (!uri) {
-    // log claro e erro somente quando a função for chamada
-    console.error("[DB] MONGODB_URI ausente. Configure na Vercel (Production/Preview) ou .env.local no dev.");
-    throw new Error("MONGODB_URI ausente");
+  // Debug em desenvolvimento
+  if (process.env.NODE_ENV === 'development') {
+    logEnvironmentVariables();
   }
 
-  if (global._mongoose!.conn) return global._mongoose!.conn;
+  const uri = process.env.MONGODB_URI;
+  
+  if (!validateMongoUri(uri)) {
+    throw new Error("MONGODB_URI está ausente ou tem formato inválido. Verifique as variáveis de ambiente.");
+  }
+
+  if (global._mongoose!.conn) {
+    console.log('🔄 Reusing existing MongoDB connection');
+    return global._mongoose!.conn;
+  }
 
   if (!global._mongoose!.promise) {
-    global._mongoose!.promise = mongoose.connect(uri, {
+    console.log('🔗 Creating new MongoDB connection...');
+    global._mongoose!.promise = mongoose.connect(uri!, {
       // opções se necessário
       // serverSelectionTimeoutMS: 15000,
-    }).then((m) => m);
+    }).then((m) => {
+      console.log('✅ MongoDB connected successfully');
+      return m;
+    }).catch((error) => {
+      console.error('❌ MongoDB connection failed:', error.message);
+      throw error;
+    });
   }
 
   global._mongoose!.conn = await global._mongoose!.promise;
