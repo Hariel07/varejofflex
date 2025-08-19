@@ -17,6 +17,9 @@ function LoginInner() {
     e.preventDefault();
     setErr("");
     setLoading(true);
+    
+    console.log('[LOGIN] Attempting login for:', email);
+    
     try {
       const res = await signIn("credentials", {
         email,
@@ -24,13 +27,22 @@ function LoginInner() {
         redirect: false,
         callbackUrl,
       });
+      
+      console.log('[LOGIN] SignIn response:', res);
+      
       if (res?.error) {
-        setErr("E-mail ou senha inválidos.");
-      } else {
+        console.log('[LOGIN] Error:', res.error);
+        setErr("E-mail ou senha inválidos. Verifique seus dados.");
+      } else if (res?.ok) {
+        console.log('[LOGIN] Success, redirecting to:', callbackUrl);
         window.location.href = callbackUrl;
+      } else {
+        console.log('[LOGIN] Unknown error');
+        setErr("Erro inesperado. Tente novamente.");
       }
-    } catch {
-      setErr("Falha no login.");
+    } catch (error) {
+      console.error('[LOGIN] Exception:', error);
+      setErr("Falha no login. Verifique sua conexão.");
     } finally {
       setLoading(false);
     }
