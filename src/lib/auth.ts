@@ -136,7 +136,7 @@ export const authOptions: AuthOptions = {
     },
   },
   
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-only',
   
   debug: process.env.NODE_ENV === 'development',
 };
