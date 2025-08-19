@@ -18,21 +18,34 @@ export default function LoginClient() {
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();                 // impede GET nativo
+    e.preventDefault();
     setErr(null);
     setLoading(true);
 
     try {
-      // Usa POST interno do NextAuth; com redirect controlado por ele
+      // Usa signIn com redirect: false para controlar manualmente
       const res = await signIn("credentials", {
         email,
         password,
-        callbackUrl,
-        redirect: true,
+        redirect: false,
       });
-      // Se redirect: true, NextAuth navega sozinho. Se retornar erro:
-      if ((res as any)?.error) setErr("E-mail ou senha inválidos.");
-    } catch (e) {
+
+      if (res?.error) {
+        setErr("E-mail ou senha inválidos.");
+        setLoading(false);
+        return;
+      }
+
+      if (res?.ok) {
+        // Login bem-sucedido, redireciona manualmente
+        router.push(callbackUrl);
+        return;
+      }
+
+      // Fallback - se não há erro nem ok, algo deu errado
+      setErr("Erro inesperado durante login.");
+    } catch (error) {
+      console.error("Login error:", error);
       setErr("Falha ao autenticar. Tente novamente.");
     } finally {
       setLoading(false);

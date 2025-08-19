@@ -55,3 +55,5 @@ yarn-error.log*
 
 # dumps de banco (opcional)
 dump/
+
+.vercel

@@ -105,7 +105,6 @@ export const authOptions: AuthOptions = {
   // Páginas customizadas
   pages: { 
     signIn: "/login",
-    error: "/login",
   },
 
   callbacks: {
@@ -128,11 +127,24 @@ export const authOptions: AuthOptions = {
      */
     async session({ session, token }) {
       const authSession = session as any;
+      authSession.user.id = token.sub;
       authSession.user.role = (token as any).role;
       authSession.user.userType = (token as any).userType;
       authSession.user.companyId = (token as any).companyId;
       authSession.user.tenantContext = (token as any).tenantContext;
       return authSession;
+    },
+
+    /**
+     * Controla para onde redirecionar após login bem-sucedido
+     */
+    async redirect({ url, baseUrl }) {
+      // Se é uma URL relativa, concatena com baseUrl
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Se é uma URL da mesma origem, permite
+      else if (new URL(url).origin === baseUrl) return url;
+      // Caso contrário, redireciona para dashboard padrão
+      return `${baseUrl}/dashboard`;
     },
   },
   
