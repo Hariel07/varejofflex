@@ -39,9 +39,9 @@ export const authOptions: AuthOptions = {
           }).populate('companyId').lean();
 
           console.log('[AUTH] User search result:', !!userDoc, userDoc ? { 
-            id: userDoc._id, 
-            email: userDoc.email, 
-            role: userDoc.role 
+            id: (userDoc as any)?._id?.toString(), 
+            email: (userDoc as any)?.email, 
+            role: (userDoc as any)?.role 
           } : null);
           
           if (!userDoc) {
