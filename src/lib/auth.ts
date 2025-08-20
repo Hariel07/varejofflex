@@ -95,14 +95,51 @@ export const authOptions: AuthOptions = {
         // Garantir que user tem a propriedade role
         const authUser = user as any;
         token.role = authUser.role;
+        token.id = authUser.id;
       }
       return token;
     },
 
     async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).role = token.role;
+      if (session.user && token) {
+        const userId = token.sub || token.id;
+        const role = token.role as Role;
+        
+        // Buscar dados completos do usuário para criar o contexto
+        try {
+          await dbConnect();
+          const userDoc = await User.findById(userId).populate('companyId').lean();
+          
+          if (userDoc) {
+            // Determinar userType baseado no role
+            const userType: UserType = role === 'owner_saas' ? 'owner_saas' : 'lojista';
+            
+            // Criar tenant context
+            const tenantContext = createTenantContext(
+              role, 
+              userType, 
+              (userDoc as any).companyId?._id?.toString()
+            );
+            
+            // Montar objeto de usuário completo
+            (session.user as any) = {
+              id: userId,
+              name: (userDoc as any).name,
+              email: (userDoc as any).email,
+              role: role,
+              userType: userType,
+              companyId: (userDoc as any).companyId?._id?.toString(),
+              tenantContext: tenantContext,
+            };
+            
+            console.log('[AUTH] Session created with userType:', userType, 'role:', role);
+          }
+        } catch (error) {
+          console.error('[AUTH] Error creating session context:', error);
+          // Fallback para dados básicos
+          (session.user as any).id = userId;
+          (session.user as any).role = role;
+        }
       }
       return session;
     },
