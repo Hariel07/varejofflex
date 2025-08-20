@@ -38,26 +38,42 @@ export const authOptions: AuthOptions = {
             isActive: true,
           }).populate('companyId').lean();
 
-          console.log('[AUTH] User found:', !!userDoc);
-          if (!userDoc) return null;
+          console.log('[AUTH] User search result:', !!userDoc, userDoc ? { 
+            id: userDoc._id, 
+            email: userDoc.email, 
+            role: userDoc.role 
+          } : null);
+          
+          if (!userDoc) {
+            console.log('[AUTH] User not found in database');
+            return null;
+          }
 
           const ok = await bcrypt.compare(
             credentials.password,
             (userDoc as any).passwordHash
           );
           
-          console.log('[AUTH] Password match:', ok);
-          if (!ok) return null;
+          console.log('[AUTH] Password comparison result:', ok);
+          if (!ok) {
+            console.log('[AUTH] Password mismatch');
+            return null;
+          }
 
+          console.log('[AUTH] Authentication successful, creating user object');
+          
           // Retorna o objeto de usuário simples
-          return {
+          const authUser = {
             id: String((userDoc as any)._id),
             name: (userDoc as any).name,
             email: (userDoc as any).email,
             role: (userDoc as any).role,
           };
+          
+          console.log('[AUTH] Returning user:', authUser);
+          return authUser;
         } catch (error) {
-          console.error("Auth error:", error);
+          console.error("[AUTH] Authorization error:", error);
           return null;
         }
       },
