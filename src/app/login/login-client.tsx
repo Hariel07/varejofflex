@@ -241,8 +241,10 @@ export default function LoginClient() {
               
               <form onSubmit={onSubmit}>
                 <div className="mb-3">
-                  <label className="form-label">E-mail</label>
+                  <label htmlFor="email-field" className="form-label">E-mail</label>
                   <input
+                    id="email-field"
+                    name="email"
                     className="form-control"
                     type="email"
                     autoComplete="username"
@@ -253,8 +255,10 @@ export default function LoginClient() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Senha</label>
+                  <label htmlFor="password-field" className="form-label">Senha</label>
                   <input
+                    id="password-field"
+                    name="password"
                     className="form-control"
                     type="password"
                     autoComplete="current-password"
