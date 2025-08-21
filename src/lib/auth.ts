@@ -90,6 +90,11 @@ export const authOptions: AuthOptions = {
   },
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Desabilitar redirecionamento automático - deixar o cliente controlar
+      return baseUrl;
+    },
+
     async jwt({ token, user }) {
       if (user) {
         // Garantir que user tem a propriedade role

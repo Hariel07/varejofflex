@@ -22,7 +22,7 @@ export default function LoginClient() {
     setErr(null);
     setLoading(true);
 
-    console.log('[LOGIN-V2] Starting login process for:', email, 'at', new Date().toISOString());
+    console.log('[LOGIN] Attempting login for:', email);
 
     try {
       // Login direto com NextAuth
@@ -32,52 +32,31 @@ export default function LoginClient() {
         redirect: false,
       });
 
-      console.log('[LOGIN-V2] NextAuth signIn result:', res);
+      console.log('[LOGIN] SignIn response:', res);
 
       if (res?.error) {
-        console.log('[LOGIN-V2] NextAuth error:', res.error);
+        console.log('[LOGIN] NextAuth error:', res.error);
         setErr(`Erro de autenticação: ${res.error}`);
         setLoading(false);
         return;
       }
 
       if (res?.ok) {
-        console.log('[LOGIN-V2] NextAuth success, determining redirect...');
+        console.log('[LOGIN] Success, redirecting to:', '/dashboard/owner');
         
-        // Buscar informações da sessão para redirecionamento inteligente
-        try {
-          const sessionResponse = await fetch('/api/auth/session');
-          const sessionData = await sessionResponse.json();
-          console.log('[LOGIN-V2] Session data:', sessionData);
-          
-          let redirectTo = callbackUrl;
-          
-          // Determinar dashboard baseado no tipo de usuário
-          if (sessionData?.user) {
-            const userType = sessionData.user.userType || sessionData.user.role;
-            console.log('[LOGIN-V2] User type detected:', userType);
-            
-            if (userType === 'owner_saas') {
-              redirectTo = '/dashboard/owner';
-            } else if (userType === 'lojista' || userType === 'admin_company') {
-              redirectTo = '/dashboard/lojista';
-            }
-          }
-          
-          console.log('[LOGIN-V2] Final redirect to:', redirectTo);
-          router.push(redirectTo);
-        } catch (error) {
-          console.log('[LOGIN-V2] Error getting session, using fallback redirect');
-          router.push(callbackUrl);
-        }
+        // Aguardar um pouco para garantir que a sessão foi criada
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Redirecionar diretamente para o dashboard owner
+        router.push('/dashboard/owner');
         return;
       }
 
       // Fallback - se não há erro nem ok, algo deu errado
-      console.log('[LOGIN-V2] Unexpected NextAuth result:', res);
+      console.log('[LOGIN] Unexpected NextAuth result:', res);
       setErr("Resultado inesperado do NextAuth. Verifique o console.");
     } catch (error) {
-      console.error("[LOGIN-V2] Exception during login:", error);
+      console.error("[LOGIN] Exception during login:", error);
       setErr(`Erro durante login: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     } finally {
       setLoading(false);
@@ -87,7 +66,7 @@ export default function LoginClient() {
   return (
     <main className="container py-4">
       <h1 className="h4 mb-3">Entrar no Varejofflex</h1>
-      <small className="text-muted mb-3 d-block">Versão: 2.0 - {new Date().toLocaleString()}</small>
+      <small className="text-muted mb-3 d-block">Versão: 3.0 - Direct Owner Redirect - {new Date().toLocaleString()}</small>
       <form onSubmit={onSubmit} className="col-12 col-md-6 col-lg-4">
         <div className="mb-3">
           <label className="form-label">E-mail</label>
