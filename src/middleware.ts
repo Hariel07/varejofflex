@@ -96,6 +96,7 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!token) {
+      console.log('[MW] No token, redirecting to login', pathname);
       // Redireciona para login se não autenticado
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
@@ -103,6 +104,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const user = token as any as AuthUser;
+    console.log('[MW] Token basic info', { path: pathname, userType: (user as any).userType, role: user.role });
 
     // Verifica se o usuário está ativo
     // tenantContext pode ainda estar sendo construído; usamos userType do token para decisões básicas
@@ -114,10 +116,12 @@ export async function middleware(request: NextRequest) {
 
     // Controle de acesso por tipo de usuário
     if (isOwnerSaasRoute(pathname) && user.userType !== "owner_saas") {
+      console.log('[MW] Blocked owner route for non-owner userType', user.userType);
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     if (isLojistaRoute(pathname) && user.userType !== "lojista") {
+      console.log('[MW] Blocked lojista route for non-lojista userType', user.userType);
       return NextResponse.redirect(new URL("/admin", request.url));
     }
 
@@ -139,16 +143,18 @@ export async function middleware(request: NextRequest) {
         requestHeaders.set("x-tenant-id", user.tenantContext.tenantId);
       }
 
-      return NextResponse.next({
+      const response = NextResponse.next({
         request: {
           headers: requestHeaders,
         },
       });
+      console.log('[MW] Passing API request with headers set');
+      return response;
     }
 
     return NextResponse.next();
   } catch (error) {
-    console.error("Middleware error:", error);
+    console.error("[MW] Middleware error:", error);
     
     // Em caso de erro, redireciona para login
     const loginUrl = new URL("/login", request.url);
