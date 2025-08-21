@@ -29,23 +29,22 @@ export default function LoginClient() {
       const res = await signIn("credentials", {
         email,
         password,
-        redirect: false,
+        callbackUrl: '/post-login',
+        redirect: true,
       });
 
-      console.log('[LOGIN] SignIn response:', res);
+  console.log('[LOGIN] SignIn response:', res);
 
-      if (res?.error) {
+  if (res && (res as any).error) {
         console.log('[LOGIN] NextAuth error:', res.error);
         setErr(`Erro de autenticação: ${res.error}`);
         setLoading(false);
         return;
       }
 
-      if (res?.ok) {
-        console.log('[LOGIN] Success, redirecting to /post-login (SSR decision)');
-        router.push('/post-login');
-        return;
-      }
+  // Quando redirect:true, o NextAuth já redireciona. Se ainda estamos aqui, talvez houve algo inesperado.
+  console.log('[LOGIN] signIn retornou (possível redirecionamento em andamento).');
+  return;
 
       // Fallback - se não há erro nem ok, algo deu errado
       console.log('[LOGIN] Unexpected NextAuth result:', res);

@@ -92,11 +92,6 @@ export const authOptions: AuthOptions = {
   },
 
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Desabilitar redirecionamento automático - deixar o cliente controlar
-      return baseUrl;
-    },
-
     async jwt({ token, user }) {
       if (user) {
         const authUser = user as any;
