@@ -14,6 +14,9 @@ import FooterBs from "@/components/FooterBs";
 // Carrega o JS do Bootstrap no cliente (modal, collapse, etc.)
 import BootstrapClient from "./bootstrap-client";
 
+// Providers (NextAuth SessionProvider)
+import Providers from "./providers";
+
 export const metadata: Metadata = {
   title: "Varejofflex - Sua loja online e PDV em uma única plataforma",
   description:
@@ -50,19 +53,21 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="bg-white d-flex flex-column min-vh-100">
-        {/* Header/Nav (sticky-top no próprio componente) */}
-        <NavbarBs />
+        <Providers>
+          {/* Header/Nav (sticky-top no próprio componente) */}
+          <NavbarBs />
 
-        {/* Conteúdo das páginas */}
-        <main id="content" className="flex-fill">
-          {children}
-        </main>
+          {/* Conteúdo das páginas */}
+          <main id="content" className="flex-fill">
+            {children}
+          </main>
 
-        {/* Rodapé com o visual solicitado */}
-        <FooterBs />
+          {/* Rodapé com o visual solicitado */}
+          <FooterBs />
 
-        {/* Bootstrap JS (modals, collapse, etc.) */}
-        <BootstrapClient />
+          {/* Bootstrap JS (modals, collapse, etc.) */}
+          <BootstrapClient />
+        </Providers>
       </body>
     </html>
   );

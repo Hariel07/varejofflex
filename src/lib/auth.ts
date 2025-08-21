@@ -58,6 +58,11 @@ export const authOptions: AuthOptions = {
           }
 
           console.log(`[AUTH-${timestamp}] 🔐 Comparing password hash...`);
+          console.log(`[AUTH-${timestamp}] 🔐 Input password:`, JSON.stringify(credentials.password));
+          console.log(`[AUTH-${timestamp}] 🔐 Input password length:`, credentials.password.length);
+          console.log(`[AUTH-${timestamp}] 🔐 Stored hash:`, JSON.stringify((userDoc as any).passwordHash));
+          console.log(`[AUTH-${timestamp}] 🔐 Stored hash length:`, (userDoc as any).passwordHash.length);
+          
           const passwordMatch = await bcrypt.compare(
             credentials.password,
             (userDoc as any).passwordHash
@@ -66,6 +71,12 @@ export const authOptions: AuthOptions = {
           console.log(`[AUTH-${timestamp}] 🔐 Password comparison result:`, passwordMatch);
           if (!passwordMatch) {
             console.log(`[AUTH-${timestamp}] ❌ Password mismatch for user: ${credentials.email}`);
+            
+            // DEBUG EXTRA: Teste manual para debug
+            console.log(`[AUTH-${timestamp}] 🔧 DEBUG: Manual test with exact values...`);
+            const manualTest = await bcrypt.compare('Thmpv1996@', (userDoc as any).passwordHash);
+            console.log(`[AUTH-${timestamp}] 🔧 DEBUG: Manual test result:`, manualTest);
+            
             return null;
           }
 

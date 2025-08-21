@@ -173,9 +173,21 @@ export default function LoginClient() {
             
             addLog('REDIRECT', 'success', `Redirecionando para: ${destination}`);
             
+            // DEBUG: Adicionar logs extra para debugar redirecionamento
+            console.log('[REDIRECT-DEBUG] Tentando redirecionar para:', destination);
+            console.log('[REDIRECT-DEBUG] Router:', router);
+            console.log('[REDIRECT-DEBUG] Window location atual:', window.location.href);
+            
             // Aguardar um pouco mais e redirecionar
             setTimeout(() => {
+              console.log('[REDIRECT-DEBUG] Executando redirecionamento...');
               router.push(destination);
+              
+              // Fallback: forçar redirecionamento se router falhar
+              setTimeout(() => {
+                console.log('[REDIRECT-DEBUG] Fallback redirect...');
+                window.location.href = destination;
+              }, 2000);
             }, 1000);
             
           } else {

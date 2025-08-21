@@ -28,7 +28,6 @@ const OWNER_SAAS_ROUTES = [
 
 // Rotas exclusivas de Lojistas
 const LOJISTA_ROUTES = [
-  "/dashboard",
   "/dashboard/lojista",
   "/cardapio",
   "/checkout",
@@ -74,7 +73,12 @@ function isOwnerSaasRoute(pathname: string): boolean {
  * Verifica se a rota é exclusiva de Lojistas
  */
 function isLojistaRoute(pathname: string): boolean {
-  return LOJISTA_ROUTES.some(route => pathname.startsWith(route));
+  return LOJISTA_ROUTES.some(route => {
+    // Verificação exata para evitar conflitos com /dashboard/owner
+    if (route === "/dashboard" && pathname === "/dashboard") return true;
+    if (route === "/dashboard" && pathname.startsWith("/dashboard/owner")) return false;
+    return pathname.startsWith(route);
+  });
 }
 
 /**
