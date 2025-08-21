@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 export default function LoginClient() {
   const router = useRouter();
   const search = useSearchParams();
-  const callbackUrl = search?.get("callbackUrl") || "/dashboard";
+  const callbackUrl = search?.get("callbackUrl") || "/admin";
   const errorQuery = search?.get("error");
 
   const [email, setEmail] = useState("");
@@ -22,45 +22,37 @@ export default function LoginClient() {
     setErr(null);
     setLoading(true);
 
-    console.log('[LOGIN] Attempting login for:', email);
+    console.log('[LOGIN-V4] Iniciando login para:', email);
 
     try {
-      // Login direto com NextAuth
-      const res = await signIn("credentials", {
-        email,
+      // Usar o fluxo padrão do NextAuth com redirect para /admin
+      const result = await signIn("credentials", {
+        email: email.toLowerCase().trim(),
         password,
-        callbackUrl: '/post-login',
-        redirect: true,
+        callbackUrl: "/admin", // Admin agora força o redirecionamento correto
+        redirect: true, // Deixa o NextAuth controlar o redirecionamento
       });
 
-  console.log('[LOGIN] SignIn response:', res);
-
-  if (res && (res as any).error) {
-        console.log('[LOGIN] NextAuth error:', res.error);
-        setErr(`Erro de autenticação: ${res.error}`);
+      // Se chegou aqui, algo deu errado (não deveria com redirect: true)
+      console.log('[LOGIN-V4] Resultado inesperado:', result);
+      
+      if (result?.error) {
+        setErr(`Erro de autenticação: ${result.error}`);
         setLoading(false);
         return;
       }
 
-  // Quando redirect:true, o NextAuth já redireciona. Se ainda estamos aqui, talvez houve algo inesperado.
-  console.log('[LOGIN] signIn retornou (possível redirecionamento em andamento).');
-  return;
-
-      // Fallback - se não há erro nem ok, algo deu errado
-      console.log('[LOGIN] Unexpected NextAuth result:', res);
-      setErr("Resultado inesperado do NextAuth. Verifique o console.");
     } catch (error) {
-      console.error("[LOGIN] Exception during login:", error);
+      console.error("[LOGIN-V4] Erro durante login:", error);
       setErr(`Erro durante login: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-    } finally {
       setLoading(false);
     }
   }
 
   return (
     <main className="container py-4">
-      <h1 className="h4 mb-3">Entrar no Varejofflex</h1>
-  <small className="text-muted mb-3 d-block">Versão: 3.2 - SSR Redirect - {new Date().toLocaleString()}</small>
+      <h1 className="h4 mb-3">Entrar no VarejoFlex</h1>
+      <small className="text-muted mb-3 d-block">Versão: 4.0 - Fluxo Radical - {new Date().toLocaleString()}</small>
       <form onSubmit={onSubmit} className="col-12 col-md-6 col-lg-4">
         <div className="mb-3">
           <label className="form-label">E-mail</label>
