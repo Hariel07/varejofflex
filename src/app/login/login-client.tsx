@@ -42,13 +42,24 @@ export default function LoginClient() {
       }
 
       if (res?.ok) {
-        console.log('[LOGIN] Success, redirecting to:', '/dashboard/owner');
-        
-        // Aguardar um pouco para garantir que a sessão foi criada
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Redirecionar diretamente para o dashboard owner
-        router.push('/dashboard/owner');
+        console.log('[LOGIN] Success, fetching session for dynamic redirect');
+        // Espera breve para garantir atualização de sessão
+        await new Promise(r => setTimeout(r, 400));
+        try {
+          const sRes = await fetch('/api/auth/session');
+          const sJson = await sRes.json();
+          console.log('[LOGIN] Session fetched:', sJson);
+          let destination = callbackUrl;
+          const userType = sJson?.user?.userType || sJson?.user?.role;
+          if (userType === 'owner_saas') destination = '/dashboard/owner';
+          else if (userType === 'lojista') destination = '/dashboard/lojista';
+          else destination = '/dashboard';
+          console.log('[LOGIN] Redirect decision:', { userType, destination });
+          router.push(destination);
+        } catch (e) {
+          console.log('[LOGIN] Failed to fetch session, fallback /dashboard');
+          router.push('/dashboard');
+        }
         return;
       }
 
@@ -66,7 +77,7 @@ export default function LoginClient() {
   return (
     <main className="container py-4">
       <h1 className="h4 mb-3">Entrar no Varejofflex</h1>
-      <small className="text-muted mb-3 d-block">Versão: 3.0 - Direct Owner Redirect - {new Date().toLocaleString()}</small>
+  <small className="text-muted mb-3 d-block">Versão: 3.1 - Dynamic Redirect - {new Date().toLocaleString()}</small>
       <form onSubmit={onSubmit} className="col-12 col-md-6 col-lg-4">
         <div className="mb-3">
           <label className="form-label">E-mail</label>

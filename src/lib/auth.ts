@@ -62,12 +62,14 @@ export const authOptions: AuthOptions = {
 
           console.log('[AUTH] Authentication successful, creating user object');
           
-          // Retorna o objeto de usuário simples
+          // Retorna o objeto de usuário simples (inclui userType e companyId para o middleware via JWT)
           const authUser = {
             id: String((userDoc as any)._id),
             name: (userDoc as any).name,
             email: (userDoc as any).email,
             role: (userDoc as any).role,
+            userType: (userDoc as any).userType || ((userDoc as any).role === 'owner_saas' ? 'owner_saas' : 'lojista'),
+            companyId: (userDoc as any).companyId?._id?.toString(),
           };
           
           console.log('[AUTH] Returning user:', authUser);
@@ -97,54 +99,48 @@ export const authOptions: AuthOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        // Garantir que user tem a propriedade role
         const authUser = user as any;
         token.role = authUser.role;
         token.id = authUser.id;
+        token.userType = authUser.userType || (authUser.role === 'owner_saas' ? 'owner_saas' : 'lojista');
+        if (authUser.companyId) token.companyId = authUser.companyId;
       }
       return token;
     },
 
     async session({ session, token }) {
       if (session.user && token) {
-        const userId = token.sub || token.id;
-        const role = token.role as Role;
-        
-        // Buscar dados completos do usuário para criar o contexto
+        const userId = (token as any).sub || (token as any).id;
+        const role = (token as any).role as Role;
+        const userType: UserType = (token as any).userType || (role === 'owner_saas' ? 'owner_saas' : 'lojista');
+        const baseUser: any = {
+          id: userId,
+          role,
+          userType,
+        };
         try {
           await dbConnect();
           const userDoc = await User.findById(userId).populate('companyId').lean();
-          
           if (userDoc) {
-            // Determinar userType baseado no role
-            const userType: UserType = role === 'owner_saas' ? 'owner_saas' : 'lojista';
-            
-            // Criar tenant context
+            baseUser.name = (userDoc as any).name;
+            baseUser.email = (userDoc as any).email;
+            baseUser.companyId = (userDoc as any).companyId?._id?.toString();
             const tenantContext = createTenantContext(
-              role, 
-              userType, 
-              (userDoc as any).companyId?._id?.toString()
+              role,
+              userType,
+              baseUser.companyId
             );
-            
-            // Montar objeto de usuário completo
-            (session.user as any) = {
-              id: userId,
-              name: (userDoc as any).name,
-              email: (userDoc as any).email,
-              role: role,
-              userType: userType,
-              companyId: (userDoc as any).companyId?._id?.toString(),
-              tenantContext: tenantContext,
-            };
-            
+            baseUser.tenantContext = tenantContext;
             console.log('[AUTH] Session created with userType:', userType, 'role:', role);
           }
         } catch (error) {
           console.error('[AUTH] Error creating session context:', error);
-          // Fallback para dados básicos
-          (session.user as any).id = userId;
-          (session.user as any).role = role;
         }
+        // Garantir tenantContext mínimo se não criado
+        if (!baseUser.tenantContext) {
+          baseUser.tenantContext = createTenantContext(role, userType, baseUser.companyId);
+        }
+        (session.user as any) = baseUser;
       }
       return session;
     },
