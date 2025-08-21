@@ -118,6 +118,10 @@ export const authOptions: AuthOptions = {
           role,
           userType,
         };
+  // Define campos mínimos imediatamente para evitar condições de corrida no cliente
+  (session.user as any).id = userId;
+  (session.user as any).role = role;
+  (session.user as any).userType = userType;
         try {
           await dbConnect();
           const userDoc = await User.findById(userId).populate('companyId').lean();
