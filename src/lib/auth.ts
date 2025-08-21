@@ -21,61 +21,85 @@ export const authOptions: AuthOptions = {
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
+        const timestamp = new Date().toISOString();
         try {
-          console.log('[AUTH] Starting authorization for:', credentials?.email);
+          console.log(`[AUTH-${timestamp}] 🔍 Starting authorization for:`, credentials?.email);
           
           if (!credentials?.email || !credentials.password) {
-            console.log('[AUTH] Missing credentials');
+            console.log(`[AUTH-${timestamp}] ❌ Missing credentials - email: ${!!credentials?.email}, password: ${!!credentials?.password}`);
             return null;
           }
 
+          console.log(`[AUTH-${timestamp}] 🔌 Attempting database connection...`);
           await dbConnect();
-          console.log('[AUTH] Connected to database');
+          console.log(`[AUTH-${timestamp}] ✅ Database connected successfully`);
 
           // Busca o usuário e popula a company se existir
+          console.log(`[AUTH-${timestamp}] 🔍 Searching for user: ${credentials.email.toLowerCase()}`);
           const userDoc = await User.findOne({
             email: credentials.email.toLowerCase(),
             isActive: true,
           }).populate('companyId').lean();
 
-          console.log('[AUTH] User search result:', !!userDoc, userDoc ? { 
-            id: (userDoc as any)?._id?.toString(), 
-            email: (userDoc as any)?.email, 
-            role: (userDoc as any)?.role 
-          } : null);
+          const userExists = !!userDoc;
+          console.log(`[AUTH-${timestamp}] 👤 User search result:`, {
+            found: userExists,
+            id: userExists ? (userDoc as any)?._id?.toString() : null,
+            email: userExists ? (userDoc as any)?.email : null,
+            role: userExists ? (userDoc as any)?.role : null,
+            userType: userExists ? (userDoc as any)?.userType : null,
+            isActive: userExists ? (userDoc as any)?.isActive : null,
+            hasCompany: userExists ? !!(userDoc as any)?.companyId : null
+          });
           
           if (!userDoc) {
-            console.log('[AUTH] User not found in database');
+            console.log(`[AUTH-${timestamp}] ❌ User not found in database or inactive`);
             return null;
           }
 
-          const ok = await bcrypt.compare(
+          console.log(`[AUTH-${timestamp}] 🔐 Comparing password hash...`);
+          const passwordMatch = await bcrypt.compare(
             credentials.password,
             (userDoc as any).passwordHash
           );
           
-          console.log('[AUTH] Password comparison result:', ok);
-          if (!ok) {
-            console.log('[AUTH] Password mismatch');
+          console.log(`[AUTH-${timestamp}] 🔐 Password comparison result:`, passwordMatch);
+          if (!passwordMatch) {
+            console.log(`[AUTH-${timestamp}] ❌ Password mismatch for user: ${credentials.email}`);
             return null;
           }
 
-          console.log('[AUTH] Authentication successful, creating user object');
+          console.log(`[AUTH-${timestamp}] ✅ Authentication successful, creating user object`);
+          
+          // Determinar userType
+          const role = (userDoc as any).role;
+          const userType = (userDoc as any).userType || (role === 'owner_saas' ? 'owner_saas' : 'lojista');
           
           // Retorna o objeto de usuário simples (inclui userType e companyId para o middleware via JWT)
           const authUser = {
             id: String((userDoc as any)._id),
             name: (userDoc as any).name,
             email: (userDoc as any).email,
-            role: (userDoc as any).role,
-            userType: (userDoc as any).userType || ((userDoc as any).role === 'owner_saas' ? 'owner_saas' : 'lojista'),
+            role: role,
+            userType: userType,
             companyId: (userDoc as any).companyId?._id?.toString(),
           };
           
-          console.log('[AUTH] Returning user:', authUser);
+          console.log(`[AUTH-${timestamp}] 🎯 Returning authenticated user:`, {
+            id: authUser.id,
+            email: authUser.email,
+            role: authUser.role,
+            userType: authUser.userType,
+            hasCompanyId: !!authUser.companyId
+          });
+          
           return authUser;
         } catch (error) {
-          console.error("[AUTH] Authorization error:", error);
+          console.error(`[AUTH-${timestamp}] 💥 Critical authorization error:`, {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+            email: credentials?.email
+          });
           return null;
         }
       },
@@ -93,54 +117,125 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async jwt({ token, user }) {
+      const timestamp = new Date().toISOString();
+      console.log(`[JWT-${timestamp}] 🔄 Processing JWT...`);
+      
       if (user) {
         const authUser = user as any;
+        console.log(`[JWT-${timestamp}] 👤 User login detected:`, {
+          id: authUser.id,
+          role: authUser.role,
+          userType: authUser.userType,
+          hasCompanyId: !!authUser.companyId
+        });
+        
         token.role = authUser.role;
         token.id = authUser.id;
         token.userType = authUser.userType || (authUser.role === 'owner_saas' ? 'owner_saas' : 'lojista');
         if (authUser.companyId) token.companyId = authUser.companyId;
+        
+        console.log(`[JWT-${timestamp}] 🔑 Token enriched:`, {
+          id: token.id,
+          role: token.role,
+          userType: token.userType,
+          hasCompanyId: !!token.companyId
+        });
+      } else {
+        console.log(`[JWT-${timestamp}] 🔄 Existing token reuse:`, {
+          id: token.id,
+          role: token.role,
+          userType: token.userType,
+          hasCompanyId: !!token.companyId
+        });
       }
       return token;
     },
 
     async session({ session, token }) {
+      const timestamp = new Date().toISOString();
+      console.log(`[SESSION-${timestamp}] 🔄 Creating session...`);
+      
       if (session.user && token) {
         const userId = (token as any).sub || (token as any).id;
         const role = (token as any).role as Role;
         const userType: UserType = (token as any).userType || (role === 'owner_saas' ? 'owner_saas' : 'lojista');
+        
+        console.log(`[SESSION-${timestamp}] 📋 Token data:`, {
+          userId,
+          role,
+          userType,
+          hasCompanyId: !!(token as any).companyId
+        });
+        
         const baseUser: any = {
           id: userId,
           role,
           userType,
         };
-  // Define campos mínimos imediatamente para evitar condições de corrida no cliente
-  (session.user as any).id = userId;
-  (session.user as any).role = role;
-  (session.user as any).userType = userType;
+        
+        // Define campos mínimos imediatamente para evitar condições de corrida no cliente
+        (session.user as any).id = userId;
+        (session.user as any).role = role;
+        (session.user as any).userType = userType;
+        
         try {
+          console.log(`[SESSION-${timestamp}] 🔌 Connecting to database for full user data...`);
           await dbConnect();
+          
+          console.log(`[SESSION-${timestamp}] 🔍 Fetching user document: ${userId}`);
           const userDoc = await User.findById(userId).populate('companyId').lean();
+          
           if (userDoc) {
             baseUser.name = (userDoc as any).name;
             baseUser.email = (userDoc as any).email;
             baseUser.companyId = (userDoc as any).companyId?._id?.toString();
+            
+            console.log(`[SESSION-${timestamp}] 👤 User document found:`, {
+              name: baseUser.name,
+              email: baseUser.email,
+              hasCompanyId: !!baseUser.companyId
+            });
+            
             const tenantContext = createTenantContext(
               role,
               userType,
               baseUser.companyId
             );
             baseUser.tenantContext = tenantContext;
-            console.log('[AUTH] Session created with userType:', userType, 'role:', role);
+            
+            console.log(`[SESSION-${timestamp}] 🏢 Tenant context created:`, {
+              tenantType: tenantContext.tenantType,
+              userType: tenantContext.userType,
+              permissionsCount: tenantContext.permissions.length
+            });
+          } else {
+            console.log(`[SESSION-${timestamp}] ⚠️ User document not found for ID: ${userId}`);
           }
         } catch (error) {
-          console.error('[AUTH] Error creating session context:', error);
+          console.error(`[SESSION-${timestamp}] ❌ Error creating session context:`, {
+            error: error instanceof Error ? error.message : String(error),
+            userId
+          });
         }
+        
         // Garantir tenantContext mínimo se não criado
         if (!baseUser.tenantContext) {
+          console.log(`[SESSION-${timestamp}] 🔧 Creating fallback tenant context...`);
           baseUser.tenantContext = createTenantContext(role, userType, baseUser.companyId);
         }
+        
         (session.user as any) = baseUser;
+        
+        console.log(`[SESSION-${timestamp}] ✅ Final session user:`, {
+          id: baseUser.id,
+          role: baseUser.role,
+          userType: baseUser.userType,
+          hasTenantContext: !!baseUser.tenantContext
+        });
+      } else {
+        console.log(`[SESSION-${timestamp}] ⚠️ No session.user or token found`);
       }
+      
       return session;
     },
   },
