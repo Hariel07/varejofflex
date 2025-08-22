@@ -31,13 +31,18 @@ export async function dbConnect() {
   if (!global._mongoose!.promise) {
     console.log('🔗 Creating new MongoDB connection...');
     global._mongoose!.promise = mongoose.connect(uri!, {
-      // opções se necessário
-      // serverSelectionTimeoutMS: 15000,
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 30000,
+      maxPoolSize: 10,
+      retryWrites: true,
+      retryReads: true,
     }).then((m) => {
       console.log('✅ MongoDB connected successfully');
       return m;
     }).catch((error) => {
       console.error('❌ MongoDB connection failed:', error.message);
+      global._mongoose!.promise = null; // Reset para permitir nova tentativa
       throw error;
     });
   }

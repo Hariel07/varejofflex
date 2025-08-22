@@ -1,9 +1,15 @@
 // scripts/create-test-user.js
+require('dotenv').config({ path: '.env.local' });
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// MongoDB URI - substitua pela sua
-const MONGODB_URI = 'mongodb+srv://hariel1996hs2009:rqgw9BbCLYDKNdHO@varejoflex.y4txl.mongodb.net/varejoflex?retryWrites=true&w=majority&appName=VarejoFlex';
+// MongoDB URI - lê das variáveis de ambiente
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI não encontrada nas variáveis de ambiente');
+  process.exit(1);
+}
 
 // Schema simples do usuário
 const userSchema = new mongoose.Schema({
