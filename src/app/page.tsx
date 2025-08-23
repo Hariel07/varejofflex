@@ -1,13 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
 
-export const metadata = {
-  title: "Varejofflex — A revolução do varejo digital",
-  description:
-    "Transforme seu negócio com nossa plataforma all-in-one. PDV inteligente, loja online, delivery e muito mais. Comece gratuitamente!",
-};
-
 export default function HomePage() {
+  // Função para fechar o menu mobile
+  const closeNavbar = () => {
+    const navbarCollapse = document.getElementById('navbarNav');
+    if (navbarCollapse && window.innerWidth < 992) {
+      const isOpen = navbarCollapse.classList.contains('show');
+      if (isOpen) {
+        navbarCollapse.classList.remove('show');
+      }
+    }
+  };
+
   return (
     <>
       {/* Header/Menu Fixo */}
@@ -59,7 +66,9 @@ export default function HomePage() {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav ms-auto align-items-center">
                 <li className="nav-item">
-                  <a className="nav-link" href="#demos" style={{
+                  <a className="nav-link" href="#demos" 
+                     onClick={closeNavbar}
+                     style={{
                     color: '#1E293B',
                     fontWeight: '500',
                     transition: 'color 0.3s ease',
@@ -67,7 +76,9 @@ export default function HomePage() {
                   }}>Demos</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#pricing" style={{
+                  <a className="nav-link" href="#pricing" 
+                     onClick={closeNavbar}
+                     style={{
                     color: '#1E293B',
                     fontWeight: '500',
                     transition: 'color 0.3s ease',
@@ -75,7 +86,9 @@ export default function HomePage() {
                   }}>Planos</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#features" style={{
+                  <a className="nav-link" href="#features" 
+                     onClick={closeNavbar}
+                     style={{
                     color: '#1E293B',
                     fontWeight: '500',
                     transition: 'color 0.3s ease',
@@ -83,7 +96,9 @@ export default function HomePage() {
                   }}>Recursos</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#testimonials" style={{
+                  <a className="nav-link" href="#testimonials" 
+                     onClick={closeNavbar}
+                     style={{
                     color: '#1E293B',
                     fontWeight: '500',
                     transition: 'color 0.3s ease',
@@ -91,7 +106,9 @@ export default function HomePage() {
                   }}>Depoimentos</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#faq" style={{
+                  <a className="nav-link" href="#faq" 
+                     onClick={closeNavbar}
+                     style={{
                     color: '#1E293B',
                     fontWeight: '500',
                     transition: 'color 0.3s ease',
@@ -100,36 +117,26 @@ export default function HomePage() {
                 </li>
                 
                 {/* Separador visual no mobile */}
-                <li className="nav-item d-lg-none">
-                  <hr className="my-3" style={{ borderColor: 'rgba(59, 130, 246, 0.2)' }} />
+                <li className="nav-item d-lg-none" style={{ margin: '0.25rem 0' }}>
+                  <hr style={{ 
+                    borderColor: 'rgba(59, 130, 246, 0.2)', 
+                    margin: '0.25rem 1rem',
+                    opacity: 0.5
+                  }} />
                 </li>
                 
                 {/* Botões de Ação */}
-                <li className="nav-item" style={{ margin: '0 0.25rem' }}>
+                <li className="nav-item" style={{ margin: '0.25rem 0.25rem' }}>
                   <a href="/login" className="nav-link" style={{
                     color: '#3B82F6',
                     fontWeight: '600',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '8px',
-                    transition: 'all 0.3s ease',
-                    textAlign: 'center'
-                  }}>
-                    Entrar
-                  </a>
-                </li>
-                <li className="nav-item" style={{ margin: '0 0.25rem' }}>
-                  <a href="/register" className="nav-link" style={{
-                    background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
-                    color: 'white',
-                    fontWeight: '600',
                     padding: '0.5rem 1.5rem',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
                     transition: 'all 0.3s ease',
                     textAlign: 'center',
-                    marginTop: '0.5rem'
+                    border: '2px solid #3B82F6'
                   }}>
-                    Teste Grátis
+                    Entrar
                   </a>
                 </li>
               </ul>
@@ -402,328 +409,1332 @@ export default function HomePage() {
 
       {/* Demos por Segmento */}
       <section style={{
-        padding: '5rem 0',
-        background: 'rgba(255, 255, 255, 0.5)',
-        backdropFilter: 'blur(10px)'
+        padding: '6rem 0',
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(147, 51, 234, 0.03) 100%)',
+        position: 'relative',
+        overflow: 'hidden'
       }} id="demos">
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{
-              fontSize: '3rem',
-              fontWeight: 'bold',
-              marginBottom: '1.5rem',
-              color: '#1E293B'
+        {/* Background Pattern */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+              radial-gradient(circle at 40% 60%, rgba(147, 51, 234, 0.04) 0%, transparent 40%)
+            `,
+            animation: 'float 8s ease-in-out infinite',
+            zIndex: 1
+          }}
+        />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          {/* Header Redesigned */}
+          <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '1rem',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '50px',
+              padding: '0.8rem 2rem',
+              marginBottom: '2rem',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
             }}>
-              Veja como funciona no <span style={{
+              <div style={{ fontSize: '2rem' }}>🎯</div>
+              <span style={{
                 background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>seu segmento</span>
-            </h2>
-            <p style={{
-              fontSize: '1.25rem',
-              color: '#64748B',
-              maxWidth: '600px',
-              margin: '0 auto'
+                backgroundClip: 'text',
+                fontWeight: '800',
+                fontSize: '1.2rem'
+              }}>
+                EXPERIMENTE NOSSOS SEGMENTOS
+              </span>
+            </div>
+
+            <h2 style={{
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontWeight: '900',
+              marginBottom: '1.5rem',
+              color: '#1E293B',
+              lineHeight: '1.1'
             }}>
-              Demos interativas personalizadas para cada tipo de negócio
+              Descubra o poder do<br/>
+              <span style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #EC4899 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>seu negócio digital</span>
+            </h2>
+            
+            <p style={{
+              fontSize: '1.3rem',
+              color: '#64748B',
+              maxWidth: '800px',
+              margin: '0 auto 3rem auto',
+              lineHeight: '1.7',
+              fontWeight: '500'
+            }}>
+              Plataformas personalizadas que transformam a forma como você vende.
+              <br />
+              <strong style={{ color: '#3B82F6' }}>Experimente agora nossa demo de delivery</strong> e veja os próximos lançamentos.
             </p>
+
+            {/* Status Cards */}
+            <div className="row g-4 justify-content-center mb-4">
+              <div className="col-lg-4 col-md-6">
+                <div style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  borderRadius: '24px',
+                  padding: '2rem',
+                  color: 'white',
+                  boxShadow: '0 25px 80px rgba(16, 185, 129, 0.4)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  transform: 'scale(1.05)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '-50%',
+                    right: '-50%',
+                    width: '200%',
+                    height: '200%',
+                    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
+                    animation: 'spin 20s linear infinite'
+                  }}></div>
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚀</div>
+                    <h5 style={{ fontWeight: '900', marginBottom: '0.5rem', fontSize: '1.3rem' }}>
+                      DELIVERY LIVE
+                    </h5>
+                    <p style={{ margin: 0, opacity: 0.9, fontSize: '1rem' }}>
+                      Sistema completo e funcional
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="col-lg-4 col-md-6">
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '24px',
+                  padding: '2rem',
+                  border: '2px solid rgba(251, 191, 36, 0.3)',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
+                  <h5 style={{ fontWeight: '800', marginBottom: '0.5rem', color: '#1e293b', fontSize: '1.3rem' }}>
+                    EM PRODUÇÃO
+                  </h5>
+                  <p style={{ margin: 0, color: '#64748b', fontSize: '1rem' }}>
+                    6 segmentos em desenvolvimento
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="row g-4">
-            {/* Lanchonetes */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-warning text-white text-center py-3">
-                  <i className="bi bi-cup-hot fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Lanchonetes</h5>
+          {/* Demo Principal - Delivery */}
+          <div className="row justify-content-center mb-5">
+            <div className="col-lg-10">
+              <div 
+                style={{
+                  background: 'rgba(255, 255, 255, 0.98)',
+                  backdropFilter: 'blur(30px)',
+                  borderRadius: '32px',
+                  border: '3px solid transparent',
+                  backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.98)), linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6)',
+                  backgroundOrigin: 'border-box',
+                  backgroundClip: 'content-box, border-box',
+                  boxShadow: `
+                    0 40px 120px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9)
+                  `,
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Animated Background */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: `
+                    radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%)
+                  `,
+                  animation: 'pulse 4s ease-in-out infinite',
+                  zIndex: 1
+                }}></div>
+
+                {/* Badge Premium */}
+                <div style={{
+                  position: 'absolute',
+                  top: '2rem',
+                  right: '2rem',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '25px',
+                  fontSize: '0.9rem',
+                  fontWeight: '800',
+                  boxShadow: '0 12px 30px rgba(16, 185, 129, 0.4)',
+                  zIndex: 3,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <div style={{ 
+                    width: '8px', 
+                    height: '8px', 
+                    background: '#22c55e', 
+                    borderRadius: '50%',
+                    animation: 'pulse 2s infinite'
+                  }}></div>
+                  AO VIVO
                 </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Cardápio digital responsivo</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Pedidos online + balcão</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Gestão de combos</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Controle de ingredientes</li>
-                    </ul>
-                  </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-warning rounded-circle p-2 me-2">
-                        <i className="bi bi-phone text-white"></i>
+
+                <div className="row align-items-center" style={{ position: 'relative', zIndex: 2, padding: '3rem' }}>
+                  {/* Left Side - Content */}
+                  <div className="col-lg-6">
+                    <div style={{ marginBottom: '2rem' }}>
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        borderRadius: '50px',
+                        padding: '8px 20px',
+                        marginBottom: '1.5rem'
+                      }}>
+                        <div style={{ fontSize: '1.5rem' }}>🚚</div>
+                        <span style={{ color: '#059669', fontWeight: '700', fontSize: '0.9rem' }}>
+                          PLATAFORMA DE DELIVERY
+                        </span>
                       </div>
-                      <span className="fw-bold">Demo Lanchonete</span>
-                    </div>
-                    <div className="small text-muted mb-2">📱 Cardápio Burguer House</div>
-                    <div className="row g-2">
-                      <div className="col-6">
-                        <div className="bg-white rounded p-2 text-center small">
-                          🍔 X-Bacon<br/>
-                          <span className="text-success fw-bold">R$ 28,90</span>
+
+                      <h3 style={{
+                        fontSize: 'clamp(2rem, 4vw, 3rem)',
+                        fontWeight: '900',
+                        marginBottom: '1.5rem',
+                        color: '#1e293b',
+                        lineHeight: '1.2'
+                      }}>
+                        Sistema Completo de
+                        <br />
+                        <span style={{
+                          background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}>
+                          Delivery Inteligente
+                        </span>
+                      </h3>
+
+                      <p style={{
+                        fontSize: '1.2rem',
+                        color: '#64748b',
+                        lineHeight: '1.7',
+                        marginBottom: '2rem'
+                      }}>
+                        A plataforma mais avançada para delivery do Brasil. 
+                        <strong style={{ color: '#10b981' }}> Testada, aprovada e 100% funcional.</strong>
+                      </p>
+
+                      {/* Features Grid */}
+                      <div className="row g-3 mb-4">
+                        <div className="col-6">
+                          <div style={{
+                            background: 'rgba(16, 185, 129, 0.08)',
+                            borderRadius: '16px',
+                            padding: '1.2rem',
+                            border: '1px solid rgba(16, 185, 129, 0.2)',
+                            transition: 'all 0.3s ease'
+                          }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</div>
+                            <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '0.3rem' }}>
+                              Rastreamento Live
+                            </h6>
+                            <small style={{ color: '#64748b' }}>
+                              GPS em tempo real
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div style={{
+                            background: 'rgba(59, 130, 246, 0.08)',
+                            borderRadius: '16px',
+                            padding: '1.2rem',
+                            border: '1px solid rgba(59, 130, 246, 0.2)'
+                          }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💳</div>
+                            <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '0.3rem' }}>
+                              Pagamento Smart
+                            </h6>
+                            <small style={{ color: '#64748b' }}>
+                              PIX, cartão, dinheiro
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div style={{
+                            background: 'rgba(147, 51, 234, 0.08)',
+                            borderRadius: '16px',
+                            padding: '1.2rem',
+                            border: '1px solid rgba(147, 51, 234, 0.2)'
+                          }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚡</div>
+                            <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '0.3rem' }}>
+                              IA Otimizada
+                            </h6>
+                            <small style={{ color: '#64748b' }}>
+                              Rotas inteligentes
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div style={{
+                            background: 'rgba(251, 191, 36, 0.08)',
+                            borderRadius: '16px',
+                            padding: '1.2rem',
+                            border: '1px solid rgba(251, 191, 36, 0.2)'
+                          }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⭐</div>
+                            <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '0.3rem' }}>
+                              Avaliações 5★
+                            </h6>
+                            <small style={{ color: '#64748b' }}>
+                              Sistema completo
+                            </small>
+                          </div>
                         </div>
                       </div>
-                      <div className="col-6">
-                        <div className="bg-white rounded p-2 text-center small">
-                          🍟 Batata G<br/>
-                          <span className="text-success fw-bold">R$ 12,90</span>
+                    </div>
+                  </div>
+
+                  {/* Right Side - Demo Preview */}
+                  <div className="col-lg-6">
+                    <div style={{
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.05))',
+                      borderRadius: '24px',
+                      padding: '2rem',
+                      border: '1px solid rgba(16, 185, 129, 0.2)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}>
+                      {/* Mobile Frame */}
+                      <div style={{
+                        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                        borderRadius: '24px',
+                        padding: '1.5rem',
+                        marginBottom: '1.5rem',
+                        position: 'relative',
+                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+                      }}>
+                        <div style={{
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          borderRadius: '20px',
+                          width: '60px',
+                          height: '4px',
+                          margin: '0 auto 1rem auto'
+                        }}></div>
+                        
+                        <div style={{
+                          background: 'white',
+                          borderRadius: '16px',
+                          padding: '1.5rem',
+                          minHeight: '200px'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            marginBottom: '1rem'
+                          }}>
+                            <div style={{
+                              width: '40px',
+                              height: '40px',
+                              background: 'linear-gradient(135deg, #10b981, #059669)',
+                              borderRadius: '12px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontSize: '1.2rem'
+                            }}>
+                              🚚
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '1rem' }}>
+                                VarejoFlex Delivery
+                              </div>
+                              <div style={{ color: '#64748b', fontSize: '0.8rem' }}>
+                                Sistema profissional
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="row g-2">
+                            <div className="col-6">
+                              <div style={{
+                                background: 'rgba(251, 191, 36, 0.1)',
+                                border: '1px solid rgba(251, 191, 36, 0.3)',
+                                borderRadius: '12px',
+                                padding: '1rem',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>🍔</div>
+                                <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.9rem' }}>
+                                  Lanchonete
+                                </div>
+                                <div style={{ color: '#10b981', fontSize: '0.8rem', fontWeight: '600' }}>
+                                  32min
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-6">
+                              <div style={{
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                borderRadius: '12px',
+                                padding: '1rem',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>🍕</div>
+                                <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.9rem' }}>
+                                  Pizzaria
+                                </div>
+                                <div style={{ color: '#10b981', fontSize: '0.8rem', fontWeight: '600' }}>
+                                  38min
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div style={{
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: 'white',
+                            borderRadius: '12px',
+                            padding: '1rem',
+                            textAlign: 'center',
+                            marginTop: '1rem'
+                          }}>
+                            <div style={{ fontWeight: '700', marginBottom: '0.3rem' }}>
+                              ✅ Demo 100% Operacional
+                            </div>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+                              Clique e teste agora mesmo
+                            </div>
+                          </div>
                         </div>
+                      </div>
+
+                      {/* CTA Button */}
+                      <a 
+                        href="/vf-delivery-demo.html" 
+                        target="_blank"
+                        style={{
+                          background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',
+                          border: 'none',
+                          borderRadius: '20px',
+                          padding: '1.2rem 2.5rem',
+                          color: 'white',
+                          fontWeight: '800',
+                          fontSize: '1.1rem',
+                          textDecoration: 'none',
+                          display: 'block',
+                          textAlign: 'center',
+                          boxShadow: '0 20px 50px rgba(16, 185, 129, 0.4)',
+                          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                          position: 'relative',
+                          overflow: 'hidden'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                          e.currentTarget.style.boxShadow = '0 25px 60px rgba(16, 185, 129, 0.6)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                          e.currentTarget.style.boxShadow = '0 20px 50px rgba(16, 185, 129, 0.4)';
+                        }}
+                      >
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                          <span style={{ fontSize: '1.3rem' }}>🚀</span>
+                          Testar Demo Delivery Agora
+                          <span style={{ fontSize: '1rem' }}>→</span>
+                        </span>
+                      </a>
+
+                      <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                        <small style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                          <span style={{ color: '#10b981' }}>●</span> Demo abre em nova aba • Sem cadastro necessário
+                        </small>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/lanchonete" className="btn btn-warning w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Lanchonete
-                  </a>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Pizzarias */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-danger text-white text-center py-3">
-                  <i className="bi bi-pizza fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Pizzarias</h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Delivery com rastreamento</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Configurador de sabores</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Tempo de preparo inteligente</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>KDS para cozinha</li>
-                    </ul>
-                  </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-danger rounded-circle p-2 me-2">
-                        <i className="bi bi-truck text-white"></i>
-                      </div>
-                      <span className="fw-bold">Demo Pizzaria</span>
-                    </div>
-                    <div className="small text-muted mb-2">🍕 Delivery Nonna Mia</div>
-                    <div className="bg-white rounded p-2 mb-2">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="small">Pizza Margherita G</span>
-                        <span className="text-success fw-bold small">R$ 42,90</span>
-                      </div>
-                    </div>
-                    <div className="bg-success text-white rounded p-2 text-center small">
-                      🚚 Entregue em 35min
-                    </div>
-                  </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/pizzaria" className="btn btn-danger w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Pizzaria
-                  </a>
-                </div>
+          {/* Próximos Segmentos */}
+          <div style={{ marginTop: '4rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '50px',
+                padding: '0.8rem 2rem',
+                marginBottom: '2rem',
+                boxShadow: '0 15px 40px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(251, 191, 36, 0.3)'
+              }}>
+                <div style={{ fontSize: '1.5rem' }}>⚡</div>
+                <span style={{
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  fontWeight: '800',
+                  fontSize: '1rem'
+                }}>
+                  PRÓXIMOS LANÇAMENTOS
+                </span>
               </div>
+
+              <h3 style={{
+                fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
+                fontWeight: '800',
+                color: '#1e293b',
+                marginBottom: '1rem'
+              }}>
+                Segmentos em Desenvolvimento
+              </h3>
+              
+              <p style={{
+                fontSize: '1.1rem',
+                color: '#64748b',
+                maxWidth: '600px',
+                margin: '0 auto',
+                lineHeight: '1.6'
+              }}>
+                Estamos criando experiências únicas para cada tipo de negócio.
+                <br />
+                <strong style={{ color: '#f59e0b' }}>Em breve, demos específicas para seu segmento!</strong>
+              </p>
             </div>
 
-            {/* Moda & Acessórios */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-purple text-white text-center py-3">
-                  <i className="bi bi-bag fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Moda & Acessórios</h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Catálogo visual avançado</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Gestão de variações</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Controle de estoque por cor/tamanho</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Looks e combinações</li>
-                    </ul>
+            {/* Grid de Segmentos */}
+            <div className="row g-4">
+              {/* Lanchonetes */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(251, 191, 36, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  {/* Progress Bar */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #f59e0b 0%, #d97706 80%, #e5e7eb 80%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
+
+                  {/* Status Badge */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    80% concluído
                   </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-purple rounded-circle p-2 me-2">
-                        <i className="bi bi-heart text-white"></i>
+
+                  <div style={{ padding: '2rem' }}>
+                    {/* Icon & Title */}
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(251, 191, 36, 0.3)'
+                      }}>
+                        🍔
                       </div>
-                      <span className="fw-bold">Demo Moda</span>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Lanchonetes
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        Sistema especializado em fast food
+                      </p>
                     </div>
-                    <div className="small text-muted mb-2">👗 Boutique Elegance</div>
-                    <div className="row g-1">
-                      <div className="col-4">
-                        <div className="bg-white rounded p-1 text-center">
-                          <div className="bg-secondary rounded" style={{height: "30px"}}></div>
-                          <div className="small">Vestido</div>
+
+                    {/* Features Preview */}
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Cardápio digital responsivo</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Gestão de combos e promoções</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Controle de ingredientes</small>
                         </div>
                       </div>
-                      <div className="col-4">
-                        <div className="bg-white rounded p-1 text-center">
-                          <div className="bg-primary rounded" style={{height: "30px"}}></div>
-                          <div className="small">Blusa</div>
-                        </div>
+                    </div>
+
+                    {/* Status */}
+                    <div style={{
+                      background: 'rgba(251, 191, 36, 0.1)',
+                      border: '1px solid rgba(251, 191, 36, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#d97706', marginBottom: '0.3rem' }}>
+                        🚧 Finalização em andamento
                       </div>
-                      <div className="col-4">
-                        <div className="bg-white rounded p-1 text-center">
-                          <div className="bg-warning rounded" style={{height: "30px"}}></div>
-                          <div className="small">Acessório</div>
-                        </div>
-                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximas semanas
+                      </small>
                     </div>
                   </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/moda" className="btn btn-purple w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Moda
-                  </a>
                 </div>
               </div>
-            </div>
 
-            {/* Mercados */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-success text-white text-center py-3">
-                  <i className="bi bi-basket fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Mercados</h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Leitor código de barras</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Pesagem integrada</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Gestão de validade</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Promoções automáticas</li>
-                    </ul>
-                  </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-success rounded-circle p-2 me-2">
-                        <i className="bi bi-upc-scan text-white"></i>
-                      </div>
-                      <span className="fw-bold">Demo Mercado</span>
-                    </div>
-                    <div className="small text-muted mb-2">🛒 SuperMercado Central</div>
-                    <div className="bg-white rounded p-2">
-                      <div className="small mb-1">🥖 Pão Francês - 500g</div>
-                      <div className="d-flex justify-content-between">
-                        <span className="small text-muted">Código: 7891234567</span>
-                        <span className="text-success fw-bold small">R$ 8,50</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/mercado" className="btn btn-success w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Mercado
-                  </a>
-                </div>
-              </div>
-            </div>
+              {/* Pizzarias - CORRIGIDO O ÍCONE */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(239, 68, 68, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #ef4444 0%, #dc2626 75%, #e5e7eb 75%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
 
-            {/* Petshops */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-info text-white text-center py-3">
-                  <i className="bi bi-heart fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Petshops</h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Ficha completa dos pets</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Agendamento de serviços</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Histórico veterinário</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Lembrete de vacinas</li>
-                    </ul>
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    75% concluído
                   </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-info rounded-circle p-2 me-2">
-                        <i className="bi bi-calendar text-white"></i>
+
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(239, 68, 68, 0.3)'
+                      }}>
+                        🍕
                       </div>
-                      <span className="fw-bold">Demo Petshop</span>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Pizzarias
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        Plataforma otimizada para delivery
+                      </p>
                     </div>
-                    <div className="small text-muted mb-2">🐕 PetCare Premium</div>
-                    <div className="bg-white rounded p-2">
-                      <div className="d-flex align-items-center">
-                        <div className="bg-warning rounded-circle me-2" style={{width: "20px", height: "20px"}}></div>
-                        <div>
-                          <div className="small fw-bold">Rex - Golden Retriever</div>
-                          <div className="small text-muted">Banho e Tosa - 14:30</div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Configurador de sabores</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Tempo de preparo inteligente</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>KDS para cozinha</small>
                         </div>
                       </div>
                     </div>
+
+                    <div style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#dc2626', marginBottom: '0.3rem' }}>
+                        🚧 Finalização em andamento
+                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximas semanas
+                      </small>
+                    </div>
                   </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/petshop" className="btn btn-info w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Petshop
-                  </a>
                 </div>
               </div>
-            </div>
 
-            {/* Salões */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border-0 shadow-sm h-100 demo-card">
-                <div className="card-header bg-primary text-white text-center py-3">
-                  <i className="bi bi-scissors fs-1 mb-2"></i>
-                  <h5 className="mb-0 fw-bold">Salões de Beleza</h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <h6 className="fw-bold text-primary">✨ Recursos Exclusivos:</h6>
-                    <ul className="list-unstyled mb-0">
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Agenda online inteligente</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Gestão de profissionais</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Histórico de procedimentos</li>
-                      <li><i className="bi bi-check-circle text-success me-2"></i>Comissões automáticas</li>
-                    </ul>
+              {/* Moda */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(147, 51, 234, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #9333ea 0%, #7c3aed 60%, #e5e7eb 60%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
+
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    60% concluído
                   </div>
-                  <div className="demo-preview bg-light rounded-3 p-3 mb-3">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="bg-primary rounded-circle p-2 me-2">
-                        <i className="bi bi-person text-white"></i>
+
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(147, 51, 234, 0.3)'
+                      }}>
+                        👗
                       </div>
-                      <span className="fw-bold">Demo Salão</span>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Moda & Acessórios
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        E-commerce avançado para fashion
+                      </p>
                     </div>
-                    <div className="small text-muted mb-2">💄 Beleza & Estilo</div>
-                    <div className="bg-white rounded p-2">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <div className="small fw-bold">Corte + Escova</div>
-                          <div className="small text-muted">Ana Silva - 15:00</div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Catálogo visual avançado</small>
                         </div>
-                        <span className="text-success fw-bold small">R$ 85,00</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Gestão de variações</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Looks e combinações</small>
+                        </div>
                       </div>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(147, 51, 234, 0.1)',
+                      border: '1px solid rgba(147, 51, 234, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#7c3aed', marginBottom: '0.3rem' }}>
+                        ⚙️ Em desenvolvimento
+                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximos meses
+                      </small>
                     </div>
                   </div>
                 </div>
-                <div className="card-footer bg-transparent border-0 p-4 pt-0">
-                  <a href="/demo/salao" className="btn btn-primary w-100 fw-bold">
-                    <i className="bi bi-play-circle me-2"></i>
-                    Testar Demo Salão
-                  </a>
+              </div>
+
+              {/* Mercados */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(34, 197, 94, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #e5e7eb 50%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
+
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    50% concluído
+                  </div>
+
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(34, 197, 94, 0.3)'
+                      }}>
+                        🛒
+                      </div>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Mercados
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        Sistema completo para varejo
+                      </p>
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Leitor código de barras</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Pesagem integrada</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Gestão de validade</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(34, 197, 94, 0.1)',
+                      border: '1px solid rgba(34, 197, 94, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#16a34a', marginBottom: '0.3rem' }}>
+                        ⚙️ Em desenvolvimento
+                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximos meses
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Petshops */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(14, 165, 233, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #0ea5e9 0%, #0284c7 40%, #e5e7eb 40%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
+
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    40% concluído
+                  </div>
+
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(14, 165, 233, 0.3)'
+                      }}>
+                        🐕
+                      </div>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Petshops
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        Gestão completa para pets
+                      </p>
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Ficha completa dos pets</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Agendamento de serviços</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Histórico veterinário</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(14, 165, 233, 0.1)',
+                      border: '1px solid rgba(14, 165, 233, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#0284c7', marginBottom: '0.3rem' }}>
+                        ⚙️ Em desenvolvimento
+                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximos meses
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Salões */}
+              <div className="col-lg-4 col-md-6">
+                <div 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '2px solid rgba(59, 130, 246, 0.2)',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.08)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.08)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 30%, #e5e7eb 30%)',
+                    borderRadius: '20px 20px 0 0'
+                  }}></div>
+
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                    color: 'white',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    zIndex: 2
+                  }}>
+                    30% concluído
+                  </div>
+
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                      <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2.5rem',
+                        margin: '0 auto 1rem auto',
+                        boxShadow: '0 15px 30px rgba(59, 130, 246, 0.3)'
+                      }}>
+                        💄
+                      </div>
+                      <h5 style={{ fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+                        Salões de Beleza
+                      </h5>
+                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+                        Agendamento e gestão profissional
+                      </p>
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h6 style={{ fontWeight: '700', color: '#1e293b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        🎯 Recursos em desenvolvimento:
+                      </h6>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Agenda online inteligente</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Gestão de profissionais</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                          <small style={{ color: '#4a5568', fontWeight: '500' }}>Comissões automáticas</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: 'rgba(59, 130, 246, 0.1)',
+                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontWeight: '700', color: '#2563eb', marginBottom: '0.3rem' }}>
+                        ⚙️ Em desenvolvimento
+                      </div>
+                      <small style={{ color: '#64748b' }}>
+                        Previsão: próximos meses
+                      </small>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="text-center mt-5">
-            <div className="bg-primary text-white rounded-4 p-4 d-inline-block">
-              <h5 className="mb-2">🎯 Não encontrou seu segmento?</h5>
-              <p className="mb-3">Nossa plataforma se adapta a qualquer tipo de negócio!</p>
-              <a href="#contact" className="btn btn-warning">
-                Falar com Especialista
-              </a>
+            <div 
+              style={{
+                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05))',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                borderRadius: '24px',
+                padding: '3rem 2rem',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚀</div>
+              <h4 style={{ color: '#1e293b', fontWeight: '800', marginBottom: '1rem' }}>
+                Roadmap de Desenvolvimento
+              </h4>
+              <p style={{ color: '#4a5568', fontSize: '1.1rem', marginBottom: '2rem' }}>
+                Estamos trabalhando intensamente para entregar demos específicas para cada segmento. 
+                <br />
+                <strong style={{ color: '#3b82f6' }}>O delivery já está disponível</strong> e outros segmentos serão lançados gradualmente.
+              </p>
+              
+              <div className="row g-3 mb-4">
+                <div className="col-md-4">
+                  <div style={{
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    borderRadius: '16px',
+                    padding: '1.5rem 1rem',
+                    backdropFilter: 'blur(10px)'
+                  }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+                    <h6 style={{ color: '#10b981', fontWeight: '800', marginBottom: '0.5rem' }}>
+                      DISPONÍVEL AGORA
+                    </h6>
+                    <p style={{ color: '#4a5568', margin: 0, fontSize: '0.9rem' }}>
+                      Sistema de Delivery completo e funcional
+                    </p>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div style={{
+                    background: 'rgba(251, 191, 36, 0.1)',
+                    border: '1px solid rgba(251, 191, 36, 0.3)',
+                    borderRadius: '16px',
+                    padding: '1.5rem 1rem',
+                    backdropFilter: 'blur(10px)'
+                  }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🚧</div>
+                    <h6 style={{ color: '#f59e0b', fontWeight: '800', marginBottom: '0.5rem' }}>
+                      EM DESENVOLVIMENTO
+                    </h6>
+                    <p style={{ color: '#4a5568', margin: 0, fontSize: '0.9rem' }}>
+                      Lanchonetes, Pizzarias, Moda, Mercados, Petshops, Salões
+                    </p>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div style={{
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    border: '1px solid rgba(59, 130, 246, 0.3)',
+                    borderRadius: '16px',
+                    padding: '1.5rem 1rem',
+                    backdropFilter: 'blur(10px)'
+                  }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📅</div>
+                    <h6 style={{ color: '#3b82f6', fontWeight: '800', marginBottom: '0.5rem' }}>
+                      PRÓXIMOS MESES
+                    </h6>
+                    <p style={{ color: '#4a5568', margin: 0, fontSize: '0.9rem' }}>
+                      Farmácias, Conveniências e outros segmentos
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="d-flex flex-column flex-md-row gap-3 justify-content-center align-items-center">
+                <a 
+                  href="/vf-delivery-demo.html" 
+                  target="_blank"
+                  className="btn"
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '1rem 2rem',
+                    color: 'white',
+                    fontWeight: '700',
+                    fontSize: '1.1rem',
+                    textDecoration: 'none',
+                    boxShadow: '0 12px 30px rgba(16, 185, 129, 0.3)'
+                  }}
+                >
+                  <i className="bi bi-play-circle me-2"></i>
+                  Testar Demo Delivery
+                </a>
+                
+                <span style={{ color: '#6b7280', fontWeight: '500' }}>ou</span>
+                
+                <a 
+                  href="#contact" 
+                  className="btn"
+                  style={{
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '1rem 2rem',
+                    color: 'white',
+                    fontWeight: '700',
+                    fontSize: '1.1rem',
+                    textDecoration: 'none',
+                    boxShadow: '0 12px 30px rgba(59, 130, 246, 0.3)'
+                  }}
+                >
+                  <i className="bi bi-person-lines-fill me-2"></i>
+                  Falar com Especialista
+                </a>
+              </div>
+              
+              <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid rgba(59, 130, 246, 0.1)' }}>
+                <p style={{ color: '#6b7280', margin: 0, fontSize: '0.9rem' }}>
+                  <strong>💡 Dica:</strong> Mesmo com demos em desenvolvimento, você já pode se cadastrar para qualquer segmento. 
+                  O sistema é adaptável e funciona perfeitamente para todos os tipos de negócio!
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -804,104 +1815,6 @@ export default function HomePage() {
 
       {/* Pricing */}
       <PricingSection />
-
-      {/* Demo */}
-      <section style={{
-        padding: '5rem 0',
-        background: 'rgba(255, 255, 255, 0.5)',
-        backdropFilter: 'blur(10px)'
-      }} id="demo">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <h2 style={{
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                marginBottom: '2rem',
-                color: '#1E293B'
-              }}>
-                Veja como seus clientes vão comprar
-              </h2>
-              <p style={{
-                fontSize: '1.25rem',
-                color: '#64748B',
-                marginBottom: '2rem',
-                lineHeight: '1.6'
-              }}>
-                Experimente na prática como funciona o delivery e a experiência de
-                compra.
-              </p>
-              <Link href="/demo" style={{
-                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
-                color: 'white',
-                padding: '15px 30px',
-                borderRadius: '15px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: '1.1rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)',
-                transition: 'all 0.3s ease'
-              }}>
-                <i className="bi bi-play-circle me-2" />
-                Experimentar Demo Agora
-              </Link>
-            </div>
-            <div className="col-lg-6 text-center">
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '25px',
-                padding: '2rem',
-                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.2)',
-                display: 'inline-block'
-              }}>
-                <i style={{
-                  fontSize: '4rem',
-                  marginBottom: '1.5rem',
-                  color: '#3B82F6'
-                }} className="bi bi-phone" />
-                <h6 style={{
-                  color: '#1E293B',
-                  fontWeight: 'bold',
-                  marginBottom: '1.5rem'
-                }}>Preview do Cardápio Mobile</h6>
-                <div style={{ marginTop: '1.5rem' }}>
-                  <div style={{
-                    background: '#F8FAFC',
-                    color: '#1E293B',
-                    borderRadius: '10px',
-                    padding: '0.75rem',
-                    marginBottom: '0.75rem',
-                    border: '1px solid rgba(59, 130, 246, 0.1)'
-                  }}>
-                    🍕 Pizza Margherita - R$ 32,90
-                  </div>
-                  <div style={{
-                    background: '#F8FAFC',
-                    color: '#1E293B',
-                    borderRadius: '10px',
-                    padding: '0.75rem',
-                    marginBottom: '0.75rem',
-                    border: '1px solid rgba(16, 185, 129, 0.1)'
-                  }}>
-                    🍔 X-Burger - R$ 28,90
-                  </div>
-                  <div style={{
-                    background: '#F8FAFC',
-                    color: '#1E293B',
-                    borderRadius: '10px',
-                    padding: '0.75rem',
-                    border: '1px solid rgba(245, 158, 11, 0.1)'
-                  }}>🥤 Refrigerante 2L - R$ 8,90</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features */}
       <section style={{ padding: '5rem 0' }} id="features">
@@ -1418,21 +2331,21 @@ export default function HomePage() {
       <footer style={{
         background: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
         color: 'white',
-        padding: '4rem 0 2rem 0'
+        padding: '3rem 0 1.5rem 0'
       }}>
         <div className="container">
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '3rem',
-            marginBottom: '3rem'
+            gap: '2rem',
+            marginBottom: '2rem'
           }}>
             {/* Coluna 1 - Sobre */}
             <div>
               <h5 style={{
                 fontSize: '1.5rem',
                 fontWeight: 'bold',
-                marginBottom: '1.5rem',
+                marginBottom: '1rem',
                 background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -1443,181 +2356,91 @@ export default function HomePage() {
               <p style={{
                 color: 'rgba(255, 255, 255, 0.8)',
                 lineHeight: '1.6',
-                marginBottom: '1.5rem'
+                marginBottom: '1rem',
+                fontSize: '0.9rem'
               }}>
                 A plataforma completa para transformar seu negócio. PDV inteligente, 
                 loja online e delivery em uma única solução.
               </p>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <a href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '1.5rem',
-                  transition: 'color 0.3s ease'
-                }}>
-                  <i className="bi bi-facebook"></i>
-                </a>
-                <a href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '1.5rem',
-                  transition: 'color 0.3s ease'
-                }}>
-                  <i className="bi bi-instagram"></i>
-                </a>
-                <a href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '1.5rem',
-                  transition: 'color 0.3s ease'
-                }}>
-                  <i className="bi bi-linkedin"></i>
-                </a>
-                <a href="#" style={{
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '1.5rem',
-                  transition: 'color 0.3s ease'
-                }}>
-                  <i className="bi bi-youtube"></i>
-                </a>
-              </div>
             </div>
 
-            {/* Coluna 2 - Produtos */}
+            {/* Coluna 2 - Links Rápidos */}
             <div>
               <h6 style={{
                 fontWeight: 'bold',
-                marginBottom: '1.5rem',
+                marginBottom: '1rem',
                 color: 'white'
               }}>
-                Produtos
+                Links Rápidos
               </h6>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ marginBottom: '0.75rem' }}>
+                <li style={{ marginBottom: '0.5rem' }}>
                   <a href="#demos" style={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
-                    transition: 'color 0.3s ease'
+                    transition: 'color 0.3s ease',
+                    fontSize: '0.9rem'
                   }}>
-                    PDV Inteligente
+                    Demos
                   </a>
                 </li>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="#demos" style={{
+                <li style={{ marginBottom: '0.5rem' }}>
+                  <a href="#pricing" style={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
-                    transition: 'color 0.3s ease'
+                    transition: 'color 0.3s ease',
+                    fontSize: '0.9rem'
                   }}>
-                    Loja Online
+                    Planos
                   </a>
                 </li>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="#demos" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Sistema Delivery
-                  </a>
-                </li>
-                <li style={{ marginBottom: '0.75rem' }}>
+                <li style={{ marginBottom: '0.5rem' }}>
                   <a href="#features" style={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
-                    transition: 'color 0.3s ease'
+                    transition: 'color 0.3s ease',
+                    fontSize: '0.9rem'
                   }}>
-                    IA Integrada
+                    Recursos
                   </a>
                 </li>
               </ul>
             </div>
 
-            {/* Coluna 3 - Segmentos */}
+            {/* Coluna 3 - Contato */}
             <div>
               <h6 style={{
                 fontWeight: 'bold',
-                marginBottom: '1.5rem',
+                marginBottom: '1rem',
                 color: 'white'
               }}>
-                Segmentos
+                Contato
               </h6>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="/demo/lanchonete" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Lanchonetes
-                  </a>
-                </li>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="/demo/pizzaria" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Pizzarias
-                  </a>
-                </li>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="/demo/moda" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Moda & Acessórios
-                  </a>
-                </li>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="/demo/mercado" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Mercados
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Coluna 4 - Suporte */}
-            <div>
-              <h6 style={{
-                fontWeight: 'bold',
-                marginBottom: '1.5rem',
-                color: 'white'
-              }}>
-                Suporte
-              </h6>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ marginBottom: '0.75rem' }}>
-                  <a href="#faq" style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    textDecoration: 'none',
-                    transition: 'color 0.3s ease'
-                  }}>
-                    Central de Ajuda
-                  </a>
-                </li>
-                <li style={{ marginBottom: '0.75rem' }}>
+                <li style={{ marginBottom: '0.5rem' }}>
                   <a href="mailto:contato@varejofflex.com" style={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
-                    transition: 'color 0.3s ease'
+                    transition: 'color 0.3s ease',
+                    fontSize: '0.9rem'
                   }}>
-                    Contato
+                    contato@varejofflex.com
                   </a>
                 </li>
-                <li style={{ marginBottom: '0.75rem' }}>
+                <li style={{ marginBottom: '0.5rem' }}>
                   <a href="tel:+5511999999999" style={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
-                    transition: 'color 0.3s ease'
+                    transition: 'color 0.3s ease',
+                    fontSize: '0.9rem'
                   }}>
                     (11) 99999-9999
                   </a>
                 </li>
-                <li style={{ marginBottom: '0.75rem' }}>
+                <li style={{ marginBottom: '0.5rem' }}>
                   <span style={{
-                    color: 'rgba(255, 255, 255, 0.8)'
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    fontSize: '0.9rem'
                   }}>
                     Suporte 24/7
                   </span>
@@ -1626,56 +2449,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Linha de Separação */}
+          {/* Copyright */}
           <div style={{
-            height: '1px',
-            background: 'rgba(255, 255, 255, 0.1)',
-            marginBottom: '2rem'
-          }}></div>
-
-          {/* Copyright e Links Legais */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem'
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingTop: '1.5rem',
+            textAlign: 'center'
           }}>
             <div style={{
               color: 'rgba(255, 255, 255, 0.6)',
               fontSize: '0.9rem'
             }}>
               © 2025 Varejofflex. Todos os direitos reservados.
-            </div>
-            <div style={{
-              display: 'flex',
-              gap: '2rem',
-              flexWrap: 'wrap'
-            }}>
-              <a href="/privacy" style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                transition: 'color 0.3s ease'
-              }}>
-                Política de Privacidade
-              </a>
-              <a href="/terms" style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                transition: 'color 0.3s ease'
-              }}>
-                Termos de Uso
-              </a>
-              <a href="/cookies" style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                transition: 'color 0.3s ease'
-              }}>
-                Cookies
-              </a>
             </div>
           </div>
         </div>
