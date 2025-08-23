@@ -190,297 +190,310 @@ export default function RegisterPage() {
             </div>
 
             {/* Cards de Opção */}
-            <div className="row g-4 justify-content-center">
+            <div className="row g-5 justify-content-center">
               {/* Cadastro Lojista */}
               <div className={`col-md-6 ${!showOwnerOption ? 'col-lg-8' : ''}`}>
                 <div 
                   style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    backdropFilter: 'blur(25px)',
-                    borderRadius: '28px',
-                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%)',
+                    backdropFilter: 'blur(30px)',
+                    borderRadius: '32px',
+                    border: '2px solid transparent',
+                    backgroundImage: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05)), linear-gradient(145deg, rgba(16, 185, 129, 0.4), rgba(6, 182, 212, 0.2))',
+                    backgroundOrigin: 'border-box',
+                    backgroundClip: 'content-box, border-box',
                     boxShadow: `
-                      0 25px 80px rgba(0, 0, 0, 0.3),
-                      0 0 0 1px rgba(16, 185, 129, 0.1),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                      0 32px 100px rgba(0, 0, 0, 0.4),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                      0 0 0 1px rgba(16, 185, 129, 0.1)
                     `,
                     padding: '0',
                     overflow: 'hidden',
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    height: '100%'
+                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    height: '100%',
+                    position: 'relative'
                   }}
                   className="h-100"
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
                     e.currentTarget.style.boxShadow = `
-                      0 35px 100px rgba(0, 0, 0, 0.4),
-                      0 0 0 1px rgba(16, 185, 129, 0.2),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.15)
+                      0 40px 120px rgba(0, 0, 0, 0.5),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                      0 0 0 2px rgba(16, 185, 129, 0.3),
+                      0 0 50px rgba(16, 185, 129, 0.3)
                     `;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.boxShadow = `
-                      0 25px 80px rgba(0, 0, 0, 0.3),
-                      0 0 0 1px rgba(16, 185, 129, 0.1),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                      0 32px 100px rgba(0, 0, 0, 0.4),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                      0 0 0 1px rgba(16, 185, 129, 0.1)
                     `;
                   }}
                 >
+                  {/* Efeito de partículas no background */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: `
+                      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 30%),
+                      radial-gradient(circle at 80% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 30%),
+                      radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 30%)
+                    `,
+                    animation: 'float 6s ease-in-out infinite',
+                    pointerEvents: 'none'
+                  }}></div>
+
                   <div 
                     style={{
-                      background: 'linear-gradient(135deg, #1E293B 0%, #10b981 50%, #059669 100%)',
+                      background: 'linear-gradient(135deg, #0F172A 0%, #16a085 30%, #10b981 70%, #059669 100%)',
                       color: 'white',
                       textAlign: 'center',
-                      padding: '2.5rem 2rem',
+                      padding: '3rem 2rem 2rem 2rem',
                       position: 'relative',
                       overflow: 'hidden'
                     }}
                   >
-                    {/* Padrão decorativo */}
+                    {/* Efeito ondulado no header */}
                     <div style={{
                       position: 'absolute',
-                      top: 0,
+                      bottom: '-2px',
                       left: 0,
                       width: '100%',
-                      height: '100%',
-                      background: 'radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)',
-                      pointerEvents: 'none'
+                      height: '20px',
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05))',
+                      clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 100%)'
                     }}></div>
                     
                     <div style={{ position: 'relative', zIndex: 1 }}>
                       <div style={{ 
-                        fontSize: '3.5rem', 
-                        marginBottom: '1rem',
-                        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
+                        fontSize: '4rem', 
+                        marginBottom: '1.2rem',
+                        filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4))',
+                        animation: 'bounce 2s ease-in-out infinite'
                       }}>
                         🏪
                       </div>
-                      <h4 className="mb-0" style={{ 
-                        fontWeight: '800',
-                        fontSize: '1.6rem',
-                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                      <h3 style={{ 
+                        fontWeight: '900',
+                        fontSize: '1.8rem',
+                        textShadow: '0 3px 6px rgba(0, 0, 0, 0.4)',
+                        marginBottom: '0.5rem'
                       }}>
                         Sou Lojista
-                      </h4>
+                      </h3>
+                      <div style={{
+                        width: '60px',
+                        height: '4px',
+                        background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.8), transparent)',
+                        margin: '0 auto',
+                        borderRadius: '2px'
+                      }}></div>
                     </div>
                   </div>
-                  <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', minHeight: 'calc(100% - 140px)' }}>
-                    <p style={{ 
-                      color: 'rgba(255, 255, 255, 0.9)', 
-                      marginBottom: '1.5rem', 
-                      fontSize: '1.1rem',
-                      fontWeight: '500',
-                      lineHeight: '1.6'
+                  <div style={{ 
+                    padding: '2.5rem 2rem', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    minHeight: 'calc(100% - 160px)',
+                    position: 'relative'
+                  }}>
+                    {/* Badge de destaque */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '-12px',
+                      right: '2rem',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      fontSize: '0.8rem',
+                      fontWeight: '700',
+                      boxShadow: '0 8px 20px rgba(16, 185, 129, 0.4)',
+                      border: '2px solid rgba(255, 255, 255, 0.2)'
                     }}>
-                      Quero vender meus produtos online e gerenciar minha loja
+                      💎 MAIS POPULAR
+                    </div>
+
+                    <p style={{ 
+                      color: 'rgba(255, 255, 255, 0.95)', 
+                      marginBottom: '2rem', 
+                      fontSize: '1.2rem',
+                      fontWeight: '600',
+                      lineHeight: '1.7',
+                      textAlign: 'center'
+                    }}>
+                      Transforme seu negócio com nossa plataforma completa de vendas
                     </p>
                     
                     <div className="mb-4">
                       <h6 style={{ 
                         color: 'white', 
-                        fontWeight: '700', 
-                        marginBottom: '1rem',
-                        fontSize: '1.1rem'
+                        fontWeight: '800', 
+                        marginBottom: '1.5rem',
+                        fontSize: '1.2rem',
+                        textAlign: 'center'
                       }}>
-                        ✨ O que você ganha:
+                        ✨ Recursos Premium Inclusos
                       </h6>
-                      <ul className="list-unstyled">
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle me-2" style={{ color: '#10b981', fontSize: '1.1rem' }}></i>
-                          <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontWeight: '500' }}>Sistema PDV completo</span>
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle me-2" style={{ color: '#10b981', fontSize: '1.1rem' }}></i>
-                          <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontWeight: '500' }}>Gestão de produtos e estoque</span>
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle me-2" style={{ color: '#10b981', fontSize: '1.1rem' }}></i>
-                          <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontWeight: '500' }}>Relatórios e métricas</span>
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle me-2" style={{ color: '#10b981', fontSize: '1.1rem' }}></i>
-                          <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontWeight: '500' }}>Integração com delivery</span>
-                        </li>
-                        <li className="mb-2">
-                          <i className="bi bi-check-circle me-2" style={{ color: '#10b981', fontSize: '1.1rem' }}></i>
-                          <span style={{ color: 'rgba(255, 255, 255, 0.8)', fontWeight: '500' }}>Suporte especializado</span>
-                        </li>
-                      </ul>
+                      <div className="row g-3">
+                        <div className="col-12">
+                          <div style={{
+                            background: 'rgba(16, 185, 129, 0.15)',
+                            border: '1px solid rgba(16, 185, 129, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1rem',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease'
+                          }}>
+                            <div className="d-flex align-items-center">
+                              <div style={{
+                                width: '48px',
+                                height: '48px',
+                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                borderRadius: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '1rem',
+                                fontSize: '1.5rem'
+                              }}>
+                                💻
+                              </div>
+                              <div>
+                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Sistema PDV Avançado</h6>
+                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Vendas rápidas e seguras</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div style={{
+                            background: 'rgba(6, 182, 212, 0.15)',
+                            border: '1px solid rgba(6, 182, 212, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1rem',
+                            backdropFilter: 'blur(10px)'
+                          }}>
+                            <div className="d-flex align-items-center">
+                              <div style={{
+                                width: '48px',
+                                height: '48px',
+                                background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                                borderRadius: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '1rem',
+                                fontSize: '1.5rem'
+                              }}>
+                                📊
+                              </div>
+                              <div>
+                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Analytics em Tempo Real</h6>
+                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Dashboards inteligentes</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div style={{
+                            background: 'rgba(147, 51, 234, 0.15)',
+                            border: '1px solid rgba(147, 51, 234, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1rem',
+                            backdropFilter: 'blur(10px)'
+                          }}>
+                            <div className="d-flex align-items-center">
+                              <div style={{
+                                width: '48px',
+                                height: '48px',
+                                background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 100%)',
+                                borderRadius: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '1rem',
+                                fontSize: '1.5rem'
+                              }}>
+                                🚚
+                              </div>
+                              <div>
+                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Delivery Integrado</h6>
+                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Entrega automática</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="mb-4">
                       <h6 style={{ 
                         color: 'white', 
-                        fontWeight: '700', 
-                        marginBottom: '1rem',
-                        fontSize: '1.1rem'
+                        fontWeight: '800', 
+                        marginBottom: '1.5rem',
+                        fontSize: '1.2rem',
+                        textAlign: 'center'
                       }}>
-                        🎯 Segmentos Disponíveis:
+                        🎯 Segmentos Especializados
                       </h6>
-                      <div className="row g-2">
-                        <div className="col-6">
+                      <div className="d-flex flex-wrap gap-2 justify-content-center">
+                        {[
+                          { icon: '🍔', label: 'Lanchonetes', color: '#fbbf24' },
+                          { icon: '🍕', label: 'Pizzarias', color: '#f87171' },
+                          { icon: '👗', label: 'Moda', color: '#60a5fa' },
+                          { icon: '🛒', label: 'Mercados', color: '#34d399' },
+                          { icon: '🐕', label: 'Petshops', color: '#fbbf24' },
+                          { icon: '💅', label: 'Salões', color: '#f87171' },
+                          { icon: '💊', label: 'Farmácias', color: '#38bdf8' },
+                          { icon: '🏪', label: 'Conveniência', color: '#9ca3af' }
+                        ].map((segment, index) => (
                           <span 
+                            key={index}
                             style={{
-                              background: 'rgba(251, 191, 36, 0.2)',
-                              color: '#fbbf24',
-                              border: '1px solid rgba(251, 191, 36, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
+                              background: `linear-gradient(135deg, ${segment.color}20, ${segment.color}10)`,
+                              color: segment.color,
+                              border: `1px solid ${segment.color}40`,
+                              borderRadius: '20px',
+                              padding: '8px 16px',
                               fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
+                              fontWeight: '700',
+                              backdropFilter: 'blur(10px)',
+                              transition: 'all 0.3s ease',
+                              cursor: 'default',
+                              boxShadow: `0 4px 12px ${segment.color}20`
                             }}
                           >
-                            🍔 Lanchonetes
+                            {segment.icon} {segment.label}
                           </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(239, 68, 68, 0.2)',
-                              color: '#f87171',
-                              border: '1px solid rgba(239, 68, 68, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            🍕 Pizzarias
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(59, 130, 246, 0.2)',
-                              color: '#60a5fa',
-                              border: '1px solid rgba(59, 130, 246, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            👗 Moda
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(16, 185, 129, 0.2)',
-                              color: '#34d399',
-                              border: '1px solid rgba(16, 185, 129, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            🛒 Mercados
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(251, 191, 36, 0.2)',
-                              color: '#fbbf24',
-                              border: '1px solid rgba(251, 191, 36, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            🐕 Petshops
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(239, 68, 68, 0.2)',
-                              color: '#f87171',
-                              border: '1px solid rgba(239, 68, 68, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            💅 Salões
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(14, 165, 233, 0.2)',
-                              color: '#38bdf8',
-                              border: '1px solid rgba(14, 165, 233, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            💊 Farmácias
-                          </span>
-                        </div>
-                        <div className="col-6">
-                          <span 
-                            style={{
-                              background: 'rgba(107, 114, 128, 0.2)',
-                              color: '#9ca3af',
-                              border: '1px solid rgba(107, 114, 128, 0.3)',
-                              borderRadius: '12px',
-                              padding: '6px 12px',
-                              fontSize: '0.85rem',
-                              fontWeight: '600',
-                              display: 'block',
-                              textAlign: 'center',
-                              backdropFilter: 'blur(10px)'
-                            }}
-                          >
-                            🏪 Conveniência
-                          </span>
-                        </div>
+                        ))}
                       </div>
                     </div>
 
                     <div style={{ marginTop: 'auto' }}>
                       <div 
                         style={{
-                          background: 'rgba(16, 185, 129, 0.15)',
-                          border: '1px solid rgba(16, 185, 129, 0.3)',
-                          borderRadius: '16px',
-                          padding: '1rem',
-                          marginBottom: '1.5rem',
-                          backdropFilter: 'blur(10px)'
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.1))',
+                          border: '1px solid rgba(16, 185, 129, 0.4)',
+                          borderRadius: '20px',
+                          padding: '1.5rem',
+                          marginBottom: '2rem',
+                          backdropFilter: 'blur(15px)',
+                          textAlign: 'center'
                         }}
                       >
-                        <small style={{ color: 'white', fontWeight: '500' }}>
-                          <i className="bi bi-gift me-2" style={{ color: '#10b981' }}></i>
-                          <strong>7 dias grátis</strong> para testar todas as funcionalidades!
-                        </small>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎁</div>
+                        <h6 style={{ color: 'white', fontWeight: '800', marginBottom: '0.5rem' }}>
+                          OFERTA ESPECIAL
+                        </h6>
+                        <p style={{ color: 'rgba(255, 255, 255, 0.9)', margin: 0, fontWeight: '600' }}>
+                          <strong>14 dias grátis</strong> + Setup gratuito + Suporte premium
+                        </p>
                       </div>
                       
                       <div className="d-grid">
@@ -489,30 +502,32 @@ export default function RegisterPage() {
                           style={{
                             background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                             border: 'none',
-                            borderRadius: '18px',
-                            padding: '1rem 1.5rem',
+                            borderRadius: '20px',
+                            padding: '1.2rem 2rem',
                             color: 'white',
-                            fontWeight: '700',
-                            fontSize: '1.1rem',
+                            fontWeight: '800',
+                            fontSize: '1.2rem',
                             textDecoration: 'none',
                             display: 'block',
                             textAlign: 'center',
-                            boxShadow: '0 12px 30px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                            boxShadow: '0 16px 40px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                            position: 'relative',
+                            overflow: 'hidden'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-3px)';
-                            e.currentTarget.style.boxShadow = '0 16px 40px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+                            e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                            e.currentTarget.style.boxShadow = '0 20px 50px rgba(16, 185, 129, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
                             e.currentTarget.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 12px 30px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                            e.currentTarget.style.boxShadow = '0 16px 40px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                             e.currentTarget.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
                           }}
                         >
-                          <i className="bi bi-shop me-2"></i>
-                          Cadastrar como Lojista
+                          <i className="bi bi-rocket-takeoff me-2"></i>
+                          Começar Agora - É Grátis!
                         </Link>
                       </div>
                     </div>
@@ -761,6 +776,29 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(1deg); }
+          66% { transform: translateY(5px) rotate(-1deg); }
+        }
+        
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+        
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); }
+        }
+      `}</style>
     </div>
   );
 }
