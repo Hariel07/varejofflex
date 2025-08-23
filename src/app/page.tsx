@@ -859,163 +859,370 @@ export default function HomePage() {
 
           <div className="row g-4 justify-content-center mb-5">
             {/* Starter */}
-            <div className="col-xl-3 col-lg-4 col-md-6">
-              <div className="card bg-white text-dark h-100 border-0 shadow-lg">
-                <div className="card-header bg-light border-0 text-center py-3">
-                  <div className="bg-primary text-white rounded-circle mx-auto mb-3" style={{width: "60px", height: "60px", lineHeight: "60px"}}>
-                    <i className="bi bi-rocket fs-4"></i>
+            <div className="col-lg-4 col-md-6">
+              <div className="card bg-white text-dark h-100 border-0 shadow-lg position-relative" style={{
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-10px)';
+                e.currentTarget.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.1)';
+              }}>
+                <div className="card-header border-0 text-center py-4" style={{
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                  color: 'white',
+                  borderRadius: '15px 15px 0 0'
+                }}>
+                  <div className="bg-white text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style={{width: "70px", height: "70px"}}>
+                    <i className="bi bi-rocket fs-3"></i>
                   </div>
-                  <h4 className="fw-bold mb-0">Starter</h4>
-                  <p className="text-muted mb-0">Para começar</p>
+                  <h4 className="fw-bold mb-1">Starter</h4>
+                  <p className="text-white-50 mb-0 small">Ideal para começar</p>
                 </div>
                 <div className="card-body text-center p-4">
                   <div className="mb-4">
-                    <div className="h2 fw-bold text-primary mb-0">
-                      <span className="monthly-price">R$ 97</span>
-                      <span className="annual-price d-none">R$ 78</span>
-                    </div>
-                    <div className="text-muted">
-                      /mês <small className="annual-only d-none">(pago anualmente)</small>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+                      borderRadius: '15px',
+                      padding: '1.5rem',
+                      marginBottom: '1rem'
+                    }}>
+                      <div className="h1 fw-bold text-primary mb-0">
+                        <span className="monthly-price">R$ 89</span>
+                        <span className="annual-price d-none">R$ 69</span>
+                      </div>
+                      <div className="text-muted small">
+                        /mês <span className="annual-only d-none">(20% desc. anual)</span>
+                      </div>
+                      <div className="badge bg-primary-subtle text-primary mt-2">
+                        💳 14 dias grátis
+                      </div>
                     </div>
                   </div>
-                  <ul className="list-unstyled text-start mb-4">
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Até 1.000 produtos</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>1 loja online</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>1 PDV incluído</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Domínio personalizado</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Suporte por email</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>15 templates</li>
-                  </ul>
-                  <div className="bg-light rounded-3 p-3 mb-4">
-                    <small className="text-muted d-block">Transações:</small>
-                    <strong className="text-success">2,9% + R$ 0,30 por venda</strong>
+                  
+                  <div className="text-start mb-4">
+                    <h6 className="fw-bold text-primary mb-3">🎯 Perfeito para:</h6>
+                    <ul className="list-unstyled">
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Até 1.000 produtos</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">1 loja online profissional</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">1 PDV incluído</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Domínio personalizado</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Suporte por email</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Templates premium</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div style={{
+                    background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1.5rem',
+                    border: '1px solid #F59E0B'
+                  }}>
+                    <div className="small text-warning-emphasis fw-bold mb-1">💰 Taxa por transação:</div>
+                    <div className="fw-bold text-warning-emphasis">3,2% + R$ 0,35 por venda</div>
+                    <div className="small text-warning-emphasis">Sem mensalidade mínima</div>
                   </div>
                 </div>
                 <div className="card-footer bg-transparent border-0 p-4">
-                  <Link href="/register?plan=starter" className="btn btn-outline-primary w-100 fw-bold py-3">
-                    Começar Grátis 30 Dias
+                  <Link href="/register?plan=starter" 
+                    className="btn btn-outline-primary w-100 fw-bold py-3"
+                    style={{
+                      borderWidth: '2px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                    <i className="bi bi-rocket me-2"></i>
+                    Começar Grátis
                   </Link>
                 </div>
               </div>
             </div>
 
             {/* Pro - Mais Popular */}
-            <div className="col-xl-3 col-lg-4 col-md-6">
-              <div className="card bg-primary text-white h-100 border-0 shadow-lg position-relative" style={{transform: "scale(1.05)"}}>
+            <div className="col-lg-4 col-md-6">
+              <div className="card bg-white text-dark h-100 border-0 shadow-lg position-relative" style={{
+                transform: "scale(1.05)",
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                border: '3px solid #F59E0B !important'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.08) translateY(-10px)';
+                e.currentTarget.style.boxShadow = '0 50px 100px rgba(245, 158, 11, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05) translateY(0)';
+                e.currentTarget.style.boxShadow = '0 40px 80px rgba(245, 158, 11, 0.2)';
+              }}>
                 <div className="position-absolute top-0 start-50 translate-middle">
-                  <span className="badge bg-warning text-dark px-3 py-2 fw-bold">⭐ MAIS POPULAR</span>
+                  <span className="badge px-4 py-2 fw-bold" style={{
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                    color: 'white',
+                    fontSize: '0.9rem',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 20px rgba(245, 158, 11, 0.4)'
+                  }}>
+                    ⭐ MAIS POPULAR
+                  </span>
                 </div>
-                <div className="card-header bg-primary border-0 text-center py-4 mt-3">
-                  <div className="bg-warning text-dark rounded-circle mx-auto mb-3" style={{width: "60px", height: "60px", lineHeight: "60px"}}>
-                    <i className="bi bi-star fs-4"></i>
+                
+                <div className="card-header border-0 text-center py-4 mt-3" style={{
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                  color: 'white',
+                  borderRadius: '15px 15px 0 0'
+                }}>
+                  <div className="bg-white text-warning rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style={{width: "70px", height: "70px"}}>
+                    <i className="bi bi-star fs-3"></i>
                   </div>
-                  <h4 className="fw-bold mb-0">Pro</h4>
-                  <p className="text-white-50 mb-0">Para crescer</p>
+                  <h4 className="fw-bold mb-1">Pro</h4>
+                  <p className="text-white-50 mb-0 small">Para crescer rápido</p>
                 </div>
+                
                 <div className="card-body text-center p-4">
                   <div className="mb-4">
-                    <div className="h2 fw-bold text-warning mb-0">
-                      <span className="monthly-price">R$ 197</span>
-                      <span className="annual-price d-none">R$ 158</span>
-                    </div>
-                    <div className="text-white-50">
-                      /mês <small className="annual-only d-none">(pago anualmente)</small>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                      borderRadius: '15px',
+                      padding: '1.5rem',
+                      marginBottom: '1rem',
+                      border: '2px solid #F59E0B'
+                    }}>
+                      <div className="h1 fw-bold mb-0" style={{color: '#F59E0B'}}>
+                        <span className="monthly-price">R$ 179</span>
+                        <span className="annual-price d-none">R$ 139</span>
+                      </div>
+                      <div className="text-warning-emphasis small">
+                        /mês <span className="annual-only d-none">(25% desc. anual)</span>
+                      </div>
+                      <div className="badge bg-warning text-dark mt-2">
+                        🎁 30 dias grátis
+                      </div>
                     </div>
                   </div>
-                  <ul className="list-unstyled text-start mb-4">
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>Produtos ilimitados</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>Até 3 lojas</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>2 PDVs incluídos</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>IA para vendas</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>Suporte prioritário</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>App mobile</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-warning me-2"></i>Relatórios avançados</li>
-                  </ul>
-                  <div className="bg-dark rounded-3 p-3 mb-4">
-                    <small className="text-white-50 d-block">Transações:</small>
-                    <strong className="text-warning">2,4% + R$ 0,25 por venda</strong>
+                  
+                  <div className="text-start mb-4">
+                    <h6 className="fw-bold mb-3" style={{color: '#F59E0B'}}>🚀 Tudo do Starter +</h6>
+                    <ul className="list-unstyled">
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">Produtos ilimitados</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">Até 3 lojas online</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">3 PDVs incluídos</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">IA para vendas e insights</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">Suporte prioritário 24/7</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">App mobile nativo</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-warning rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px", color: 'white'}}>
+                          ✓
+                        </div>
+                        <span className="small">Relatórios avançados</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div style={{
+                    background: 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1.5rem',
+                    border: '1px solid #10B981'
+                  }}>
+                    <div className="small text-success-emphasis fw-bold mb-1">💰 Taxa por transação:</div>
+                    <div className="fw-bold text-success-emphasis">2,8% + R$ 0,29 por venda</div>
+                    <div className="small text-success-emphasis">Economia de R$ 0,06 por venda</div>
                   </div>
                 </div>
+                
                 <div className="card-footer bg-transparent border-0 p-4">
-                  <Link href="/register?plan=pro" className="btn btn-warning w-100 fw-bold py-3 text-dark">
-                    Começar Grátis 30 Dias
+                  <Link href="/register?plan=pro" 
+                    className="btn w-100 fw-bold py-3 text-white"
+                    style={{
+                      background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                      border: 'none',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 8px 20px rgba(245, 158, 11, 0.3)'
+                    }}>
+                    <i className="bi bi-star me-2"></i>
+                    Começar Grátis
                   </Link>
                 </div>
               </div>
             </div>
 
             {/* Enterprise */}
-            <div className="col-xl-3 col-lg-4 col-md-6">
-              <div className="card bg-white text-dark h-100 border-0 shadow-lg">
-                <div className="card-header bg-light border-0 text-center py-3">
-                  <div className="bg-success text-white rounded-circle mx-auto mb-3" style={{width: "60px", height: "60px", lineHeight: "60px"}}>
-                    <i className="bi bi-building fs-4"></i>
+            <div className="col-lg-4 col-md-6">
+              <div className="card bg-white text-dark h-100 border-0 shadow-lg position-relative" style={{
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-10px)';
+                e.currentTarget.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.1)';
+              }}>
+                <div className="card-header border-0 text-center py-4" style={{
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: 'white',
+                  borderRadius: '15px 15px 0 0'
+                }}>
+                  <div className="bg-white text-success rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style={{width: "70px", height: "70px"}}>
+                    <i className="bi bi-building fs-3"></i>
                   </div>
-                  <h4 className="fw-bold mb-0">Enterprise</h4>
-                  <p className="text-muted mb-0">Para escalar</p>
+                  <h4 className="fw-bold mb-1">Enterprise</h4>
+                  <p className="text-white-50 mb-0 small">Para escalar sem limites</p>
                 </div>
+                
                 <div className="card-body text-center p-4">
                   <div className="mb-4">
-                    <div className="h2 fw-bold text-success mb-0">
-                      <span className="monthly-price">R$ 397</span>
-                      <span className="annual-price d-none">R$ 318</span>
-                    </div>
-                    <div className="text-muted">
-                      /mês <small className="annual-only d-none">(pago anualmente)</small>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)',
+                      borderRadius: '15px',
+                      padding: '1.5rem',
+                      marginBottom: '1rem'
+                    }}>
+                      <div className="h1 fw-bold text-success mb-0">
+                        <span className="monthly-price">R$ 349</span>
+                        <span className="annual-price d-none">R$ 269</span>
+                      </div>
+                      <div className="text-success-emphasis small">
+                        /mês <span className="annual-only d-none">(30% desc. anual)</span>
+                      </div>
+                      <div className="badge bg-success text-white mt-2">
+                        🎯 45 dias grátis
+                      </div>
                     </div>
                   </div>
-                  <ul className="list-unstyled text-start mb-4">
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Tudo do Pro</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Lojas ilimitadas</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>5 PDVs incluídos</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>API completa</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>Gerente dedicado</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-success me-2"></i>White label</li>
-                  </ul>
-                  <div className="bg-light rounded-3 p-3 mb-4">
-                    <small className="text-muted d-block">Transações:</small>
-                    <strong className="text-success">1,9% + R$ 0,20 por venda</strong>
+                  
+                  <div className="text-start mb-4">
+                    <h6 className="fw-bold text-success mb-3">🏢 Tudo do Pro +</h6>
+                    <ul className="list-unstyled">
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Lojas ilimitadas</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">10 PDVs incluídos</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">API completa</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Gerente dedicado</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">White label opcional</span>
+                      </li>
+                      <li className="mb-2 d-flex align-items-center">
+                        <div className="bg-success rounded-circle me-2 d-flex align-items-center justify-content-center" style={{width: "20px", height: "20px", fontSize: "12px"}}>
+                          ✓
+                        </div>
+                        <span className="small">Treinamento presencial</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div style={{
+                    background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1.5rem',
+                    border: '1px solid #3B82F6'
+                  }}>
+                    <div className="small text-primary-emphasis fw-bold mb-1">💰 Taxa por transação:</div>
+                    <div className="fw-bold text-primary-emphasis">2,4% + R$ 0,25 por venda</div>
+                    <div className="small text-primary-emphasis">Máxima economia por venda</div>
                   </div>
                 </div>
+                
                 <div className="card-footer bg-transparent border-0 p-4">
-                  <Link href="/register?plan=enterprise" className="btn btn-outline-success w-100 fw-bold py-3">
-                    Começar Grátis 30 Dias
+                  <Link href="/register?plan=enterprise" 
+                    className="btn btn-outline-success w-100 fw-bold py-3"
+                    style={{
+                      borderWidth: '2px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                    <i className="bi bi-building me-2"></i>
+                    Começar Grátis
                   </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Custom */}
-            <div className="col-xl-3 col-lg-4 col-md-6">
-              <div className="card bg-gradient-custom text-white h-100 border-0 shadow-lg">
-                <div className="card-header bg-transparent border-0 text-center py-3">
-                  <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{width: "60px", height: "60px", lineHeight: "60px"}}>
-                    <i className="bi bi-gear fs-4"></i>
-                  </div>
-                  <h4 className="fw-bold mb-0">Custom</h4>
-                  <p className="text-white-50 mb-0">Sob medida</p>
-                </div>
-                <div className="card-body text-center p-4">
-                  <div className="mb-4">
-                    <div className="h2 fw-bold mb-0">Sob</div>
-                    <div className="h2 fw-bold mb-0">Consulta</div>
-                  </div>
-                  <ul className="list-unstyled text-start mb-4">
-                    <li className="mb-2"><i className="bi bi-check-lg text-white me-2"></i>Solução personalizada</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-white me-2"></i>Integrações customizadas</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-white me-2"></i>Infraestrutura dedicada</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-white me-2"></i>SLA garantido</li>
-                    <li className="mb-2"><i className="bi bi-check-lg text-white me-2"></i>Consultoria especializada</li>
-                  </ul>
-                  <div className="bg-white bg-opacity-20 rounded-3 p-3 mb-4">
-                    <small className="text-white-50 d-block">Transações:</small>
-                    <strong className="text-white">Negociáveis</strong>
-                  </div>
-                </div>
-                <div className="card-footer bg-transparent border-0 p-4">
-                  <a href="#contact" className="btn btn-light w-100 fw-bold py-3">
-                    Falar com Vendas
-                  </a>
                 </div>
               </div>
             </div>
@@ -1023,89 +1230,255 @@ export default function HomePage() {
 
           {/* Addon Services */}
           <div style={{
-            background: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(25px)',
             borderRadius: '25px',
             padding: '3rem',
             color: '#1E293B',
             boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.2)'
+            border: '1px solid rgba(59, 130, 246, 0.1)'
           }}>
-            <h3 style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              marginBottom: '3rem',
-              fontSize: '2rem'
-            }}>🧩 Serviços Adicionais</h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '2rem',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                border: '1px solid rgba(59, 130, 246, 0.2)',
-                borderRadius: '15px',
-                padding: '2rem',
-                background: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                <i className="bi bi-credit-card-2-front text-primary fs-2 mb-3"></i>
-                <h5 style={{ fontWeight: 'bold' }}>PDV Extra</h5>
+            <div className="text-center mb-4">
+              <h3 style={{
+                fontWeight: 'bold',
+                fontSize: '2rem',
+                marginBottom: '1rem'
+              }}>🧩 Recursos Adicionais</h3>
+              <p style={{
+                color: '#64748B',
+                fontSize: '1.1rem',
+                marginBottom: '0'
+              }}>Expanda conforme sua necessidade com preços justos</p>
+            </div>
+
+            <div className="row g-4">
+              <div className="col-lg-3 col-md-6">
                 <div style={{
-                  color: '#3B82F6',
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem'
-                }}>R$ 27</div>
-                <small style={{ color: '#64748B' }}>/mês por unidade</small>
+                  border: '2px solid rgba(59, 130, 246, 0.2)',
+                  borderRadius: '20px',
+                  padding: '2rem',
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = '#3B82F6';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <div className="bg-primary text-white rounded-circle mx-auto mb-3" style={{
+                    width: "60px", 
+                    height: "60px", 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <i className="bi bi-credit-card-2-front fs-4"></i>
+                  </div>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>PDV Extra</h5>
+                  <div style={{
+                    color: '#3B82F6',
+                    fontWeight: 'bold',
+                    fontSize: '1.8rem',
+                    marginBottom: '0.5rem'
+                  }}>R$ 25</div>
+                  <div style={{ 
+                    color: '#64748B',
+                    fontSize: '0.9rem',
+                    marginBottom: '1rem'
+                  }}>/mês por terminal</div>
+                  <div style={{
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    fontSize: '0.85rem',
+                    color: '#1E293B'
+                  }}>
+                    💡 Ideal para múltiplos caixas
+                  </div>
+                </div>
               </div>
-              <div style={{
-                border: '1px solid rgba(16, 185, 129, 0.2)',
-                borderRadius: '15px',
-                padding: '2rem',
-                background: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                <i className="bi bi-display text-success fs-2 mb-3"></i>
-                <h5 style={{ fontWeight: 'bold' }}>KDS Cozinha</h5>
+
+              <div className="col-lg-3 col-md-6">
                 <div style={{
-                  color: '#10B981',
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem'
-                }}>R$ 17</div>
-                <small style={{ color: '#64748B' }}>/mês por tela</small>
+                  border: '2px solid rgba(16, 185, 129, 0.2)',
+                  borderRadius: '20px',
+                  padding: '2rem',
+                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = '#10B981';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <div className="bg-success text-white rounded-circle mx-auto mb-3" style={{
+                    width: "60px", 
+                    height: "60px", 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <i className="bi bi-display fs-4"></i>
+                  </div>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>Tela KDS</h5>
+                  <div style={{
+                    color: '#10B981',
+                    fontWeight: 'bold',
+                    fontSize: '1.8rem',
+                    marginBottom: '0.5rem'
+                  }}>R$ 19</div>
+                  <div style={{ 
+                    color: '#64748B',
+                    fontSize: '0.9rem',
+                    marginBottom: '1rem'
+                  }}>/mês por tela</div>
+                  <div style={{
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    fontSize: '0.85rem',
+                    color: '#1E293B'
+                  }}>
+                    🍳 Perfeito para cozinhas
+                  </div>
+                </div>
               </div>
-              <div style={{
-                border: '1px solid rgba(245, 158, 11, 0.2)',
-                borderRadius: '15px',
-                padding: '2rem',
-                background: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                <i className="bi bi-truck text-warning fs-2 mb-3"></i>
-                <h5 style={{ fontWeight: 'bold' }}>Gestão Frota</h5>
+
+              <div className="col-lg-3 col-md-6">
                 <div style={{
-                  color: '#F59E0B',
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem'
-                }}>R$ 37</div>
-                <small style={{ color: '#64748B' }}>/mês por veículo</small>
+                  border: '2px solid rgba(245, 158, 11, 0.2)',
+                  borderRadius: '20px',
+                  padding: '2rem',
+                  background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = '#F59E0B';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(245, 158, 11, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <div className="bg-warning text-white rounded-circle mx-auto mb-3" style={{
+                    width: "60px", 
+                    height: "60px", 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <i className="bi bi-truck fs-4"></i>
+                  </div>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>Delivery Pro</h5>
+                  <div style={{
+                    color: '#F59E0B',
+                    fontWeight: 'bold',
+                    fontSize: '1.8rem',
+                    marginBottom: '0.5rem'
+                  }}>R$ 39</div>
+                  <div style={{ 
+                    color: '#64748B',
+                    fontSize: '0.9rem',
+                    marginBottom: '1rem'
+                  }}>/mês por loja</div>
+                  <div style={{
+                    background: 'rgba(245, 158, 11, 0.1)',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    fontSize: '0.85rem',
+                    color: '#1E293B'
+                  }}>
+                    🚚 Gestão completa delivery
+                  </div>
+                </div>
               </div>
-              <div style={{
-                border: '1px solid rgba(6, 182, 212, 0.2)',
-                borderRadius: '15px',
-                padding: '2rem',
-                background: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                <i className="bi bi-shop text-info fs-2 mb-3"></i>
-                <h5 style={{ fontWeight: 'bold' }}>Loja Extra</h5>
+
+              <div className="col-lg-3 col-md-6">
                 <div style={{
-                  color: '#06B6D4',
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem'
-                }}>R$ 47</div>
-                <small style={{ color: '#64748B' }}>/mês por loja</small>
+                  border: '2px solid rgba(6, 182, 212, 0.2)',
+                  borderRadius: '20px',
+                  padding: '2rem',
+                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.borderColor = '#06B6D4';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(6, 182, 212, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <div className="bg-info text-white rounded-circle mx-auto mb-3" style={{
+                    width: "60px", 
+                    height: "60px", 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <i className="bi bi-shop fs-4"></i>
+                  </div>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '1rem' }}>Loja Extra</h5>
+                  <div style={{
+                    color: '#06B6D4',
+                    fontWeight: 'bold',
+                    fontSize: '1.8rem',
+                    marginBottom: '0.5rem'
+                  }}>R$ 45</div>
+                  <div style={{ 
+                    color: '#64748B',
+                    fontSize: '0.9rem',
+                    marginBottom: '1rem'
+                  }}>/mês por loja</div>
+                  <div style={{
+                    background: 'rgba(6, 182, 212, 0.1)',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    fontSize: '0.85rem',
+                    color: '#1E293B'
+                  }}>
+                    🏪 Para múltiplos negócios
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mt-4">
+              <div style={{
+                background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                color: 'white',
+                borderRadius: '15px',
+                padding: '1.5rem',
+                display: 'inline-block',
+                maxWidth: '600px'
+              }}>
+                <h6 className="fw-bold mb-2">💰 Economia Inteligente</h6>
+                <p className="mb-0 small">
+                  Comece pequeno e adicione recursos conforme cresce. 
+                  Sem compromisso de prazo mínimo!
+                </p>
               </div>
             </div>
           </div>
