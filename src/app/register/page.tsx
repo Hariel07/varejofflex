@@ -26,43 +26,25 @@ export default function RegisterPage() {
       <div 
         className="min-vh-100 d-flex align-items-center justify-content-center"
         style={{ 
-          background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 30%, #334155 60%, #475569 100%)',
-          position: 'relative',
-          overflow: 'hidden'
+          background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+          position: 'relative'
         }}
       >
-        {/* Background decorativo */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: `
-            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)
-          `,
-          pointerEvents: 'none'
-        }}></div>
-        
-        <div className="text-center" style={{ position: 'relative', zIndex: 2 }}>
+        <div className="text-center">
           <div 
             className="spinner-border mb-3" 
             role="status"
             style={{ 
-              color: 'rgba(255, 255, 255, 0.8)', 
+              color: '#3b82f6', 
               width: '3rem', 
-              height: '3rem',
-              borderWidth: '3px'
+              height: '3rem'
             }}
           >
             <span className="visually-hidden">Carregando...</span>
           </div>
           <p style={{ 
-            color: 'rgba(255, 255, 255, 0.7)',
-            fontSize: '1.1rem',
-            fontWeight: '500'
+            color: '#64748b',
+            fontSize: '1.1rem'
           }}>
             Verificando opções de cadastro...
           </p>
@@ -72,11 +54,10 @@ export default function RegisterPage() {
   }
   return (
     <div className="min-vh-100" style={{ 
-      background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 30%, #334155 60%, #475569 100%)',
-      position: 'relative',
-      overflow: 'hidden'
+      background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+      position: 'relative'
     }}>
-      {/* Background decorativo animado */}
+      {/* Background Pattern */}
       <div 
         style={{
           position: 'absolute',
@@ -84,32 +65,14 @@ export default function RegisterPage() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: `
-            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)
+          backgroundImage: `
+            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.03) 0%, transparent 50%)
           `,
           zIndex: 1
         }}
       />
-      
-      {/* Padrão geométrico sutil */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundImage: `
-          linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
-          linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%),
-          linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%)
-        `,
-        backgroundSize: '60px 60px',
-        backgroundPosition: '0 0, 0 30px, 30px -30px, -30px 0px',
-        pointerEvents: 'none'
-      }}></div>
       
       <div className="container py-5" style={{ position: 'relative', zIndex: 2 }}>
         <div className="row justify-content-center">
@@ -120,28 +83,16 @@ export default function RegisterPage() {
                 href="/" 
                 className="btn mb-4"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.9)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: '16px',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                  color: '#3b82f6',
+                  borderRadius: '50px',
                   padding: '12px 24px',
-                  fontWeight: '600',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
                   textDecoration: 'none',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                  display: 'inline-flex',
-                  alignItems: 'center'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                 }}
               >
                 <i className="bi bi-arrow-left me-2"></i>
@@ -151,35 +102,37 @@ export default function RegisterPage() {
               <div 
                 className="mb-4"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  backdropFilter: 'blur(25px)',
-                  borderRadius: '28px',
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '24px',
                   padding: '3rem 2rem',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  boxShadow: '0 25px 80px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
                 }}
               >
                 <div style={{ 
                   fontSize: '3.5rem', 
                   marginBottom: '1.5rem',
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))'
                 }}>
                   🚀
                 </div>
                 <h1 
                   className="display-5 fw-bold mb-3"
                   style={{
-                    color: 'white',
+                    background: 'linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #8b5cf6 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
                     fontSize: '2.5rem',
                     fontWeight: '800',
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                     marginBottom: '1rem'
                   }}
                 >
                   Escolha seu Perfil
                 </h1>
                 <p className="lead" style={{ 
-                  color: 'rgba(255, 255, 255, 0.8)', 
+                  color: '#64748b', 
                   fontSize: '1.3rem',
                   fontWeight: '400',
                   marginBottom: 0
@@ -192,33 +145,33 @@ export default function RegisterPage() {
             {/* Cards de Opção */}
             <div className="row g-5 justify-content-center">
               {/* Cadastro Lojista */}
-              <div className={`col-md-6 ${!showOwnerOption ? 'col-lg-8' : ''}`}>
+              <div className={`col-md-6 ${!showOwnerOption ? 'col-lg-10' : 'col-lg-6'}`}>
                 <div 
                   style={{
-                    background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%)',
+                    background: 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(30px)',
                     borderRadius: '32px',
                     border: '2px solid transparent',
-                    backgroundImage: 'linear-gradient(145deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05)), linear-gradient(145deg, rgba(16, 185, 129, 0.4), rgba(6, 182, 212, 0.2))',
+                    backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), linear-gradient(145deg, rgba(16, 185, 129, 0.4), rgba(6, 182, 212, 0.2))',
                     backgroundOrigin: 'border-box',
                     backgroundClip: 'content-box, border-box',
                     boxShadow: `
-                      0 32px 100px rgba(0, 0, 0, 0.4),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                      0 32px 100px rgba(0, 0, 0, 0.15),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.8),
                       0 0 0 1px rgba(16, 185, 129, 0.1)
                     `,
                     padding: '0',
                     overflow: 'hidden',
                     transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                    height: '100%',
+                    minHeight: '800px',
                     position: 'relative'
                   }}
                   className="h-100"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
                     e.currentTarget.style.boxShadow = `
-                      0 40px 120px rgba(0, 0, 0, 0.5),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                      0 40px 120px rgba(0, 0, 0, 0.2),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.9),
                       0 0 0 2px rgba(16, 185, 129, 0.3),
                       0 0 50px rgba(16, 185, 129, 0.3)
                     `;
@@ -226,8 +179,8 @@ export default function RegisterPage() {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.boxShadow = `
-                      0 32px 100px rgba(0, 0, 0, 0.4),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                      0 32px 100px rgba(0, 0, 0, 0.15),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.8),
                       0 0 0 1px rgba(16, 185, 129, 0.1)
                     `;
                   }}
@@ -240,9 +193,9 @@ export default function RegisterPage() {
                     width: '100%',
                     height: '100%',
                     background: `
-                      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 30%),
-                      radial-gradient(circle at 80% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 30%),
-                      radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 30%)
+                      radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 30%),
+                      radial-gradient(circle at 80% 40%, rgba(6, 182, 212, 0.03) 0%, transparent 30%),
+                      radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.02) 0%, transparent 30%)
                     `,
                     animation: 'float 6s ease-in-out infinite',
                     pointerEvents: 'none'
@@ -250,7 +203,7 @@ export default function RegisterPage() {
 
                   <div 
                     style={{
-                      background: 'linear-gradient(135deg, #0F172A 0%, #16a085 30%, #10b981 70%, #059669 100%)',
+                      background: 'linear-gradient(135deg, #10b981 0%, #16a085 50%, #059669 100%)',
                       color: 'white',
                       textAlign: 'center',
                       padding: '3rem 2rem 2rem 2rem',
@@ -265,7 +218,7 @@ export default function RegisterPage() {
                       left: 0,
                       width: '100%',
                       height: '20px',
-                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05))',
+                      background: 'rgba(255, 255, 255, 0.1)',
                       clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 100%)'
                     }}></div>
                     
@@ -296,11 +249,10 @@ export default function RegisterPage() {
                     </div>
                   </div>
                   <div style={{ 
-                    padding: '2.5rem 2rem', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    minHeight: 'calc(100% - 160px)',
-                    position: 'relative'
+                    padding: '3rem 2.5rem',
+                    background: 'rgba(255, 255, 255, 0.98)',
+                    position: 'relative',
+                    minHeight: '500px'
                   }}>
                     {/* Badge de destaque */}
                     <div style={{
@@ -320,7 +272,7 @@ export default function RegisterPage() {
                     </div>
 
                     <p style={{ 
-                      color: 'rgba(255, 255, 255, 0.95)', 
+                      color: '#2d3748', 
                       marginBottom: '2rem', 
                       fontSize: '1.2rem',
                       fontWeight: '600',
@@ -332,7 +284,7 @@ export default function RegisterPage() {
                     
                     <div className="mb-4">
                       <h6 style={{ 
-                        color: 'white', 
+                        color: '#1a1a1a', 
                         fontWeight: '800', 
                         marginBottom: '1.5rem',
                         fontSize: '1.2rem',
@@ -343,8 +295,8 @@ export default function RegisterPage() {
                       <div className="row g-3">
                         <div className="col-12">
                           <div style={{
-                            background: 'rgba(16, 185, 129, 0.15)',
-                            border: '1px solid rgba(16, 185, 129, 0.3)',
+                            background: 'rgba(16, 185, 129, 0.08)',
+                            border: '1px solid rgba(16, 185, 129, 0.2)',
                             borderRadius: '16px',
                             padding: '1rem',
                             backdropFilter: 'blur(10px)',
@@ -365,16 +317,16 @@ export default function RegisterPage() {
                                 💻
                               </div>
                               <div>
-                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Sistema PDV Avançado</h6>
-                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Vendas rápidas e seguras</small>
+                                <h6 style={{ color: '#1a1a1a', fontWeight: '700', marginBottom: '2px' }}>Sistema PDV Avançado</h6>
+                                <small style={{ color: '#4a5568' }}>Vendas rápidas e seguras</small>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="col-12">
                           <div style={{
-                            background: 'rgba(6, 182, 212, 0.15)',
-                            border: '1px solid rgba(6, 182, 212, 0.3)',
+                            background: 'rgba(6, 182, 212, 0.08)',
+                            border: '1px solid rgba(6, 182, 212, 0.2)',
                             borderRadius: '16px',
                             padding: '1rem',
                             backdropFilter: 'blur(10px)'
@@ -394,16 +346,16 @@ export default function RegisterPage() {
                                 📊
                               </div>
                               <div>
-                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Analytics em Tempo Real</h6>
-                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Dashboards inteligentes</small>
+                                <h6 style={{ color: '#1a1a1a', fontWeight: '700', marginBottom: '2px' }}>Analytics em Tempo Real</h6>
+                                <small style={{ color: '#4a5568' }}>Dashboards inteligentes</small>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="col-12">
                           <div style={{
-                            background: 'rgba(147, 51, 234, 0.15)',
-                            border: '1px solid rgba(147, 51, 234, 0.3)',
+                            background: 'rgba(147, 51, 234, 0.08)',
+                            border: '1px solid rgba(147, 51, 234, 0.2)',
                             borderRadius: '16px',
                             padding: '1rem',
                             backdropFilter: 'blur(10px)'
@@ -423,8 +375,8 @@ export default function RegisterPage() {
                                 🚚
                               </div>
                               <div>
-                                <h6 style={{ color: 'white', fontWeight: '700', marginBottom: '2px' }}>Delivery Integrado</h6>
-                                <small style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Entrega automática</small>
+                                <h6 style={{ color: '#1a1a1a', fontWeight: '700', marginBottom: '2px' }}>Delivery Integrado</h6>
+                                <small style={{ color: '#4a5568' }}>Entrega automática</small>
                               </div>
                             </div>
                           </div>
@@ -434,7 +386,7 @@ export default function RegisterPage() {
 
                     <div className="mb-4">
                       <h6 style={{ 
-                        color: 'white', 
+                        color: '#1a1a1a', 
                         fontWeight: '800', 
                         marginBottom: '1.5rem',
                         fontSize: '1.2rem',
@@ -444,21 +396,21 @@ export default function RegisterPage() {
                       </h6>
                       <div className="d-flex flex-wrap gap-2 justify-content-center">
                         {[
-                          { icon: '🍔', label: 'Lanchonetes', color: '#fbbf24' },
-                          { icon: '🍕', label: 'Pizzarias', color: '#f87171' },
-                          { icon: '👗', label: 'Moda', color: '#60a5fa' },
-                          { icon: '🛒', label: 'Mercados', color: '#34d399' },
-                          { icon: '🐕', label: 'Petshops', color: '#fbbf24' },
-                          { icon: '💅', label: 'Salões', color: '#f87171' },
-                          { icon: '💊', label: 'Farmácias', color: '#38bdf8' },
-                          { icon: '🏪', label: 'Conveniência', color: '#9ca3af' }
+                          { icon: '🍔', label: 'Lanchonetes', color: '#f59e0b' },
+                          { icon: '🍕', label: 'Pizzarias', color: '#ef4444' },
+                          { icon: '👗', label: 'Moda', color: '#3b82f6' },
+                          { icon: '🛒', label: 'Mercados', color: '#10b981' },
+                          { icon: '🐕', label: 'Petshops', color: '#f59e0b' },
+                          { icon: '💅', label: 'Salões', color: '#ef4444' },
+                          { icon: '💊', label: 'Farmácias', color: '#0ea5e9' },
+                          { icon: '🏪', label: 'Conveniência', color: '#6b7280' }
                         ].map((segment, index) => (
                           <span 
                             key={index}
                             style={{
-                              background: `linear-gradient(135deg, ${segment.color}20, ${segment.color}10)`,
+                              background: `linear-gradient(135deg, ${segment.color}15, ${segment.color}08)`,
                               color: segment.color,
-                              border: `1px solid ${segment.color}40`,
+                              border: `1px solid ${segment.color}30`,
                               borderRadius: '20px',
                               padding: '8px 16px',
                               fontSize: '0.85rem',
@@ -466,7 +418,7 @@ export default function RegisterPage() {
                               backdropFilter: 'blur(10px)',
                               transition: 'all 0.3s ease',
                               cursor: 'default',
-                              boxShadow: `0 4px 12px ${segment.color}20`
+                              boxShadow: `0 4px 12px ${segment.color}15`
                             }}
                           >
                             {segment.icon} {segment.label}
@@ -475,11 +427,11 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
-                    <div style={{ marginTop: 'auto' }}>
+                    <div>
                       <div 
                         style={{
-                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.1))',
-                          border: '1px solid rgba(16, 185, 129, 0.4)',
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05))',
+                          border: '1px solid rgba(16, 185, 129, 0.2)',
                           borderRadius: '20px',
                           padding: '1.5rem',
                           marginBottom: '2rem',
@@ -488,11 +440,11 @@ export default function RegisterPage() {
                         }}
                       >
                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎁</div>
-                        <h6 style={{ color: 'white', fontWeight: '800', marginBottom: '0.5rem' }}>
+                        <h6 style={{ color: '#1a1a1a', fontWeight: '800', marginBottom: '0.5rem' }}>
                           OFERTA ESPECIAL
                         </h6>
-                        <p style={{ color: 'rgba(255, 255, 255, 0.9)', margin: 0, fontWeight: '600' }}>
-                          <strong>14 dias grátis</strong> + Setup gratuito + Suporte premium
+                        <p style={{ color: '#4a5568', margin: 0, fontWeight: '600' }}>
+                          <strong style={{ color: '#10b981' }}>14 dias grátis</strong> + Setup gratuito + Suporte premium
                         </p>
                       </div>
                       
@@ -720,16 +672,16 @@ export default function RegisterPage() {
             <div className="text-center mt-5">
               <div 
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(25px)',
                   borderRadius: '24px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  boxShadow: '0 25px 80px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                  padding: '2rem'
+                  border: '1px solid rgba(16, 185, 129, 0.1)',
+                  boxShadow: '0 25px 80px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                  padding: '2.5rem'
                 }}
               >
                 <p style={{ 
-                  color: 'rgba(255, 255, 255, 0.8)', 
+                  color: '#4a5568', 
                   marginBottom: '1.5rem',
                   fontSize: '1.1rem',
                   fontWeight: '500'
@@ -741,14 +693,14 @@ export default function RegisterPage() {
                       textDecoration: 'none', 
                       marginLeft: '8px', 
                       fontWeight: '700',
-                      color: '#60a5fa',
+                      color: '#10b981',
                       transition: 'color 0.3s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#93c5fd';
+                      e.currentTarget.style.color = '#059669';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#60a5fa';
+                      e.currentTarget.style.color = '#10b981';
                     }}
                   >
                     Fazer Login
@@ -759,15 +711,15 @@ export default function RegisterPage() {
                   style={{
                     marginTop: '1.5rem',
                     paddingTop: '1.5rem',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                    borderTop: '1px solid rgba(16, 185, 129, 0.1)'
                   }}
                 >
                   <small style={{ 
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: '#4a5568',
                     fontSize: '0.95rem',
                     fontWeight: '500'
                   }}>
-                    <i className="bi bi-shield-check me-2" style={{ color: '#10b981' }}></i>
+                    <span style={{ color: '#10b981', marginRight: '8px' }}>🔒</span>
                     Seus dados estão seguros e protegidos com criptografia avançada
                   </small>
                 </div>
