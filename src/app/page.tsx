@@ -863,14 +863,6 @@ export default function HomePage() {
               <div className="card bg-white text-dark h-100 border-0 shadow-lg position-relative" style={{
                 transition: 'all 0.3s ease',
                 cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-10px)';
-                e.currentTarget.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.1)';
               }}>
                 <div className="card-header border-0 text-center py-4" style={{
                   background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
@@ -979,14 +971,6 @@ export default function HomePage() {
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
                 border: '3px solid #F59E0B !important'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.08) translateY(-10px)';
-                e.currentTarget.style.boxShadow = '0 50px 100px rgba(245, 158, 11, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05) translateY(0)';
-                e.currentTarget.style.boxShadow = '0 40px 80px rgba(245, 158, 11, 0.2)';
               }}>
                 <div className="position-absolute top-0 start-50 translate-middle">
                   <span className="badge px-4 py-2 fw-bold" style={{
@@ -1116,14 +1100,6 @@ export default function HomePage() {
               <div className="card bg-white text-dark h-100 border-0 shadow-lg position-relative" style={{
                 transition: 'all 0.3s ease',
                 cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-10px)';
-                e.currentTarget.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.1)';
               }}>
                 <div className="card-header border-0 text-center py-4" style={{
                   background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
@@ -1261,16 +1237,6 @@ export default function HomePage() {
                   textAlign: 'center',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.borderColor = '#3B82F6';
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.2)';
-                  e.currentTarget.style.boxShadow = 'none';
                 }}>
                   <div className="bg-primary text-white rounded-circle mx-auto mb-3" style={{
                     width: "60px", 
