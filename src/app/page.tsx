@@ -23,86 +23,116 @@ export default function HomePage() {
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}>
         <div className="container">
-          <nav style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 0'
-          }}>
+          <nav className="navbar navbar-expand-lg navbar-light" style={{ padding: '1rem 0' }}>
             {/* Logo */}
-            <div style={{
+            <a className="navbar-brand" href="/" style={{
               fontSize: '1.5rem',
               fontWeight: 'bold',
               background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              backgroundClip: 'text',
+              textDecoration: 'none'
             }}>
               Varejofflex
-            </div>
+            </a>
 
-            {/* Menu de Navegação */}
-            <div style={{
-              display: 'flex',
-              gap: '2rem',
-              alignItems: 'center'
-            }}>
-              <a href="#demos" style={{
-                color: '#1E293B',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>Demos</a>
-              <a href="#pricing" style={{
-                color: '#1E293B',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>Planos</a>
-              <a href="#features" style={{
-                color: '#1E293B',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>Recursos</a>
-              <a href="#testimonials" style={{
-                color: '#1E293B',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>Depoimentos</a>
-              <a href="#faq" style={{
-                color: '#1E293B',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>FAQ</a>
-              
-              {/* Botões de Ação */}
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <a href="/login" style={{
-                  color: '#3B82F6',
-                  textDecoration: 'none',
-                  fontWeight: '600',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '8px',
-                  transition: 'all 0.3s ease'
-                }}>
-                  Entrar
-                </a>
-                <a href="/register" style={{
-                  background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
-                  color: 'white',
-                  textDecoration: 'none',
-                  fontWeight: '600',
-                  padding: '0.5rem 1.5rem',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
-                  transition: 'all 0.3s ease'
-                }}>
-                  Teste Grátis
-                </a>
-              </div>
+            {/* Botão Hamburger para Mobile */}
+            <button 
+              className="navbar-toggler border-0" 
+              type="button" 
+              data-bs-toggle="collapse" 
+              data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" 
+              aria-expanded="false" 
+              aria-label="Toggle navigation"
+              style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                borderRadius: '8px',
+                padding: '0.5rem 0.75rem'
+              }}
+            >
+              <i className="bi bi-list text-white fs-5"></i>
+            </button>
+
+            {/* Menu de Navegação Colapsável */}
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav ms-auto align-items-center">
+                <li className="nav-item">
+                  <a className="nav-link" href="#demos" style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>Demos</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#pricing" style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>Planos</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#features" style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>Recursos</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#testimonials" style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>Depoimentos</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#faq" style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>FAQ</a>
+                </li>
+                
+                {/* Separador visual no mobile */}
+                <li className="nav-item d-lg-none">
+                  <hr className="my-3" style={{ borderColor: 'rgba(59, 130, 246, 0.2)' }} />
+                </li>
+                
+                {/* Botões de Ação */}
+                <li className="nav-item" style={{ margin: '0 0.25rem' }}>
+                  <a href="/login" className="nav-link" style={{
+                    color: '#3B82F6',
+                    fontWeight: '600',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '8px',
+                    transition: 'all 0.3s ease',
+                    textAlign: 'center'
+                  }}>
+                    Entrar
+                  </a>
+                </li>
+                <li className="nav-item" style={{ margin: '0 0.25rem' }}>
+                  <a href="/register" className="nav-link" style={{
+                    background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                    color: 'white',
+                    fontWeight: '600',
+                    padding: '0.5rem 1.5rem',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                    transition: 'all 0.3s ease',
+                    textAlign: 'center',
+                    marginTop: '0.5rem'
+                  }}>
+                    Teste Grátis
+                  </a>
+                </li>
+              </ul>
             </div>
           </nav>
         </div>
