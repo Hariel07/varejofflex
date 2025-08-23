@@ -214,18 +214,40 @@ export default function LoginClient() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+      background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 30%, #334155 60%, #475569 100%)',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Background decorativo */}
+      {/* Background decorativo animado */}
       <div style={{
         position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        background: 'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)',
+        background: `
+          radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)
+        `,
+        pointerEvents: 'none'
+      }}></div>
+      
+      {/* Padrão geométrico sutil */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: `
+          linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%),
+          linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%)
+        `,
+        backgroundSize: '60px 60px',
+        backgroundPosition: '0 0, 0 30px, 30px -30px, -30px 0px',
         pointerEvents: 'none'
       }}></div>
 
@@ -233,37 +255,83 @@ export default function LoginClient() {
         <div className="row min-vh-100 align-items-center justify-content-center">
           <div className="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
             <div style={{
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '24px',
-              border: '2px solid rgba(59, 130, 246, 0.3)',
-              boxShadow: '0 20px 60px rgba(59, 130, 246, 0.15)',
+              background: 'rgba(255, 255, 255, 0.98)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '28px',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: `
+                0 25px 80px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4)
+              `,
               padding: '0',
               overflow: 'hidden',
-              position: 'relative'
-            }}>
+              position: 'relative',
+              transform: 'translateY(0)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = `
+                0 35px 100px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5)
+              `;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = `
+                0 25px 80px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4)
+              `;
+            }}
+            >
               {/* Header do Card */}
               <div style={{
-                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                background: 'linear-gradient(135deg, #1E293B 0%, #334155 50%, #475569 100%)',
                 color: 'white',
                 textAlign: 'center',
-                padding: '2rem 2rem 1.5rem 2rem'
+                padding: '2.5rem 2rem 2rem 2rem',
+                position: 'relative',
+                overflow: 'hidden'
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔐</div>
-                <h1 style={{
-                  fontSize: '1.75rem',
-                  fontWeight: '700',
-                  marginBottom: '0.5rem'
-                }}>
-                  Bem-vindo de volta!
-                </h1>
-                <p style={{
-                  fontSize: '1rem',
-                  opacity: 0.9,
-                  marginBottom: 0
-                }}>
-                  Entre na sua conta VarejoFlex
-                </p>
+                {/* Padrão decorativo */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.2) 0%, transparent 50%)',
+                  pointerEvents: 'none'
+                }}></div>
+                
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ 
+                    fontSize: '2.5rem', 
+                    marginBottom: '1.2rem',
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+                  }}>
+                    �
+                  </div>
+                  <h1 style={{
+                    fontSize: '1.8rem',
+                    fontWeight: '800',
+                    marginBottom: '0.8rem',
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                  }}>
+                    Acesse sua conta
+                  </h1>
+                  <p style={{
+                    fontSize: '1.05rem',
+                    opacity: 0.95,
+                    marginBottom: 0,
+                    fontWeight: '400'
+                  }}>
+                    Faça login ou cadastre-se no VarejoFlex
+                  </p>
+                </div>
               </div>
 
               {/* Conteúdo do Card */}
@@ -275,25 +343,28 @@ export default function LoginClient() {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      color: '#64748B',
+                      color: '#475569',
                       textDecoration: 'none',
-                      fontSize: '0.9rem',
-                      fontWeight: '500',
-                      transition: 'all 0.3s ease',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(100, 116, 139, 0.2)',
-                      background: 'rgba(100, 116, 139, 0.05)'
+                      fontSize: '0.95rem',
+                      fontWeight: '600',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      padding: '0.75rem 1.25rem',
+                      borderRadius: '14px',
+                      border: '1px solid rgba(71, 85, 105, 0.2)',
+                      background: 'rgba(248, 250, 252, 0.6)',
+                      backdropFilter: 'blur(10px)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-                      e.currentTarget.style.color = '#3B82F6';
+                      e.currentTarget.style.background = 'rgba(30, 41, 59, 0.05)';
+                      e.currentTarget.style.color = '#1E293B';
                       e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(71, 85, 105, 0.15)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(100, 116, 139, 0.05)';
-                      e.currentTarget.style.color = '#64748B';
+                      e.currentTarget.style.background = 'rgba(248, 250, 252, 0.6)';
+                      e.currentTarget.style.color = '#475569';
                       e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
                     <i className="bi bi-arrow-left me-2"></i>
@@ -347,22 +418,27 @@ export default function LoginClient() {
                       disabled={loading}
                       style={{
                         width: '100%',
-                        padding: '0.875rem 1rem',
-                        border: '2px solid rgba(59, 130, 246, 0.2)',
-                        borderRadius: '12px',
+                        padding: '1rem 1.25rem',
+                        border: '2px solid rgba(30, 41, 59, 0.15)',
+                        borderRadius: '16px',
                         fontSize: '1rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        backgroundColor: 'rgba(248, 250, 252, 0.8)',
                         backdropFilter: 'blur(10px)',
-                        transition: 'all 0.3s ease',
-                        outline: 'none'
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        outline: 'none',
+                        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
                       }}
                       onFocus={(e) => {
-                        e.target.style.borderColor = '#3B82F6';
-                        e.target.style.boxShadow = '0 0 0 0.25rem rgba(59, 130, 246, 0.25)';
+                        e.target.style.borderColor = '#1E293B';
+                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                        e.target.style.boxShadow = '0 0 0 0.25rem rgba(30, 41, 59, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.05)';
+                        e.target.style.transform = 'translateY(-1px)';
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = 'rgba(59, 130, 246, 0.2)';
-                        e.target.style.boxShadow = 'none';
+                        e.target.style.borderColor = 'rgba(30, 41, 59, 0.15)';
+                        e.target.style.backgroundColor = 'rgba(248, 250, 252, 0.8)';
+                        e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.05)';
+                        e.target.style.transform = 'translateY(0)';
                       }}
                     />
                   </div>
@@ -391,22 +467,27 @@ export default function LoginClient() {
                       disabled={loading}
                       style={{
                         width: '100%',
-                        padding: '0.875rem 1rem',
-                        border: '2px solid rgba(59, 130, 246, 0.2)',
-                        borderRadius: '12px',
+                        padding: '1rem 1.25rem',
+                        border: '2px solid rgba(30, 41, 59, 0.15)',
+                        borderRadius: '16px',
                         fontSize: '1rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        backgroundColor: 'rgba(248, 250, 252, 0.8)',
                         backdropFilter: 'blur(10px)',
-                        transition: 'all 0.3s ease',
-                        outline: 'none'
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        outline: 'none',
+                        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)'
                       }}
                       onFocus={(e) => {
-                        e.target.style.borderColor = '#3B82F6';
-                        e.target.style.boxShadow = '0 0 0 0.25rem rgba(59, 130, 246, 0.25)';
+                        e.target.style.borderColor = '#1E293B';
+                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                        e.target.style.boxShadow = '0 0 0 0.25rem rgba(30, 41, 59, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.05)';
+                        e.target.style.transform = 'translateY(-1px)';
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = 'rgba(59, 130, 246, 0.2)';
-                        e.target.style.boxShadow = 'none';
+                        e.target.style.borderColor = 'rgba(30, 41, 59, 0.15)';
+                        e.target.style.backgroundColor = 'rgba(248, 250, 252, 0.8)';
+                        e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.05)';
+                        e.target.style.transform = 'translateY(0)';
                       }}
                     />
                   </div>
@@ -416,28 +497,36 @@ export default function LoginClient() {
                     disabled={loading}
                     style={{
                       width: '100%',
-                      background: loading ? '#9CA3AF' : 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                      background: loading ? 
+                        'linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%)' : 
+                        'linear-gradient(135deg, #1E293B 0%, #334155 50%, #475569 100%)',
                       color: 'white',
                       border: 'none',
-                      borderRadius: '15px',
-                      padding: '0.875rem 1.5rem',
+                      borderRadius: '18px',
+                      padding: '1rem 1.5rem',
                       fontSize: '1.1rem',
                       fontWeight: '700',
                       cursor: loading ? 'not-allowed' : 'pointer',
-                      boxShadow: loading ? 'none' : '0 8px 25px rgba(59, 130, 246, 0.3)',
-                      transition: 'all 0.3s ease',
-                      marginBottom: '1.5rem'
+                      boxShadow: loading ? 
+                        'none' : 
+                        '0 12px 30px rgba(30, 41, 59, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      marginBottom: '1.5rem',
+                      position: 'relative',
+                      overflow: 'hidden'
                     }}
                     onMouseEnter={(e) => {
                       if (!loading) {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 12px 30px rgba(59, 130, 246, 0.4)';
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                        e.currentTarget.style.boxShadow = '0 16px 40px rgba(30, 41, 59, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+                        e.currentTarget.style.background = 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!loading) {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+                        e.currentTarget.style.boxShadow = '0 12px 30px rgba(30, 41, 59, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.background = 'linear-gradient(135deg, #1E293B 0%, #334155 50%, #475569 100%)';
                       }
                     }}
                   >
@@ -480,20 +569,29 @@ export default function LoginClient() {
                   <Link 
                     href="/register"
                     style={{
-                      color: '#3B82F6',
+                      color: '#1E293B',
                       textDecoration: 'none',
-                      fontWeight: '600',
+                      fontWeight: '700',
                       fontSize: '1rem',
-                      transition: 'color 0.3s ease'
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.08) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                      border: '1px solid rgba(30, 41, 59, 0.15)',
+                      display: 'inline-block'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#06B6D4';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(30, 41, 59, 0.2)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#3B82F6';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.08) 0%, rgba(51, 65, 85, 0.05) 100%)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
-                    Criar conta gratuita →
+                    ✨ Criar conta gratuita
                   </Link>
                   
                   <div style={{ marginTop: '1rem' }}>
