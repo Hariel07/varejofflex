@@ -5,13 +5,13 @@ import React from "react";
 // CSS base (ordem importa)
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "../../globals.css";
+import "../globals.css";
 
 // Carrega o JS do Bootstrap no cliente (modal, collapse, etc.)
-import BootstrapClient from "../../bootstrap-client";
+import BootstrapClient from "../bootstrap-client";
 
 // Providers (NextAuth SessionProvider)
-import Providers from "../../providers";
+import Providers from "../providers";
 
 export const metadata: Metadata = {
   title: "Dashboard Owner - VarejoFlex",
@@ -28,9 +28,7 @@ export default function DashboardGroupLayout({
 }) {
   return (
     <Providers>
-      <div className="dashboard-container dashboard-body">
-        {children}
-      </div>
+      {children}
       <BootstrapClient />
     </Providers>
   );

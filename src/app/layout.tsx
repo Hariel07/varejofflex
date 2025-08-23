@@ -7,10 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.css"; // se não existir, pode remover esta linha
 
-// Componentes compartilhados
-import NavbarBs from "@/components/NavbarBs";
-import FooterBs from "@/components/FooterBs";
-
 // Carrega o JS do Bootstrap no cliente (modal, collapse, etc.)
 import BootstrapClient from "./bootstrap-client";
 
@@ -45,6 +41,18 @@ export const viewport: Viewport = {
   themeColor: "#2563eb",
 };
 
+// Componente para conteúdo principal
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {/* Conteúdo das páginas */}
+      <main id="content" className="flex-fill">
+        {children}
+      </main>
+    </>
+  );
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -54,17 +62,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className="bg-white d-flex flex-column min-vh-100">
         <Providers>
-          {/* Header/Nav (sticky-top no próprio componente) */}
-          <NavbarBs />
-
-          {/* Conteúdo das páginas */}
-          <main id="content" className="flex-fill">
-            {children}
-          </main>
-
-          {/* Rodapé com o visual solicitado */}
-          <FooterBs />
-
+          <LayoutContent>{children}</LayoutContent>
           {/* Bootstrap JS (modals, collapse, etc.) */}
           <BootstrapClient />
         </Providers>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
@@ -26,6 +26,12 @@ export default function LoginClient() {
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [showDiagnostics, setShowDiagnostics] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Fix hydration error
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const addLog = (step: string, status: LogEntry['status'], message: string, data?: any) => {
     const logEntry: LogEntry = {
@@ -241,7 +247,8 @@ export default function LoginClient() {
             <div className="card-body">
               <h1 className="h4 mb-3 text-center">Entrar no VarejoFlex</h1>
               <small className="text-muted mb-3 d-block text-center">
-                Versão: 5.0 - Diagnóstico Completo - {new Date().toLocaleString()}
+                Versão: 5.0 - Diagnóstico Completo
+                {mounted && ` - ${new Date().toLocaleString()}`}
               </small>
               
               {err && (

@@ -9,7 +9,7 @@ const SEGMENTS = [
     id: "lanchonete",
     name: "Lanchonete",
     icon: "🍔",
-    color: "warning",
+    color: "#f59e0b",
     description: "Hamburgueria, sanduícheria, pastelaria",
     features: ["PDV rápido", "Controle de ingredientes", "Delivery integrado"]
   },
@@ -17,7 +17,7 @@ const SEGMENTS = [
     id: "pizzaria",
     name: "Pizzaria",
     icon: "🍕",
-    color: "danger",
+    color: "#ef4444",
     description: "Pizzas, massas, pratos italianos",
     features: ["Sabores por tamanho", "Tempo de preparo", "Forno integrado"]
   },
@@ -25,7 +25,7 @@ const SEGMENTS = [
     id: "moda",
     name: "Moda",
     icon: "👗",
-    color: "primary",
+    color: "#3b82f6",
     description: "Roupas, calçados, acessórios",
     features: ["Grades por cor/tamanho", "Estoque visual", "Coleções"]
   },
@@ -33,7 +33,7 @@ const SEGMENTS = [
     id: "mercado",
     name: "Mercado",
     icon: "🛒",
-    color: "success",
+    color: "#10b981",
     description: "Supermercado, mercearia, hortifrúti",
     features: ["Balança integrada", "Controle de lote", "Produtos fracionados"]
   },
@@ -41,7 +41,7 @@ const SEGMENTS = [
     id: "petshop",
     name: "Petshop",
     icon: "🐕",
-    color: "warning",
+    color: "#f59e0b",
     description: "Produtos pet, banho e tosa",
     features: ["Agendamentos", "Ficha do pet", "Lembretes automáticos"]
   },
@@ -49,7 +49,7 @@ const SEGMENTS = [
     id: "salao",
     name: "Salão",
     icon: "💅",
-    color: "danger",
+    color: "#ef4444",
     description: "Cabeleireiro, manicure, estética",
     features: ["Agenda profissionais", "Comissões", "Avaliações"]
   },
@@ -57,7 +57,7 @@ const SEGMENTS = [
     id: "farmacia",
     name: "Farmácia",
     icon: "💊",
-    color: "info",
+    color: "#0ea5e9",
     description: "Medicamentos, cosméticos",
     features: ["Receitas controladas", "Compliance ANVISA", "Alertas validade"]
   },
@@ -65,7 +65,7 @@ const SEGMENTS = [
     id: "conveniencia",
     name: "Conveniência",
     icon: "🏪",
-    color: "secondary",
+    color: "#6b7280",
     description: "Loja 24h, produtos diversos",
     features: ["PDV express", "Controle de idade", "Operação 24h"]
   }
@@ -76,6 +76,9 @@ function RegisterLojistaForm() {
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSegment, setSelectedSegment] = useState(searchParams?.get("segment") || "");
+  const [errors, setErrors] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     segment: "",
     company: {
@@ -102,8 +105,6 @@ function RegisterLojistaForm() {
       confirmPassword: ""
     }
   });
-  const [errors, setErrors] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const segment = searchParams?.get("segment");
@@ -121,13 +122,16 @@ function RegisterLojistaForm() {
   };
 
   const handleCompanyDataChange = (field: string, value: any) => {
-    if (field.includes(".")) {
-      const [parent, child] = field.split(".");
+    if (field.includes("address.")) {
+      const addressField = field.split(".")[1];
       setFormData(prev => ({
         ...prev,
-        [parent]: {
-          ...(prev[parent as keyof typeof prev] as object || {}),
-          [child]: value
+        company: {
+          ...prev.company,
+          address: {
+            ...prev.company.address,
+            [addressField]: value
+          }
         }
       }));
     } else {
@@ -230,7 +234,7 @@ function RegisterLojistaForm() {
       if (!res.ok) {
         setErrors(data?.error?.message || "Erro ao criar conta");
       } else {
-        setCurrentStep(4); // Sucesso
+        setCurrentStep(4);
       }
     } catch (error) {
       setErrors("Erro de rede. Tente novamente.");
@@ -242,379 +246,598 @@ function RegisterLojistaForm() {
   const selectedSegmentData = SEGMENTS.find(s => s.id === selectedSegment);
 
   return (
-    <div className="min-vh-100 bg-light">
-      <div className="container py-5">
+    <div className="min-vh-100" style={{ 
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+      position: 'relative'
+    }}>
+      {/* Background Pattern */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
+            radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.03) 0%, transparent 50%)
+          `,
+          zIndex: 1
+        }}
+      />
+      
+      <div className="container py-5" style={{ position: 'relative', zIndex: 2 }}>
         <div className="row justify-content-center">
           <div className="col-lg-8">
-            {/* Header */}
             <div className="text-center mb-5">
-              <Link href="/" className="btn btn-outline-primary mb-3">
+              <Link 
+                href="/register" 
+                className="btn mb-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                  color: '#3b82f6',
+                  borderRadius: '50px',
+                  padding: '12px 24px',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                }}
+              >
                 <i className="bi bi-arrow-left me-2"></i>
-                Voltar ao Início
+                Voltar
               </Link>
-              <h1 className="display-6 fw-bold mb-2">Cadastro de Lojista</h1>
-              <p className="lead text-muted">
-                Crie sua conta e comece a vender em poucos minutos
-              </p>
+              
+              <div 
+                className="mb-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '24px',
+                  padding: '40px',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <h1 
+                  className="display-5 fw-bold mb-3"
+                  style={{
+                    background: 'linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #8b5cf6 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  Cadastro de Lojista
+                </h1>
+                <p className="lead" style={{ color: '#64748b', fontSize: '1.2rem' }}>
+                  Crie sua conta e comece a vender em poucos minutos
+                </p>
+              </div>
             </div>
 
-            {/* Progress */}
-            <div className="card mb-4">
-              <div className="card-body">
-                <div className="row text-center">
-                  <div className="col-3">
-                    <div className={`rounded-circle d-inline-flex align-items-center justify-content-center ${currentStep >= 1 ? 'bg-primary text-white' : 'bg-light text-muted'}`} 
-                         style={{width: "40px", height: "40px"}}>
-                      {currentStep > 1 ? <i className="bi bi-check"></i> : "1"}
-                    </div>
-                    <div className="mt-2 small fw-bold">Segmento</div>
+            {/* Progress Steps */}
+            <div 
+              className="mb-5"
+              style={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+                padding: '24px'
+              }}
+            >
+              <div className="row text-center">
+                <div className="col-3">
+                  <div 
+                    className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style={{
+                      width: "60px", 
+                      height: "60px",
+                      background: currentStep >= 1 
+                        ? 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' 
+                        : 'rgba(148, 163, 184, 0.2)',
+                      color: currentStep >= 1 ? 'white' : '#94a3b8',
+                      fontSize: '1.2rem',
+                      fontWeight: '600',
+                      border: currentStep >= 1 ? 'none' : '2px solid rgba(148, 163, 184, 0.3)',
+                      boxShadow: currentStep >= 1 ? '0 8px 25px rgba(59, 130, 246, 0.3)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {currentStep > 1 ? <i className="bi bi-check"></i> : "1"}
                   </div>
-                  <div className="col-3">
-                    <div className={`rounded-circle d-inline-flex align-items-center justify-content-center ${currentStep >= 2 ? 'bg-primary text-white' : 'bg-light text-muted'}`} 
-                         style={{width: "40px", height: "40px"}}>
-                      {currentStep > 2 ? <i className="bi bi-check"></i> : "2"}
-                    </div>
-                    <div className="mt-2 small fw-bold">Empresa</div>
+                  <div style={{ color: '#1e293b', fontWeight: '600', fontSize: '0.9rem' }}>Segmento</div>
+                </div>
+                <div className="col-3">
+                  <div 
+                    className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style={{
+                      width: "60px", 
+                      height: "60px",
+                      background: currentStep >= 2 
+                        ? 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' 
+                        : 'rgba(148, 163, 184, 0.2)',
+                      color: currentStep >= 2 ? 'white' : '#94a3b8',
+                      fontSize: '1.2rem',
+                      fontWeight: '600',
+                      border: currentStep >= 2 ? 'none' : '2px solid rgba(148, 163, 184, 0.3)',
+                      boxShadow: currentStep >= 2 ? '0 8px 25px rgba(59, 130, 246, 0.3)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {currentStep > 2 ? <i className="bi bi-check"></i> : "2"}
                   </div>
-                  <div className="col-3">
-                    <div className={`rounded-circle d-inline-flex align-items-center justify-content-center ${currentStep >= 3 ? 'bg-primary text-white' : 'bg-light text-muted'}`} 
-                         style={{width: "40px", height: "40px"}}>
-                      {currentStep > 3 ? <i className="bi bi-check"></i> : "3"}
-                    </div>
-                    <div className="mt-2 small fw-bold">Usuário</div>
+                  <div style={{ color: '#1e293b', fontWeight: '600', fontSize: '0.9rem' }}>Empresa</div>
+                </div>
+                <div className="col-3">
+                  <div 
+                    className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style={{
+                      width: "60px", 
+                      height: "60px",
+                      background: currentStep >= 3 
+                        ? 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' 
+                        : 'rgba(148, 163, 184, 0.2)',
+                      color: currentStep >= 3 ? 'white' : '#94a3b8',
+                      fontSize: '1.2rem',
+                      fontWeight: '600',
+                      border: currentStep >= 3 ? 'none' : '2px solid rgba(148, 163, 184, 0.3)',
+                      boxShadow: currentStep >= 3 ? '0 8px 25px rgba(59, 130, 246, 0.3)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {currentStep > 3 ? <i className="bi bi-check"></i> : "3"}
                   </div>
-                  <div className="col-3">
-                    <div className={`rounded-circle d-inline-flex align-items-center justify-content-center ${currentStep >= 4 ? 'bg-success text-white' : 'bg-light text-muted'}`} 
-                         style={{width: "40px", height: "40px"}}>
-                      {currentStep >= 4 ? <i className="bi bi-check"></i> : "4"}
-                    </div>
-                    <div className="mt-2 small fw-bold">Pronto</div>
+                  <div style={{ color: '#1e293b', fontWeight: '600', fontSize: '0.9rem' }}>Usuário</div>
+                </div>
+                <div className="col-3">
+                  <div 
+                    className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style={{
+                      width: "60px", 
+                      height: "60px",
+                      background: currentStep >= 4 
+                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' 
+                        : 'rgba(148, 163, 184, 0.2)',
+                      color: currentStep >= 4 ? 'white' : '#94a3b8',
+                      fontSize: '1.2rem',
+                      fontWeight: '600',
+                      border: currentStep >= 4 ? 'none' : '2px solid rgba(148, 163, 184, 0.3)',
+                      boxShadow: currentStep >= 4 ? '0 8px 25px rgba(16, 185, 129, 0.3)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {currentStep >= 4 ? <i className="bi bi-check"></i> : "4"}
                   </div>
+                  <div style={{ color: '#1e293b', fontWeight: '600', fontSize: '0.9rem' }}>Pronto</div>
                 </div>
               </div>
             </div>
 
-            {/* Step Content */}
-            <div className="card">
-              <div className="card-body p-4">
-                {/* Step 1: Segmento */}
-                {currentStep === 1 && (
-                  <div>
-                    <h4 className="card-title mb-4">
-                      <i className="bi bi-shop me-2"></i>
-                      Escolha seu Segmento
-                    </h4>
-                    <p className="text-muted mb-4">
-                      Selecione o tipo de negócio que você possui. Isso nos ajudará a configurar 
-                      o sistema com as funcionalidades ideais para sua loja.
-                    </p>
-                    
-                    <div className="row g-3">
-                      {SEGMENTS.map(segment => (
-                        <div key={segment.id} className="col-md-6">
-                          <div 
-                            className={`card h-100 cursor-pointer border-2 ${selectedSegment === segment.id ? `border-${segment.color}` : 'border-light'}`}
-                            onClick={() => handleSegmentSelect(segment.id)}
-                            style={{ cursor: "pointer" }}
-                          >
-                            <div className="card-body">
-                              <div className="d-flex align-items-center mb-3">
-                                <div className="fs-1 me-3">{segment.icon}</div>
-                                <div>
-                                  <h6 className="mb-1">{segment.name}</h6>
-                                  <small className="text-muted">{segment.description}</small>
-                                </div>
-                              </div>
-                              <ul className="list-unstyled mb-0">
-                                {segment.features.map((feature, idx) => (
-                                  <li key={idx} className="mb-1">
-                                    <i className={`bi bi-check-circle text-${segment.color} me-2`}></i>
-                                    <small>{feature}</small>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 2: Dados da Empresa */}
-                {currentStep === 2 && (
-                  <div>
-                    <h4 className="card-title mb-4">
-                      <i className="bi bi-building me-2"></i>
-                      Dados da Empresa
-                      {selectedSegmentData && (
-                        <span className={`badge bg-${selectedSegmentData.color} ms-2`}>
-                          {selectedSegmentData.icon} {selectedSegmentData.name}
-                        </span>
-                      )}
-                    </h4>
-                    
-                    <div className="row g-3">
-                      <div className="col-md-8">
-                        <label className="form-label">Nome da Empresa *</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.name}
-                          onChange={(e) => handleCompanyDataChange("name", e.target.value)}
-                          placeholder="Ex: Lanchonete do João"
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Tipo de Pessoa</label>
-                        <select 
-                          className="form-select"
-                          value={formData.company.personType}
-                          onChange={(e) => {
-                            const personType = e.target.value as "PF" | "PJ";
-                            handleCompanyDataChange("personType", personType);
-                            handleCompanyDataChange("documentType", personType === "PF" ? "CPF" : "CNPJ");
+            {/* Main Form Container */}
+            <div 
+              style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '24px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+                padding: '40px'
+              }}
+            >
+              {/* Step 1: Segment Selection */}
+              {currentStep === 1 && (
+                <div>
+                  <h4 style={{ color: '#1e293b', fontWeight: '700', fontSize: '1.5rem' }} className="mb-4">
+                    <i className="bi bi-shop me-3" style={{ color: '#3b82f6' }}></i>
+                    Escolha seu Segmento
+                  </h4>
+                  <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: '1.6' }} className="mb-5">
+                    Selecione o tipo de negócio que você possui para personalizar sua experiência.
+                  </p>
+                  
+                  <div className="row g-4">
+                    {SEGMENTS.map(segment => (
+                      <div key={segment.id} className="col-md-6">
+                        <div 
+                          onClick={() => handleSegmentSelect(segment.id)}
+                          style={{ 
+                            cursor: "pointer",
+                            background: selectedSegment === segment.id ? 'rgba(59, 130, 246, 0.1)' : 'rgba(255, 255, 255, 0.7)',
+                            backdropFilter: 'blur(20px)',
+                            borderRadius: '16px',
+                            border: selectedSegment === segment.id ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.3)',
+                            padding: '20px',
+                            transition: 'all 0.3s ease',
+                            boxShadow: selectedSegment === segment.id ? '0 12px 40px rgba(59, 130, 246, 0.15)' : '0 8px 32px rgba(0, 0, 0, 0.08)'
                           }}
                         >
-                          <option value="PJ">Pessoa Jurídica</option>
-                          <option value="PF">Pessoa Física</option>
-                        </select>
+                          <div className="d-flex align-items-center mb-3">
+                            <div className="fs-1 me-3">{segment.icon}</div>
+                            <div>
+                              <h6 className="mb-1" style={{ color: '#1e293b', fontWeight: '600' }}>
+                                {segment.name}
+                              </h6>
+                              <small style={{ color: '#64748b' }}>{segment.description}</small>
+                            </div>
+                          </div>
+                          <ul className="list-unstyled mb-0">
+                            {segment.features.map((feature, idx) => (
+                              <li key={idx} className="mb-2">
+                                <i className="bi bi-check-circle me-2" style={{ color: '#10b981' }}></i>
+                                <small style={{ color: '#64748b' }}>{feature}</small>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
-                      <div className="col-md-4">
-                        <label className="form-label">{formData.company.documentType} *</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.documentNumber}
-                          onChange={(e) => handleCompanyDataChange("documentNumber", e.target.value)}
-                          placeholder={formData.company.documentType === "CPF" ? "000.000.000-00" : "00.000.000/0001-00"}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">E-mail *</label>
-                        <input 
-                          type="email" 
-                          className="form-control" 
-                          value={formData.company.email}
-                          onChange={(e) => handleCompanyDataChange("email", e.target.value)}
-                          placeholder="contato@empresa.com"
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Telefone/WhatsApp *</label>
-                        <input 
-                          type="tel" 
-                          className="form-control" 
-                          value={formData.company.phone}
-                          onChange={(e) => handleCompanyDataChange("phone", e.target.value)}
-                          placeholder="(11) 99999-9999"
-                        />
-                      </div>
-                      
-                      <div className="col-12">
-                        <hr />
-                        <h6>Endereço (opcional)</h6>
-                      </div>
-                      
-                      <div className="col-md-3">
-                        <label className="form-label">CEP</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.zip}
-                          onChange={(e) => handleCompanyDataChange("address.zip", e.target.value)}
-                          placeholder="00000-000"
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="form-label">Rua</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.street}
-                          onChange={(e) => handleCompanyDataChange("address.street", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <label className="form-label">Número</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.number}
-                          onChange={(e) => handleCompanyDataChange("address.number", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Bairro</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.district}
-                          onChange={(e) => handleCompanyDataChange("address.district", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Cidade</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.city}
-                          onChange={(e) => handleCompanyDataChange("address.city", e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-2">
-                        <label className="form-label">UF</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.state}
-                          onChange={(e) => handleCompanyDataChange("address.state", e.target.value)}
-                          maxLength={2}
-                        />
-                      </div>
-                      <div className="col-md-2">
-                        <label className="form-label">Complemento</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.company.address.complement}
-                          onChange={(e) => handleCompanyDataChange("address.complement", e.target.value)}
-                        />
-                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Company Data */}
+              {currentStep === 2 && (
+                <div>
+                  <h4 style={{ color: '#1e293b', fontWeight: '700', fontSize: '1.5rem' }} className="mb-4">
+                    <i className="bi bi-building me-3" style={{ color: '#3b82f6' }}></i>
+                    Dados da Empresa
+                    {selectedSegmentData && (
+                      <span 
+                        className="ms-3 badge"
+                        style={{
+                          background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                          color: 'white',
+                          fontSize: '0.9rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {selectedSegmentData.icon} {selectedSegmentData.name}
+                      </span>
+                    )}
+                  </h4>
+                  
+                  <div className="row g-4">
+                    <div className="col-md-8">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Nome da Empresa *
+                      </label>
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        value={formData.company.name}
+                        onChange={(e) => handleCompanyDataChange("name", e.target.value)}
+                        placeholder="Ex: Lanchonete do João"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Tipo de Pessoa
+                      </label>
+                      <select 
+                        className="form-select"
+                        value={formData.company.personType}
+                        onChange={(e) => {
+                          const personType = e.target.value as "PF" | "PJ";
+                          handleCompanyDataChange("personType", personType);
+                          handleCompanyDataChange("documentType", personType === "PF" ? "CPF" : "CNPJ");
+                        }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      >
+                        <option value="PJ">Pessoa Jurídica</option>
+                        <option value="PF">Pessoa Física</option>
+                      </select>
                     </div>
                   </div>
-                )}
 
-                {/* Step 3: Dados do Usuário */}
-                {currentStep === 3 && (
-                  <div>
-                    <h4 className="card-title mb-4">
-                      <i className="bi bi-person me-2"></i>
-                      Seus Dados de Acesso
-                    </h4>
-                    <p className="text-muted mb-4">
-                      Estes serão seus dados para acessar o sistema.
-                    </p>
-                    
-                    <div className="row g-3">
-                      <div className="col-md-6">
-                        <label className="form-label">Nome Completo *</label>
-                        <input 
-                          type="text" 
-                          className="form-control" 
-                          value={formData.user.name}
-                          onChange={(e) => handleUserDataChange("name", e.target.value)}
-                          placeholder="Seu nome completo"
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="form-label">E-mail *</label>
-                        <input 
-                          type="email" 
-                          className="form-control" 
-                          value={formData.user.email}
-                          onChange={(e) => handleUserDataChange("email", e.target.value)}
-                          placeholder="seu@email.com"
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="form-label">Senha *</label>
-                        <input 
-                          type="password" 
-                          className="form-control" 
-                          value={formData.user.password}
-                          onChange={(e) => handleUserDataChange("password", e.target.value)}
-                          placeholder="Mínimo 6 caracteres"
-                          minLength={6}
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="form-label">Confirmar Senha *</label>
-                        <input 
-                          type="password" 
-                          className="form-control" 
-                          value={formData.user.confirmPassword}
-                          onChange={(e) => handleUserDataChange("confirmPassword", e.target.value)}
-                          placeholder="Digite a senha novamente"
-                        />
-                      </div>
+                  <div className="row g-4 mt-3">
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        {formData.company.documentType} *
+                      </label>
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        value={formData.company.documentNumber}
+                        onChange={(e) => handleCompanyDataChange("documentNumber", e.target.value)}
+                        placeholder={formData.company.documentType === "CPF" ? "000.000.000-00" : "00.000.000/0000-00"}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Telefone *
+                      </label>
+                      <input 
+                        type="tel" 
+                        className="form-control" 
+                        value={formData.company.phone}
+                        onChange={(e) => handleCompanyDataChange("phone", e.target.value)}
+                        placeholder="(11) 99999-9999"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
                     </div>
                   </div>
-                )}
 
-                {/* Step 4: Sucesso */}
-                {currentStep === 4 && (
-                  <div className="text-center">
-                    <div className="mb-4">
-                      <i className="bi bi-check-circle text-success" style={{fontSize: "4rem"}}></i>
-                    </div>
-                    <h4 className="text-success mb-3">Conta Criada com Sucesso!</h4>
-                    <p className="text-muted mb-4">
-                      Sua conta foi criada e você já pode começar a usar o VarejoFlex.
-                      Faça login para acessar seu dashboard.
-                    </p>
-                    <div className="d-grid gap-2 col-md-6 mx-auto">
-                      <Link href="/login" className="btn btn-success btn-lg">
-                        <i className="bi bi-box-arrow-in-right me-2"></i>
-                        Fazer Login
-                      </Link>
+                  <div className="row g-4 mt-3">
+                    <div className="col-12">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        E-mail da Empresa *
+                      </label>
+                      <input 
+                        type="email" 
+                        className="form-control" 
+                        value={formData.company.email}
+                        onChange={(e) => handleCompanyDataChange("email", e.target.value)}
+                        placeholder="contato@empresa.com"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Errors */}
-                {errors && (
-                  <div className="alert alert-danger mt-3">
-                    <i className="bi bi-exclamation-triangle me-2"></i>
-                    {errors}
+              {/* Step 3: User Data */}
+              {currentStep === 3 && (
+                <div>
+                  <h4 style={{ color: '#1e293b', fontWeight: '700', fontSize: '1.5rem' }} className="mb-4">
+                    <i className="bi bi-person me-3" style={{ color: '#3b82f6' }}></i>
+                    Seus Dados de Acesso
+                  </h4>
+                  
+                  <div className="row g-4">
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Nome Completo *
+                      </label>
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        value={formData.user.name}
+                        onChange={(e) => handleUserDataChange("name", e.target.value)}
+                        placeholder="Seu nome completo"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        E-mail *
+                      </label>
+                      <input 
+                        type="email" 
+                        className="form-control" 
+                        value={formData.user.email}
+                        onChange={(e) => handleUserDataChange("email", e.target.value)}
+                        placeholder="seu@email.com"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
                   </div>
-                )}
 
-                {/* Navigation */}
-                {currentStep < 4 && (
-                  <div className="d-flex justify-content-between mt-4">
+                  <div className="row g-4 mt-3">
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Senha *
+                      </label>
+                      <input 
+                        type="password" 
+                        className="form-control" 
+                        value={formData.user.password}
+                        onChange={(e) => handleUserDataChange("password", e.target.value)}
+                        placeholder="Mínimo 6 caracteres"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" style={{ color: '#1e293b', fontWeight: '600' }}>
+                        Confirmar Senha *
+                      </label>
+                      <input 
+                        type="password" 
+                        className="form-control" 
+                        value={formData.user.confirmPassword}
+                        onChange={(e) => handleUserDataChange("confirmPassword", e.target.value)}
+                        placeholder="Digite a senha novamente"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(203, 213, 225, 0.5)',
+                          borderRadius: '12px',
+                          padding: '12px 16px',
+                          fontSize: '1rem'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Success */}
+              {currentStep === 4 && (
+                <div className="text-center">
+                  <div className="mb-5">
+                    <div 
+                      style={{
+                        width: '120px',
+                        height: '120px',
+                        margin: '0 auto 24px',
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 20px 60px rgba(16, 185, 129, 0.3)'
+                      }}
+                    >
+                      <i className="bi bi-check-circle" style={{fontSize: "3rem", color: 'white'}}></i>
+                    </div>
+                  </div>
+                  <h4 style={{ color: '#10b981', fontWeight: '700', fontSize: '2rem' }} className="mb-4">
+                    Conta Criada com Sucesso!
+                  </h4>
+                  <p style={{ color: '#64748b', fontSize: '1.2rem', lineHeight: '1.6' }} className="mb-5">
+                    Sua conta foi criada. Faça login para acessar seu dashboard.
+                  </p>
+                  <Link 
+                    href="/login" 
+                    className="btn btn-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      border: 'none',
+                      borderRadius: '50px',
+                      padding: '16px 32px',
+                      color: 'white',
+                      fontWeight: '600',
+                      fontSize: '1.1rem',
+                      textDecoration: 'none',
+                      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    <i className="bi bi-box-arrow-in-right me-2"></i>
+                    Fazer Login
+                  </Link>
+                </div>
+              )}
+
+              {/* Error Display */}
+              {errors && (
+                <div 
+                  className="mt-4"
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    color: '#dc2626'
+                  }}
+                >
+                  <i className="bi bi-exclamation-triangle me-2"></i>
+                  {errors}
+                </div>
+              )}
+
+              {/* Navigation Buttons */}
+              {currentStep < 4 && (
+                <div className="d-flex justify-content-between mt-5">
+                  <button 
+                    type="button" 
+                    onClick={prevStep}
+                    disabled={currentStep === 1}
+                    style={{
+                      background: currentStep === 1 ? 'rgba(148, 163, 184, 0.2)' : 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(203, 213, 225, 0.5)',
+                      borderRadius: '50px',
+                      padding: '12px 24px',
+                      color: currentStep === 1 ? '#94a3b8' : '#64748b',
+                      fontWeight: '500',
+                      cursor: currentStep === 1 ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    <i className="bi bi-arrow-left me-2"></i>
+                    Anterior
+                  </button>
+                  
+                  {currentStep < 3 ? (
                     <button 
                       type="button" 
-                      className="btn btn-outline-secondary"
-                      onClick={prevStep}
-                      disabled={currentStep === 1}
+                      onClick={nextStep}
+                      style={{
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                        border: 'none',
+                        borderRadius: '50px',
+                        padding: '12px 24px',
+                        color: 'white',
+                        fontWeight: '600',
+                        boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)'
+                      }}
                     >
-                      <i className="bi bi-arrow-left me-2"></i>
-                      Anterior
+                      Próximo
+                      <i className="bi bi-arrow-right ms-2"></i>
                     </button>
-                    
-                    {currentStep < 3 ? (
-                      <button 
-                        type="button" 
-                        className="btn btn-primary"
-                        onClick={nextStep}
-                      >
-                        Próximo
-                        <i className="bi bi-arrow-right ms-2"></i>
-                      </button>
-                    ) : (
-                      <button 
-                        type="button" 
-                        className="btn btn-success"
-                        onClick={handleSubmit}
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2"></span>
-                            Criando Conta...
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-check-circle me-2"></i>
-                            Criar Conta
-                          </>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <button 
+                      type="button" 
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      style={{
+                        background: loading ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        border: 'none',
+                        borderRadius: '50px',
+                        padding: '12px 24px',
+                        color: 'white',
+                        fontWeight: '600',
+                        boxShadow: loading ? 'none' : '0 8px 25px rgba(16, 185, 129, 0.3)',
+                        cursor: loading ? 'not-allowed' : 'pointer'
+                      }}
+                    >
+                      {loading ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Criando Conta...
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-check-circle me-2"></i>
+                          Criar Conta
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -626,12 +849,19 @@ function RegisterLojistaForm() {
 export default function RegisterLojista() {
   return (
     <Suspense fallback={
-      <div className="container py-5">
+      <div 
+        className="min-vh-100 d-flex align-items-center justify-content-center"
+        style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}
+      >
         <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
+          <div 
+            className="spinner-border mb-3" 
+            role="status"
+            style={{ color: '#3b82f6', width: '3rem', height: '3rem' }}
+          >
             <span className="visually-hidden">Carregando...</span>
           </div>
-          <p className="mt-3 text-muted">Carregando formulário de registro...</p>
+          <p style={{ color: '#64748b' }}>Carregando formulário...</p>
         </div>
       </div>
     }>

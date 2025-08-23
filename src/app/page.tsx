@@ -10,113 +10,360 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="hero-section position-relative overflow-hidden" id="hero">
-        <div className="position-absolute top-0 start-0 w-100 h-100">
-          <div className="bg-gradient-primary opacity-10"></div>
+      {/* Header/Menu Fixo */}
+      <header style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        zIndex: 1000,
+        borderBottom: '1px solid rgba(59, 130, 246, 0.1)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+      }}>
+        <div className="container">
+          <nav style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '1rem 0'
+          }}>
+            {/* Logo */}
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Varejofflex
+            </div>
+
+            {/* Menu de Navegação */}
+            <div style={{
+              display: 'flex',
+              gap: '2rem',
+              alignItems: 'center'
+            }}>
+              <a href="#demos" style={{
+                color: '#1E293B',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>Demos</a>
+              <a href="#pricing" style={{
+                color: '#1E293B',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>Planos</a>
+              <a href="#features" style={{
+                color: '#1E293B',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>Recursos</a>
+              <a href="#testimonials" style={{
+                color: '#1E293B',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>Depoimentos</a>
+              <a href="#faq" style={{
+                color: '#1E293B',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>FAQ</a>
+              
+              {/* Botões de Ação */}
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <a href="/login" style={{
+                  color: '#3B82F6',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease'
+                }}>
+                  Entrar
+                </a>
+                <a href="/register" style={{
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  padding: '0.5rem 1.5rem',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                  transition: 'all 0.3s ease'
+                }}>
+                  Teste Grátis
+                </a>
+              </div>
+            </div>
+          </nav>
         </div>
+      </header>
+
+      {/* Hero */}
+      <section style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+        paddingTop: '100px' // Compensar header fixo
+      }} id="hero">
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }}></div>
         <div className="container position-relative">
           <div className="row align-items-center min-vh-100 py-5">
             <div className="col-lg-6">
-              <div className="badge bg-success mb-4 px-3 py-2 fs-6">
+              <div style={{
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                color: 'white',
+                padding: '8px 20px',
+                borderRadius: '20px',
+                display: 'inline-block',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                marginBottom: '2rem',
+                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
+              }}>
                 🚀 Mais de 10.000 negócios transformados
               </div>
-              <h1 className="display-3 fw-bold mb-4 text-white">
+              <h1 style={{
+                fontSize: '3.5rem',
+                fontWeight: 'bold',
+                marginBottom: '2rem',
+                color: '#1E293B',
+                lineHeight: '1.1'
+              }}>
                 Revolucione seu negócio com
-                <span className="text-warning d-block">tecnologia de ponta</span>
+                <span style={{
+                  display: 'block',
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>tecnologia de ponta</span>
               </h1>
-              <p className="lead mb-5 text-white-50">
+              <p style={{
+                fontSize: '1.25rem',
+                marginBottom: '3rem',
+                color: '#64748B',
+                lineHeight: '1.6'
+              }}>
                 PDV inteligente, loja online profissional, delivery otimizado e IA integrada. 
                 Tudo em uma plataforma que cresce com você.
               </p>
-              <div className="row g-3 mb-5">
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center text-white">
-                    <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
-                    <span>Setup em 5 minutos</span>
-                  </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.5rem',
+                marginBottom: '3rem'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#1E293B'
+                }}>
+                  <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                  <span style={{ fontWeight: '500' }}>Setup em 5 minutos</span>
                 </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center text-white">
-                    <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
-                    <span>Suporte 24/7</span>
-                  </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#1E293B'
+                }}>
+                  <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                  <span style={{ fontWeight: '500' }}>Suporte 24/7</span>
                 </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center text-white">
-                    <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
-                    <span>Sem taxas ocultas</span>
-                  </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#1E293B'
+                }}>
+                  <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                  <span style={{ fontWeight: '500' }}>Sem taxas ocultas</span>
                 </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center text-white">
-                    <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
-                    <span>Cancele quando quiser</span>
-                  </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#1E293B'
+                }}>
+                  <i className="bi bi-check-circle-fill text-success me-3 fs-5"></i>
+                  <span style={{ fontWeight: '500' }}>Cancele quando quiser</span>
                 </div>
               </div>
-              <div className="d-flex flex-column flex-sm-row gap-3 mb-4">
-                <a href="#demos" className="btn btn-warning btn-lg px-5 py-3 fw-bold">
-                  <i className="bi bi-play-circle me-2" />
-                  Ver Demos por Segmento
-                </a>
-                <a href="#pricing" className="btn btn-outline-light btn-lg px-5 py-3">
-                  <i className="bi bi-calculator me-2" />
-                  Calcular Investimento
-                </a>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                marginBottom: '3rem'
+              }}>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <a href="#demos" style={{
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                    color: 'white',
+                    padding: '15px 30px',
+                    borderRadius: '15px',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    boxShadow: '0 10px 25px rgba(245, 158, 11, 0.3)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <i className="bi bi-play-circle me-2" />
+                    Ver Demos por Segmento
+                  </a>
+                  <a href="#pricing" style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(20px)',
+                    color: '#1E293B',
+                    padding: '15px 30px',
+                    borderRadius: '15px',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: '1px solid rgba(59, 130, 246, 0.2)',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <i className="bi bi-calculator me-2" />
+                    Calcular Investimento
+                  </a>
+                </div>
               </div>
-              <div className="row text-center mt-4">
-                <div className="col-4">
-                  <div className="text-warning fw-bold fs-4">4.9/5</div>
-                  <small className="text-white-50">Avaliação</small>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '2rem',
+                textAlign: 'center',
+                marginTop: '2rem'
+              }}>
+                <div>
+                  <div style={{
+                    color: '#F59E0B',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '0.5rem'
+                  }}>4.9/5</div>
+                  <small style={{ color: '#64748B' }}>Avaliação</small>
                 </div>
-                <div className="col-4">
-                  <div className="text-warning fw-bold fs-4">99.9%</div>
-                  <small className="text-white-50">Uptime</small>
+                <div>
+                  <div style={{
+                    color: '#10B981',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '0.5rem'
+                  }}>99.9%</div>
+                  <small style={{ color: '#64748B' }}>Uptime</small>
                 </div>
-                <div className="col-4">
-                  <div className="text-warning fw-bold fs-4">24h</div>
-                  <small className="text-white-50">Suporte</small>
+                <div>
+                  <div style={{
+                    color: '#3B82F6',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '0.5rem'
+                  }}>24h</div>
+                  <small style={{ color: '#64748B' }}>Suporte</small>
                 </div>
               </div>
             </div>
             <div className="col-lg-6 text-center">
-              <div className="position-relative">
-                <div className="bg-white rounded-4 p-4 shadow-lg d-inline-block">
-                  <div className="row g-3">
-                    <div className="col-12">
-                      <div className="bg-primary text-white rounded-3 p-3 text-center">
-                        <i className="bi bi-graph-up-arrow fs-1 mb-2"></i>
-                        <h5 className="mb-0">Dashboard Inteligente</h5>
-                      </div>
+              <div style={{ position: 'relative' }}>
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '25px',
+                  padding: '2rem',
+                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                  display: 'inline-block',
+                  maxWidth: '500px'
+                }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr',
+                    gap: '1.5rem'
+                  }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                      color: 'white',
+                      borderRadius: '15px',
+                      padding: '1.5rem',
+                      textAlign: 'center',
+                      boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)'
+                    }}>
+                      <i className="bi bi-graph-up-arrow fs-1 mb-2"></i>
+                      <h5 style={{ margin: 0, fontWeight: 'bold' }}>Dashboard Inteligente</h5>
                     </div>
-                    <div className="col-6">
-                      <div className="bg-success text-white rounded-3 p-3 text-center">
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '1rem'
+                    }}>
+                      <div style={{
+                        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                        color: 'white',
+                        borderRadius: '15px',
+                        padding: '1.5rem',
+                        textAlign: 'center',
+                        boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
+                      }}>
                         <i className="bi bi-credit-card fs-3"></i>
-                        <div className="fw-bold">PDV</div>
+                        <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>PDV</div>
                       </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="bg-warning text-white rounded-3 p-3 text-center">
+                      <div style={{
+                        background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                        color: 'white',
+                        borderRadius: '15px',
+                        padding: '1.5rem',
+                        textAlign: 'center',
+                        boxShadow: '0 10px 25px rgba(245, 158, 11, 0.3)'
+                      }}>
                         <i className="bi bi-shop fs-3"></i>
-                        <div className="fw-bold">Loja</div>
+                        <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Loja</div>
                       </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="bg-info text-white rounded-3 p-3 text-center">
+                      <div style={{
+                        background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                        color: 'white',
+                        borderRadius: '15px',
+                        padding: '1.5rem',
+                        textAlign: 'center',
+                        boxShadow: '0 10px 25px rgba(6, 182, 212, 0.3)'
+                      }}>
                         <i className="bi bi-truck fs-3"></i>
-                        <div className="fw-bold">Delivery</div>
+                        <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Delivery</div>
                       </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="bg-danger text-white rounded-3 p-3 text-center">
+                      <div style={{
+                        background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                        color: 'white',
+                        borderRadius: '15px',
+                        padding: '1.5rem',
+                        textAlign: 'center',
+                        boxShadow: '0 10px 25px rgba(139, 92, 246, 0.3)'
+                      }}>
                         <i className="bi bi-robot fs-3"></i>
-                        <div className="fw-bold">IA</div>
+                        <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>IA</div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="position-absolute top-0 start-0 w-100 h-100 bg-gradient-radial opacity-20 pointer-events-none"></div>
               </div>
             </div>
           </div>
@@ -124,13 +371,32 @@ export default function HomePage() {
       </section>
 
       {/* Demos por Segmento */}
-      <section className="py-5 bg-light" id="demos">
+      <section style={{
+        padding: '5rem 0',
+        background: 'rgba(255, 255, 255, 0.5)',
+        backdropFilter: 'blur(10px)'
+      }} id="demos">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold mb-3">
-              Veja como funciona no <span className="text-primary">seu segmento</span>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              marginBottom: '1.5rem',
+              color: '#1E293B'
+            }}>
+              Veja como funciona no <span style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>seu segmento</span>
             </h2>
-            <p className="lead text-muted">
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#64748B',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
               Demos interativas personalizadas para cada tipo de negócio
             </p>
           </div>
@@ -434,48 +700,126 @@ export default function HomePage() {
       </section>
 
       {/* Value Props */}
-      <section className="py-5" id="value-props">
+      <section style={{ padding: '5rem 0' }} id="value-props">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">Por que escolher o Varejofflex?</h2>
-            <p className="lead text-muted">Benefícios reais para o seu negócio crescer</p>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              color: '#1E293B',
+              marginBottom: '1rem'
+            }}>Por que escolher o Varejofflex?</h2>
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#64748B'
+            }}>Benefícios reais para o seu negócio crescer</p>
           </div>
-          <div className="row g-4 text-center">
-            <div className="col-md-3">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '2rem',
+            textAlign: 'center'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.2)'
+            }}>
               <i className="bi bi-graph-up text-primary fs-1 mb-3" />
-              <h5 className="fw-bold">Venda Mais</h5>
-              <p className="text-muted">Multiplique seus canais de venda</p>
+              <h5 style={{ fontWeight: 'bold', color: '#1E293B' }}>Venda Mais</h5>
+              <p style={{ color: '#64748B' }}>Multiplique seus canais de venda</p>
             </div>
-            <div className="col-md-3">
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}>
               <i className="bi bi-cash-coin text-success fs-1 mb-3" />
-              <h5 className="fw-bold">Pague Menos</h5>
-              <p className="text-muted">Só pague pelas unidades que usar</p>
+              <h5 style={{ fontWeight: 'bold', color: '#1E293B' }}>Pague Menos</h5>
+              <p style={{ color: '#64748B' }}>Só pague pelas unidades que usar</p>
             </div>
-            <div className="col-md-3">
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(245, 158, 11, 0.2)'
+            }}>
               <i className="bi bi-lightning-charge text-warning fs-1 mb-3" />
-              <h5 className="fw-bold">Configure Rápido</h5>
-              <p className="text-muted">15 minutos para sua loja no ar</p>
+              <h5 style={{ fontWeight: 'bold', color: '#1E293B' }}>Configure Rápido</h5>
+              <p style={{ color: '#64748B' }}>15 minutos para sua loja no ar</p>
             </div>
-            <div className="col-md-3">
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(6, 182, 212, 0.2)'
+            }}>
               <i className="bi bi-headset text-info fs-1 mb-3" />
-              <h5 className="fw-bold">Suporte Total</h5>
-              <p className="text-muted">IA + especialistas 24/7</p>
+              <h5 style={{ fontWeight: 'bold', color: '#1E293B' }}>Suporte Total</h5>
+              <p style={{ color: '#64748B' }}>IA + especialistas 24/7</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="py-5 bg-dark text-white" id="pricing">
-        <div className="container">
-          <div className="text-center mb-5">
-            <div className="badge bg-warning text-dark px-3 py-2 mb-3">
+      <section style={{
+        padding: '5rem 0',
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+        position: 'relative'
+      }} id="pricing">
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }}></div>
+        <div className="container position-relative">
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+              color: 'white',
+              padding: '8px 20px',
+              borderRadius: '20px',
+              display: 'inline-block',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              marginBottom: '2rem',
+              boxShadow: '0 10px 25px rgba(245, 158, 11, 0.3)'
+            }}>
               💸 Economize até 70% comparado à concorrência
             </div>
-            <h2 className="display-4 fw-bold mb-3">
-              Preços que cabem no seu <span className="text-warning">bolso</span>
+            <h2 style={{
+              fontSize: '3.5rem',
+              fontWeight: 'bold',
+              marginBottom: '1.5rem',
+              color: '#1E293B'
+            }}>
+              Preços que cabem no seu <span style={{
+                background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>bolso</span>
             </h2>
-            <p className="lead text-white-50 mb-4">
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#64748B',
+              marginBottom: '2rem'
+            }}>
               Sem pegadinhas, sem taxas ocultas. Pague só pelo que usar!
             </p>
             
@@ -648,149 +992,90 @@ export default function HomePage() {
           </div>
 
           {/* Addon Services */}
-          <div className="bg-white rounded-4 p-5 text-dark">
-            <h3 className="text-center fw-bold mb-4">🧩 Serviços Adicionais</h3>
-            <div className="row g-4 text-center">
-              <div className="col-lg-3 col-md-6">
-                <div className="border rounded-3 p-4 h-100">
-                  <i className="bi bi-credit-card-2-front text-primary fs-2 mb-3"></i>
-                  <h5 className="fw-bold">PDV Extra</h5>
-                  <div className="text-primary fw-bold fs-4">R$ 27</div>
-                  <small className="text-muted">/mês por unidade</small>
-                </div>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '25px',
+            padding: '3rem',
+            color: '#1E293B',
+            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(59, 130, 246, 0.2)'
+          }}>
+            <h3 style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              marginBottom: '3rem',
+              fontSize: '2rem'
+            }}>🧩 Serviços Adicionais</h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '2rem',
+              textAlign: 'center'
+            }}>
+              <div style={{
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                borderRadius: '15px',
+                padding: '2rem',
+                background: 'rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <i className="bi bi-credit-card-2-front text-primary fs-2 mb-3"></i>
+                <h5 style={{ fontWeight: 'bold' }}>PDV Extra</h5>
+                <div style={{
+                  color: '#3B82F6',
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem'
+                }}>R$ 27</div>
+                <small style={{ color: '#64748B' }}>/mês por unidade</small>
               </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="border rounded-3 p-4 h-100">
-                  <i className="bi bi-display text-success fs-2 mb-3"></i>
-                  <h5 className="fw-bold">KDS Cozinha</h5>
-                  <div className="text-success fw-bold fs-4">R$ 17</div>
-                  <small className="text-muted">/mês por tela</small>
-                </div>
+              <div style={{
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                borderRadius: '15px',
+                padding: '2rem',
+                background: 'rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <i className="bi bi-display text-success fs-2 mb-3"></i>
+                <h5 style={{ fontWeight: 'bold' }}>KDS Cozinha</h5>
+                <div style={{
+                  color: '#10B981',
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem'
+                }}>R$ 17</div>
+                <small style={{ color: '#64748B' }}>/mês por tela</small>
               </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="border rounded-3 p-4 h-100">
-                  <i className="bi bi-truck text-warning fs-2 mb-3"></i>
-                  <h5 className="fw-bold">Gestão Frota</h5>
-                  <div className="text-warning fw-bold fs-4">R$ 37</div>
-                  <small className="text-muted">/mês por veículo</small>
-                </div>
+              <div style={{
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                borderRadius: '15px',
+                padding: '2rem',
+                background: 'rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <i className="bi bi-truck text-warning fs-2 mb-3"></i>
+                <h5 style={{ fontWeight: 'bold' }}>Gestão Frota</h5>
+                <div style={{
+                  color: '#F59E0B',
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem'
+                }}>R$ 37</div>
+                <small style={{ color: '#64748B' }}>/mês por veículo</small>
               </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="border rounded-3 p-4 h-100">
-                  <i className="bi bi-shop text-info fs-2 mb-3"></i>
-                  <h5 className="fw-bold">Loja Extra</h5>
-                  <div className="text-info fw-bold fs-4">R$ 47</div>
-                  <small className="text-muted">/mês por loja</small>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Comparação com Concorrentes */}
-          <div className="mt-5 text-center">
-            <h3 className="fw-bold mb-4">💰 Compare e Economize</h3>
-            <div className="row justify-content-center">
-              <div className="col-lg-8">
-                <div className="table-responsive">
-                  <table className="table table-dark table-striped">
-                    <thead>
-                      <tr>
-                        <th>Recurso</th>
-                        <th className="text-warning">Varejofflex</th>
-                        <th>Concorrente A</th>
-                        <th>Concorrente B</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Taxa por transação</td>
-                        <td className="text-warning fw-bold">2,4%</td>
-                        <td>4,9%</td>
-                        <td>3,8%</td>
-                      </tr>
-                      <tr>
-                        <td>Setup grátis</td>
-                        <td><i className="bi bi-check-lg text-success"></i></td>
-                        <td><i className="bi bi-x-lg text-danger"></i></td>
-                        <td><i className="bi bi-x-lg text-danger"></i></td>
-                      </tr>
-                      <tr>
-                        <td>IA integrada</td>
-                        <td><i className="bi bi-check-lg text-success"></i></td>
-                        <td><i className="bi bi-x-lg text-danger"></i></td>
-                        <td><i className="bi bi-dash text-warning"></i></td>
-                      </tr>
-                      <tr>
-                        <td>Suporte 24/7</td>
-                        <td><i className="bi bi-check-lg text-success"></i></td>
-                        <td><i className="bi bi-dash text-warning"></i></td>
-                        <td><i className="bi bi-x-lg text-danger"></i></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Segmentos */}
-      <section className="py-5" id="segments">
-        <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">Para todos os tipos de negócio</h2>
-            <p className="lead text-muted">Soluções especializadas para cada segmento</p>
-          </div>
-          <div className="row g-4">
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-cup-hot fs-1 text-primary mb-3" />
-                <h5>Lanchonetes</h5>
-                <p className="text-muted">
-                  Cardápio digital, pedidos online e PDV integrado
-                </p>
-              </div>
-            </div>
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-pizza fs-1 text-primary mb-3" />
-                <h5>Pizzarias</h5>
-                <p className="text-muted">
-                  Delivery otimizado com rastreamento em tempo real
-                </p>
-              </div>
-            </div>
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-bag fs-1 text-primary mb-3" />
-                <h5>Moda & Acessórios</h5>
-                <p className="text-muted">
-                  Catálogo visual e gestão de estoque por variação
-                </p>
-              </div>
-            </div>
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-basket fs-1 text-primary mb-3" />
-                <h5>Mercados</h5>
-                <p className="text-muted">
-                  Integração com balanças e código de barras
-                </p>
-              </div>
-            </div>
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-heart fs-1 text-primary mb-3" />
-                <h5>Petshops</h5>
-                <p className="text-muted">Agendamentos e ficha completa dos pets</p>
-              </div>
-            </div>
-            <div className="col-md-4 col-sm-6">
-              <div className="segment-card">
-                <i className="bi bi-scissors fs-1 text-primary mb-3" />
-                <h5>Salões</h5>
-                <p className="text-muted">Agenda online e gestão de profissionais</p>
+              <div style={{
+                border: '1px solid rgba(6, 182, 212, 0.2)',
+                borderRadius: '15px',
+                padding: '2rem',
+                background: 'rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <i className="bi bi-shop text-info fs-2 mb-3"></i>
+                <h5 style={{ fontWeight: 'bold' }}>Loja Extra</h5>
+                <div style={{
+                  color: '#06B6D4',
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem'
+                }}>R$ 47</div>
+                <small style={{ color: '#64748B' }}>/mês por loja</small>
               </div>
             </div>
           </div>
@@ -798,34 +1083,96 @@ export default function HomePage() {
       </section>
 
       {/* Demo */}
-      <section className="py-5 bg-light-subtle" id="demo">
+      <section style={{
+        padding: '5rem 0',
+        background: 'rgba(255, 255, 255, 0.5)',
+        backdropFilter: 'blur(10px)'
+      }} id="demo">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6">
-              <h2 className="display-5 fw-bold mb-4">
+              <h2 style={{
+                fontSize: '3rem',
+                fontWeight: 'bold',
+                marginBottom: '2rem',
+                color: '#1E293B'
+              }}>
                 Veja como seus clientes vão comprar
               </h2>
-              <p className="lead text-muted mb-4">
+              <p style={{
+                fontSize: '1.25rem',
+                color: '#64748B',
+                marginBottom: '2rem',
+                lineHeight: '1.6'
+              }}>
                 Experimente na prática como funciona o delivery e a experiência de
                 compra.
               </p>
-              <Link href="/demo" className="btn btn-primary btn-lg">
+              <Link href="/demo" style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                color: 'white',
+                padding: '15px 30px',
+                borderRadius: '15px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)',
+                transition: 'all 0.3s ease'
+              }}>
                 <i className="bi bi-play-circle me-2" />
                 Experimentar Demo Agora
               </Link>
             </div>
             <div className="col-lg-6 text-center">
-              <div className="demo-preview">
-                <i className="bi bi-phone fs-1 mb-3" />
-                <h6>Preview do Cardápio Mobile</h6>
-                <div className="mt-3">
-                  <div className="bg-white text-dark rounded p-2 mb-2">
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '25px',
+                padding: '2rem',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                display: 'inline-block'
+              }}>
+                <i style={{
+                  fontSize: '4rem',
+                  marginBottom: '1.5rem',
+                  color: '#3B82F6'
+                }} className="bi bi-phone" />
+                <h6 style={{
+                  color: '#1E293B',
+                  fontWeight: 'bold',
+                  marginBottom: '1.5rem'
+                }}>Preview do Cardápio Mobile</h6>
+                <div style={{ marginTop: '1.5rem' }}>
+                  <div style={{
+                    background: '#F8FAFC',
+                    color: '#1E293B',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    marginBottom: '0.75rem',
+                    border: '1px solid rgba(59, 130, 246, 0.1)'
+                  }}>
                     🍕 Pizza Margherita - R$ 32,90
                   </div>
-                  <div className="bg-white text-dark rounded p-2 mb-2">
+                  <div style={{
+                    background: '#F8FAFC',
+                    color: '#1E293B',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    marginBottom: '0.75rem',
+                    border: '1px solid rgba(16, 185, 129, 0.1)'
+                  }}>
                     🍔 X-Burger - R$ 28,90
                   </div>
-                  <div className="bg-white text-dark rounded p-2">🥤 Refrigerante 2L - R$ 8,90</div>
+                  <div style={{
+                    background: '#F8FAFC',
+                    color: '#1E293B',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
+                    border: '1px solid rgba(245, 158, 11, 0.1)'
+                  }}>🥤 Refrigerante 2L - R$ 8,90</div>
                 </div>
               </div>
             </div>
@@ -834,83 +1181,179 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-5" id="features">
+      <section style={{ padding: '5rem 0' }} id="features">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              color: '#1E293B',
+              marginBottom: '1rem'
+            }}>
               Tudo que você precisa em um só lugar
             </h2>
-            <p className="lead text-muted">Recursos completos para seu negócio crescer</p>
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#64748B'
+            }}>Recursos completos para seu negócio crescer</p>
           </div>
-          <div className="row g-4">
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-primary text-white rounded p-3 me-3">
-                  <i className="bi bi-credit-card fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">PDV Completo</h5>
-                  <p className="text-muted">
-                    Terminal de vendas com impressora, gaveta e leitor integrados
-                  </p>
-                </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gap: '2rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-credit-card fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>PDV Completo</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>
+                  Terminal de vendas com impressora, gaveta e leitor integrados
+                </p>
               </div>
             </div>
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-success text-white rounded p-3 me-3">
-                  <i className="bi bi-robot fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">IA Integrada</h5>
-                  <p className="text-muted">Assistente virtual e insights inteligentes</p>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-robot fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>IA Integrada</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>Assistente virtual e insights inteligentes</p>
               </div>
             </div>
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-warning text-white rounded p-3 me-3">
-                  <i className="bi bi-currency-exchange fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">Multimoeda</h5>
-                  <p className="text-muted">Venda em diferentes moedas e idiomas</p>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(245, 158, 11, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-currency-exchange fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>Multimoeda</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>Venda em diferentes moedas e idiomas</p>
               </div>
             </div>
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-info text-white rounded p-3 me-3">
-                  <i className="bi bi-percent fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">Cupons</h5>
-                  <p className="text-muted">
-                    Sistema completo de promoções e cupons
-                  </p>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(6, 182, 212, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-percent fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>Cupons</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>
+                  Sistema completo de promoções e cupons
+                </p>
               </div>
             </div>
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-secondary text-white rounded p-3 me-3">
-                  <i className="bi bi-bar-chart fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">Relatórios</h5>
-                  <p className="text-muted">Dashboards com métricas em tempo real</p>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(100, 116, 139, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-bar-chart fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>Relatórios</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>Dashboards com métricas em tempo real</p>
               </div>
             </div>
-            <div className="col-md-6 col-lg-4">
-              <div className="d-flex">
-                <div className="bg-danger text-white rounded p-3 me-3">
-                  <i className="bi bi-puzzle fs-4" />
-                </div>
-                <div>
-                  <h5 className="fw-bold">Integrações</h5>
-                  <p className="text-muted">Conecte com pagamento, delivery e ERPs</p>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '15px',
+              padding: '1.5rem',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.2)'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginRight: '1rem',
+                flexShrink: 0
+              }}>
+                <i className="bi bi-puzzle fs-4" />
+              </div>
+              <div>
+                <h5 style={{ fontWeight: 'bold', color: '#1E293B', marginBottom: '0.5rem' }}>Integrações</h5>
+                <p style={{ color: '#64748B', margin: 0 }}>Conecte com pagamento, delivery e ERPs</p>
               </div>
             </div>
           </div>
@@ -918,72 +1361,130 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-5 bg-light-subtle" id="testimonials">
+      <section style={{
+        padding: '5rem 0',
+        background: 'rgba(255, 255, 255, 0.5)',
+        backdropFilter: 'blur(10px)'
+      }} id="testimonials">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">O que nossos lojistas dizem</h2>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              color: '#1E293B'
+            }}>O que nossos lojistas dizem</h2>
           </div>
-          <div className="row g-4">
-            <div className="col-lg-4">
-              <div className="bg-white rounded-4 p-4 shadow">
-                <div className="mb-2">
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                </div>
-                <p>
-                  &quot;Aumentei 70% as vendas online em 3 meses. O PDV integrado facilitou
-                  muito a operação.&quot;
-                </p>
-                <h6 className="mb-0">Maria Silva</h6>
-                <small className="text-muted">Pizzaria Bella Vista</small>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '2rem'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(245, 158, 11, 0.2)'
+            }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
               </div>
+              <p style={{
+                color: '#1E293B',
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                marginBottom: '1.5rem'
+              }}>
+                &quot;Aumentei 70% as vendas online em 3 meses. O PDV integrado facilitou
+                muito a operação.&quot;
+              </p>
+              <h6 style={{
+                color: '#1E293B',
+                fontWeight: 'bold',
+                marginBottom: '0.25rem'
+              }}>Maria Silva</h6>
+              <small style={{ color: '#64748B' }}>Pizzaria Bella Vista</small>
             </div>
-            <div className="col-lg-4">
-              <div className="bg-white rounded-4 p-4 shadow">
-                <div className="mb-2">
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                </div>
-                <p>
-                  &quot;A cobrança por unidade é perfeita. Comecei pequeno e fui crescendo
-                  conforme a necessidade.&quot;
-                </p>
-                <h6 className="mb-0">João Santos</h6>
-                <small className="text-muted">Mercado do Bairro</small>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.2)'
+            }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
               </div>
+              <p style={{
+                color: '#1E293B',
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                marginBottom: '1.5rem'
+              }}>
+                &quot;A cobrança por unidade é perfeita. Comecei pequeno e fui crescendo
+                conforme a necessidade.&quot;
+              </p>
+              <h6 style={{
+                color: '#1E293B',
+                fontWeight: 'bold',
+                marginBottom: '0.25rem'
+              }}>João Santos</h6>
+              <small style={{ color: '#64748B' }}>Mercado do Bairro</small>
             </div>
-            <div className="col-lg-4">
-              <div className="bg-white rounded-4 p-4 shadow">
-                <div className="mb-2">
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                  <i className="bi bi-star-fill text-warning" />
-                </div>
-                <p>
-                  &quot;Suporte excepcional! A IA me ajuda a entender meus clientes e
-                  aumentar as vendas.&quot;
-                </p>
-                <h6 className="mb-0">Ana Costa</h6>
-                <small className="text-muted">Boutique Elegance</small>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
+                <i className="bi bi-star-fill text-warning" />
               </div>
+              <p style={{
+                color: '#1E293B',
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                marginBottom: '1.5rem'
+              }}>
+                &quot;Suporte excepcional! A IA me ajuda a entender meus clientes e
+                aumentar as vendas.&quot;
+              </p>
+              <h6 style={{
+                color: '#1E293B',
+                fontWeight: 'bold',
+                marginBottom: '0.25rem'
+              }}>Ana Costa</h6>
+              <small style={{ color: '#64748B' }}>Boutique Elegance</small>
             </div>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-5" id="faq">
+      <section style={{ padding: '5rem 0' }} id="faq">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">Dúvidas frequentes</h2>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              color: '#1E293B'
+            }}>Dúvidas frequentes</h2>
           </div>
           <div className="row justify-content-center">
             <div className="col-lg-8">
@@ -1122,20 +1623,340 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-5 bg-primary text-white">
-        <div className="container text-center">
-          <h2 className="display-5 fw-bold mb-4">Comece a vender mais hoje mesmo</h2>
-          <p className="lead mb-4">Junte-se a mais de 5.000 lojistas</p>
-          <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-            <Link href="/register" className="btn btn-light btn-lg">
-              Teste Grátis 15 dias
-            </Link>
-            <a href="#pricing" className="btn btn-outline-light btn-lg">
-              Ver Planos
-            </a>
+      <section style={{
+        padding: '5rem 0',
+        background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }}></div>
+        <div className="container text-center position-relative">
+          <h2 style={{
+            fontSize: '3.5rem',
+            fontWeight: 'bold',
+            marginBottom: '2rem',
+            color: 'white'
+          }}>Comece a vender mais hoje mesmo</h2>
+          <p style={{
+            fontSize: '1.25rem',
+            marginBottom: '3rem',
+            color: 'rgba(255, 255, 255, 0.9)'
+          }}>Junte-se a mais de 5.000 lojistas</p>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Link href="/register" style={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(20px)',
+                color: '#1E293B',
+                padding: '15px 30px',
+                borderRadius: '15px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}>
+                Teste Grátis 15 dias
+              </Link>
+              <a href="#pricing" style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                color: 'white',
+                padding: '15px 30px',
+                borderRadius: '15px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+              }}>
+                Ver Planos
+              </a>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer style={{
+        background: 'linear-gradient(135deg, #1E293B 0%, #334155 100%)',
+        color: 'white',
+        padding: '4rem 0 2rem 0'
+      }}>
+        <div className="container">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '3rem',
+            marginBottom: '3rem'
+          }}>
+            {/* Coluna 1 - Sobre */}
+            <div>
+              <h5 style={{
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                marginBottom: '1.5rem',
+                background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                Varejofflex
+              </h5>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                lineHeight: '1.6',
+                marginBottom: '1.5rem'
+              }}>
+                A plataforma completa para transformar seu negócio. PDV inteligente, 
+                loja online e delivery em uma única solução.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <a href="#" style={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '1.5rem',
+                  transition: 'color 0.3s ease'
+                }}>
+                  <i className="bi bi-facebook"></i>
+                </a>
+                <a href="#" style={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '1.5rem',
+                  transition: 'color 0.3s ease'
+                }}>
+                  <i className="bi bi-instagram"></i>
+                </a>
+                <a href="#" style={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '1.5rem',
+                  transition: 'color 0.3s ease'
+                }}>
+                  <i className="bi bi-linkedin"></i>
+                </a>
+                <a href="#" style={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '1.5rem',
+                  transition: 'color 0.3s ease'
+                }}>
+                  <i className="bi bi-youtube"></i>
+                </a>
+              </div>
+            </div>
+
+            {/* Coluna 2 - Produtos */}
+            <div>
+              <h6 style={{
+                fontWeight: 'bold',
+                marginBottom: '1.5rem',
+                color: 'white'
+              }}>
+                Produtos
+              </h6>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="#demos" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    PDV Inteligente
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="#demos" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Loja Online
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="#demos" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Sistema Delivery
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="#features" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    IA Integrada
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Coluna 3 - Segmentos */}
+            <div>
+              <h6 style={{
+                fontWeight: 'bold',
+                marginBottom: '1.5rem',
+                color: 'white'
+              }}>
+                Segmentos
+              </h6>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="/demo/lanchonete" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Lanchonetes
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="/demo/pizzaria" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Pizzarias
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="/demo/moda" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Moda & Acessórios
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="/demo/mercado" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Mercados
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Coluna 4 - Suporte */}
+            <div>
+              <h6 style={{
+                fontWeight: 'bold',
+                marginBottom: '1.5rem',
+                color: 'white'
+              }}>
+                Suporte
+              </h6>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="#faq" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Central de Ajuda
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="mailto:contato@varejofflex.com" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    Contato
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <a href="tel:+5511999999999" style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    (11) 99999-9999
+                  </a>
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  <span style={{
+                    color: 'rgba(255, 255, 255, 0.8)'
+                  }}>
+                    Suporte 24/7
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Linha de Separação */}
+          <div style={{
+            height: '1px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            marginBottom: '2rem'
+          }}></div>
+
+          {/* Copyright e Links Legais */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div style={{
+              color: 'rgba(255, 255, 255, 0.6)',
+              fontSize: '0.9rem'
+            }}>
+              © 2025 Varejofflex. Todos os direitos reservados.
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: '2rem',
+              flexWrap: 'wrap'
+            }}>
+              <a href="/privacy" style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                transition: 'color 0.3s ease'
+              }}>
+                Política de Privacidade
+              </a>
+              <a href="/terms" style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                transition: 'color 0.3s ease'
+              }}>
+                Termos de Uso
+              </a>
+              <a href="/cookies" style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                transition: 'color 0.3s ease'
+              }}>
+                Cookies
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Modal de Teste Grátis */}
       <div className="modal fade" id="trialModal" tabIndex={-1} aria-hidden="true">

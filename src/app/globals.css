@@ -1,5 +1,20 @@
 /* src/app/globals.css */
 
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll Padding para compensar header fixo */
+#demos, #pricing, #features, #testimonials, #faq {
+  scroll-margin-top: 100px;
+}
+
+/* Header Hover Effects */
+header a:hover {
+  color: #3B82F6 !important;
+}
+
 /* Design System Atualizado */
 :root {
   --vf-primary: #0d6efd;
@@ -79,6 +94,36 @@ body {
 
 /* Dashboard Layout */
 /* Dashboard styles */
+.dashboard-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f8f9fa;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Esconde navbar e footer APENAS quando dashboard-wrapper está presente */
+.dashboard-wrapper ~ nav,
+.dashboard-wrapper ~ footer {
+  display: none !important;
+}
+
+/* Esconde main content APENAS quando dashboard está ativo */
+body:has(.dashboard-wrapper) #content:not(.dashboard-wrapper #content) {
+  display: none !important;
+}
+
+/* Alternativa mais específica para esconder elementos da página principal */
+body:has(.dashboard-wrapper) > div > nav,
+body:has(.dashboard-wrapper) > div > footer,
+body:has(.dashboard-wrapper) > nav,
+body:has(.dashboard-wrapper) > footer {
+  display: none !important;
+}
+
 .dashboard-body {
   margin: 0;
   padding: 0;
@@ -93,6 +138,7 @@ body {
   min-height: 100vh;
   width: 100%;
   background-color: #f8f9fa;
+  overflow-y: auto;
 }
 
 .sidebar-expanded {
