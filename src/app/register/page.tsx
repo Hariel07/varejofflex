@@ -16,24 +16,24 @@ function RegisterContent() {
   const plansData = {
     basico: {
       name: "Básico",
-      price: "R$ 49",
-      basePrice: 49,
+      price: "R$ 89",
+      basePrice: 89,
       features: ["Até 100 produtos", "1 usuário", "PDV básico", "Relatórios essenciais", "Suporte por email"],
       color: "#0d6efd",
       popular: false
     },
     profissional: {
       name: "Profissional",
-      price: "R$ 149", 
-      basePrice: 149,
+      price: "R$ 189", 
+      basePrice: 189,
       features: ["Até 1.000 produtos", "5 usuários", "PDV completo", "Relatórios avançados", "Gestão de estoque", "Suporte prioritário"],
       color: "#0d6efd",
       popular: true
     },
     empresarial: {
       name: "Empresarial",
-      price: "R$ 299",
-      basePrice: 299,
+      price: "R$ 389",
+      basePrice: 389,
       features: ["Produtos ilimitados", "Usuários ilimitados", "Multi-loja", "BI e Analytics", "API completa", "Suporte 24/7"],
       color: "#198754",
       popular: false
