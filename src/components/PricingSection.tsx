@@ -84,28 +84,53 @@ export default function PricingSection() {
             </p>
             
             {/* Seletor de Ciclo de Cobrança */}
-            <div className="d-inline-flex bg-white rounded-pill p-1 shadow-sm mb-4">
+            <div className="d-inline-flex bg-white rounded-pill p-2 shadow-lg mb-4 border" style={{ gap: '8px' }}>
               <button
-                className={`btn ${billingCycle === 'weekly' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-4`}
+                className={`btn ${billingCycle === 'weekly' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2`}
                 onClick={() => setBillingCycle('weekly')}
+                style={{
+                  fontWeight: '600',
+                  border: billingCycle === 'weekly' ? '2px solid #0d6efd' : '2px solid #dee2e6',
+                  color: billingCycle === 'weekly' ? 'white' : '#495057'
+                }}
               >
                 📅 Semanal
               </button>
               <button
-                className={`btn ${billingCycle === 'monthly' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-4 position-relative`}
+                className={`btn ${billingCycle === 'monthly' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2 position-relative`}
                 onClick={() => setBillingCycle('monthly')}
+                style={{
+                  fontWeight: '600',
+                  border: billingCycle === 'monthly' ? '2px solid #0d6efd' : '2px solid #dee2e6',
+                  color: billingCycle === 'monthly' ? 'white' : '#495057'
+                }}
               >
                 🗓️ Mensal
-                <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
+                <span className="badge bg-warning text-dark position-absolute" style={{
+                  top: '-8px',
+                  right: '-8px',
+                  fontSize: '0.7rem',
+                  fontWeight: '700'
+                }}>
                   POPULAR
                 </span>
               </button>
               <button
-                className={`btn ${billingCycle === 'annual' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-4 position-relative`}
+                className={`btn ${billingCycle === 'annual' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2 position-relative`}
                 onClick={() => setBillingCycle('annual')}
+                style={{
+                  fontWeight: '600',
+                  border: billingCycle === 'annual' ? '2px solid #0d6efd' : '2px solid #dee2e6',
+                  color: billingCycle === 'annual' ? 'white' : '#495057'
+                }}
               >
                 📆 Anual
-                <span className="badge bg-success position-absolute top-0 start-100 translate-middle">
+                <span className="badge bg-success text-white position-absolute" style={{
+                  top: '-8px',
+                  right: '-8px',
+                  fontSize: '0.7rem',
+                  fontWeight: '700'
+                }}>
                   -17%
                 </span>
               </button>
@@ -137,21 +162,6 @@ export default function PricingSection() {
                   }}
                 >
                   <div className="card-header border-0 bg-transparent text-center pt-4">
-                    {plan.popular && (
-                      <div className="mb-3">
-                        <span 
-                          className="badge px-3 py-2 rounded-pill"
-                          style={{
-                            background: plan.color,
-                            color: 'white',
-                            fontSize: '0.9rem',
-                            fontWeight: '700'
-                          }}
-                        >
-                          <i className="bi bi-star-fill me-1"></i>Mais Popular
-                        </span>
-                      </div>
-                    )}
                     <h3 style={{ color: plan.color, fontWeight: '800' }}>{plan.name}</h3>
                     <div className="mb-3">
                       {hasDiscount ? (
