@@ -32,7 +32,6 @@ export default function CouponsManagement() {
     title: "",
     description: "",
     type: "percent",
-    category: "subscription",
     value: "",
     subscriptionPlan: "basic",
     discountDuration: "1",
@@ -75,6 +74,7 @@ export default function CouponsManagement() {
         },
         body: JSON.stringify({
           ...formData,
+          category: activeTab, // Usa a aba ativa como categoria
           value: parseFloat(formData.value),
           discountDuration: parseInt(formData.discountDuration),
           freeTrialDays: formData.freeTrialDays ? parseInt(formData.freeTrialDays) : 0,
@@ -94,7 +94,6 @@ export default function CouponsManagement() {
           title: "",
           description: "",
           type: "percent",
-          category: "subscription",
           value: "",
           subscriptionPlan: "basic",
           discountDuration: "1",
@@ -304,33 +303,7 @@ export default function CouponsManagement() {
                 />
               </div>
 
-              {/* Categoria */}
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold', 
-                  color: '#1E293B' 
-                }}>
-                  📂 Categoria
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '1px solid rgba(16, 185, 129, 0.3)',
-                    borderRadius: '12px',
-                    fontSize: '1rem',
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    backdropFilter: 'blur(10px)'
-                  }}
-                >
-                  <option value="subscription">💳 Assinatura</option>
-                  <option value="order">🛍️ Pedidos</option>
-                </select>
-              </div>
+
 
               {/* Tipo */}
               <div>
@@ -357,7 +330,7 @@ export default function CouponsManagement() {
                 >
                   <option value="percent">📊 Porcentagem</option>
                   <option value="amount">💰 Valor Fixo</option>
-                  {formData.category === "subscription" && (
+                  {activeTab === "subscription" && (
                     <>
                       <option value="free_trial">🆓 Trial Gratuito</option>
                       <option value="subscription_discount">🎟️ Desconto Recorrente</option>
@@ -396,7 +369,7 @@ export default function CouponsManagement() {
               </div>
 
               {/* Plano (só para assinatura) */}
-              {formData.category === "subscription" && (
+              {activeTab === "subscription" && (
                 <div>
                   <label style={{ 
                     display: 'block', 
