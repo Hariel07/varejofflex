@@ -633,6 +633,7 @@ function RegisterContent() {
                       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
                         <CouponSection 
                           selectedPlan={selectedPlanId} 
+                          selectedPlanData={selectedPlan}
                           onCouponApplied={handleCouponApplied}
                         />
                       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 interface CouponSectionProps {
   selectedPlan: string;
+  selectedPlanData?: any; // Dados do plano do banco
   onCouponApplied: (couponData: any) => void;
 }
 
@@ -15,17 +16,27 @@ interface PlanPrices {
   };
 }
 
-export default function CouponSection({ selectedPlan, onCouponApplied }: CouponSectionProps) {
+export default function CouponSection({ selectedPlan, selectedPlanData, onCouponApplied }: CouponSectionProps) {
   const [couponCode, setCouponCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [error, setError] = useState("");
   const [billingCycle, setBillingCycle] = useState("monthly");
 
-  const planPrices: PlanPrices = {
-    basico: { monthly: 49, annual: 490, weekly: 15 },
-    profissional: { monthly: 149, annual: 1490, weekly: 45 },
-    empresarial: { monthly: 299, annual: 2990, weekly: 85 }
+  // Usar dados do banco quando disponíveis, senão usar fallback
+  const getPlanPrice = (cycle: string) => {
+    if (selectedPlanData?.pricing?.[cycle]) {
+      return selectedPlanData.pricing[cycle].price;
+    }
+    
+    // Fallback para valores padrão (caso não tenha dados do banco)
+    const fallbackPrices: PlanPrices = {
+      basico: { monthly: 89, annual: 890, weekly: 22 },
+      profissional: { monthly: 189, annual: 1890, weekly: 47 },
+      empresarial: { monthly: 389, annual: 3890, weekly: 97 }
+    };
+    
+    return fallbackPrices[selectedPlan]?.[cycle as keyof typeof fallbackPrices.basico] || 0;
   };
 
   const planNames: { [key: string]: string } = {
@@ -84,7 +95,7 @@ export default function CouponSection({ selectedPlan, onCouponApplied }: CouponS
     onCouponApplied(null);
   };
 
-  const currentPrice = planPrices[selectedPlan]?.[billingCycle as keyof typeof planPrices.basico] || 0;
+  const currentPrice = getPlanPrice(billingCycle);
 
   return (
     <div style={{ marginBottom: '2rem' }}>
@@ -113,7 +124,7 @@ export default function CouponSection({ selectedPlan, onCouponApplied }: CouponS
               <div style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>📅</div>
               <div style={{ fontSize: '0.9rem' }}>Semanal</div>
               <div style={{ fontSize: '1.1rem', fontWeight: '800' }}>
-                R$ {planPrices[selectedPlan]?.weekly}
+                R$ {getPlanPrice('weekly')}
               </div>
             </button>
           </div>
@@ -150,7 +161,7 @@ export default function CouponSection({ selectedPlan, onCouponApplied }: CouponS
               <div style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>🗓️</div>
               <div style={{ fontSize: '0.9rem' }}>Mensal</div>
               <div style={{ fontSize: '1.1rem', fontWeight: '800' }}>
-                R$ {planPrices[selectedPlan]?.monthly}
+                R$ {getPlanPrice('monthly')}
               </div>
             </button>
           </div>
@@ -187,7 +198,7 @@ export default function CouponSection({ selectedPlan, onCouponApplied }: CouponS
               <div style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>📆</div>
               <div style={{ fontSize: '0.9rem' }}>Anual</div>
               <div style={{ fontSize: '1.1rem', fontWeight: '800' }}>
-                R$ {planPrices[selectedPlan]?.annual}
+                R$ {getPlanPrice('annual')}
               </div>
             </button>
           </div>
