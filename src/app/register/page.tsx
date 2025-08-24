@@ -550,9 +550,12 @@ function RegisterContent() {
                                 style={{
                                   border: '2px solid #e5e7eb',
                                   borderRadius: '12px 0 0 12px',
-                                  maxWidth: '140px',
+                                  width: '120px',
+                                  minWidth: '120px',
+                                  maxWidth: '120px',
                                   background: '#f8fafc',
-                                  fontSize: '0.9rem'
+                                  fontSize: '0.9rem',
+                                  flexShrink: 0
                                 }}
                               >
                                 <option value="+55">🇧🇷 +55</option>
@@ -569,7 +572,8 @@ function RegisterContent() {
                                   borderLeft: 'none',
                                   borderRadius: '0 12px 12px 0',
                                   padding: '1rem',
-                                  fontSize: '1rem'
+                                  fontSize: '1rem',
+                                  flex: '1 1 auto'
                                 }}
                                 placeholder="(44) 99758-8758"
                                 required
