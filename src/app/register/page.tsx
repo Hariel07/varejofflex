@@ -557,7 +557,11 @@ function RegisterContent() {
 
           {/* Seção de Cupom */}
           <div className="border-t bg-gray-50 p-6">
-            <CouponSection selectedPlanData={selectedPlan} />
+            <CouponSection 
+              selectedPlan={selectedPlanId}
+              selectedPlanData={selectedPlan}
+              onCouponApplied={handleCouponApplied} 
+            />
           </div>
         </div>
       </div>
