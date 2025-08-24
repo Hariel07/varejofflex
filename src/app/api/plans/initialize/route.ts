@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
     
     // Verificar se é owner
     const user = await User.findOne({ email: session.user.email });
-    if (!user || user.role !== 'owner') {
+    if (!user || (user.role !== 'owner' && user.role !== 'owner_saas')) {
       return NextResponse.json(
         { success: false, error: 'Acesso negado. Apenas owners podem inicializar planos.' },
         { status: 403 }
