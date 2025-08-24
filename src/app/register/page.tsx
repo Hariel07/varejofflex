@@ -197,62 +197,6 @@ function RegisterContent() {
                   }}>
                     Plano <strong style={{ color: selectedPlan.color }}>{selectedPlan.name}</strong> selecionado - {selectedPlan.trialDays} dias grátis garantidos!
                   </p>
-
-                  {/* Seletor de Ciclo de Cobrança */}
-                  <div className="d-inline-flex bg-white rounded-pill p-2 shadow-lg mb-4 border" style={{ gap: '8px' }}>
-                    <button
-                      className={`btn ${billingCycle === 'weekly' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2`}
-                      onClick={() => setBillingCycle('weekly')}
-                      disabled={!selectedPlan.pricing.weekly.enabled}
-                      style={{
-                        fontWeight: '600',
-                        border: billingCycle === 'weekly' ? '2px solid #0d6efd' : '2px solid #dee2e6',
-                        color: billingCycle === 'weekly' ? 'white' : '#495057'
-                      }}
-                    >
-                      📅 Semanal
-                    </button>
-                    <button
-                      className={`btn ${billingCycle === 'monthly' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2 position-relative`}
-                      onClick={() => setBillingCycle('monthly')}
-                      disabled={!selectedPlan.pricing.monthly.enabled}
-                      style={{
-                        fontWeight: '600',
-                        border: billingCycle === 'monthly' ? '2px solid #0d6efd' : '2px solid #dee2e6',
-                        color: billingCycle === 'monthly' ? 'white' : '#495057'
-                      }}
-                    >
-                      🗓️ Mensal
-                      <span className="badge bg-warning text-dark position-absolute" style={{
-                        top: '-8px',
-                        right: '-8px',
-                        fontSize: '0.7rem',
-                        fontWeight: '700'
-                      }}>
-                        POPULAR
-                      </span>
-                    </button>
-                    <button
-                      className={`btn ${billingCycle === 'annual' ? 'btn-primary' : 'btn-outline-secondary'} rounded-pill px-4 py-2 position-relative`}
-                      onClick={() => setBillingCycle('annual')}
-                      disabled={!selectedPlan.pricing.annual.enabled}
-                      style={{
-                        fontWeight: '600',
-                        border: billingCycle === 'annual' ? '2px solid #0d6efd' : '2px solid #dee2e6',
-                        color: billingCycle === 'annual' ? 'white' : '#495057'
-                      }}
-                    >
-                      📆 Anual
-                      <span className="badge bg-success text-white position-absolute" style={{
-                        top: '-8px',
-                        right: '-8px',
-                        fontSize: '0.7rem',
-                        fontWeight: '700'
-                      }}>
-                        -17%
-                      </span>
-                    </button>
-                  </div>
                 </div>
               </div>
 
