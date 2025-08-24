@@ -898,6 +898,15 @@ function RegisterContent() {
                         </button>
                       </div>
 
+                      {/* Seção de Cupom - agora dentro do card principal */}
+                      <div className="mb-4">
+                        <CouponSection 
+                          selectedPlan={selectedPlanId}
+                          selectedPlanData={selectedPlan}
+                          onCouponApplied={handleCouponApplied} 
+                        />
+                      </div>
+
                       <div className="text-center">
                         <p style={{ color: '#6b7280', marginBottom: 0 }}>
                           Já tem uma conta?{" "}
@@ -921,26 +930,7 @@ function RegisterContent() {
           </div>
         </div>
 
-        {/* Seção de Cupom - Separada */}
-        <div 
-          style={{
-            background: 'rgba(248, 250, 252, 0.95)',
-            backdropFilter: 'blur(20px)',
-            borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-          }}
-        >
-          <div className="container py-5">
-            <div className="row justify-content-center">
-              <div className="col-lg-10">
-                <CouponSection 
-                  selectedPlan={selectedPlanId}
-                  selectedPlanData={selectedPlan}
-                  onCouponApplied={handleCouponApplied} 
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Seção de Cupom removida daqui, agora está dentro do card principal */}
       </div>
     );
   }
