@@ -7,7 +7,7 @@ import { PlanType, PLAN_INFO } from '@/lib/planMatrix';
 
 export default function PricingSection() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<PlanType>('professional');
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<PlanType>('profissional');
   const [selectedAddOnName, setSelectedAddOnName] = useState('');
 
   const handleUpgrade = (targetPlan: PlanType, addOnName: string) => {
