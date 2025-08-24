@@ -3,6 +3,7 @@
 import { useAuthUser } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import CouponsManagement from "@/components/dashboard/CouponsManagement";
+import IoTDashboard from "@/components/iot/IoTDashboard";
 
 export default function OwnerDashboard() {
   const { user, isLoading } = useAuthUser();
@@ -680,6 +681,9 @@ export default function OwnerDashboard() {
             </div>
           </div>
         </section>
+
+        {/* IoT Management Section */}
+        <IoTDashboard />
 
         {/* Coupons Management Section */}
         <CouponsManagement />
