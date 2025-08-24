@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotGateway from '@/models/iot/Gateway';
 import IotTelemetry from '@/models/iot/Telemetry';
 
 // Coletar amostras de uma zona
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { 
       storeId, 
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const std = Math.sqrt(variance);
 
     // Atualizar calibração da zona
-    const zoneIndex = gateway.calib.zones.findIndex(z => z.zoneId === zoneId);
+    const zoneIndex = gateway.calib.zones.findIndex((z: any) => z.zoneId === zoneId);
     
     if (zoneIndex === -1) {
       return NextResponse.json({

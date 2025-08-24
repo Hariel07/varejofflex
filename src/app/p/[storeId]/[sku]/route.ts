@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotProduct from '@/models/iot/Product';
 import IotEvent from '@/models/iot/Event';
 
 // Deep-link de produto/tag
 export async function GET(
   request: NextRequest,
-  { params }: { params: { storeId: string; sku: string } }
+  { params }: { params: Promise<{ storeId: string; sku: string }> }
 ) {
   try {
-    await connectDB();
+    await dbConnect();
     
-    const { storeId, sku } = params;
+    const { storeId, sku } = await params;
     const url = new URL(request.url);
     const tagId = url.searchParams.get('tag');
     const action = url.searchParams.get('action') || 'view';
@@ -40,7 +40,7 @@ export async function GET(
           productId: product._id,
           action,
           userAgent: request.headers.get('user-agent') || '',
-          ip: request.ip || ''
+          ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || ''
         }
       }).save();
     }

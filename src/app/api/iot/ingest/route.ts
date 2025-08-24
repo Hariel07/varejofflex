@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotTelemetry from '@/models/iot/Telemetry';
 import IotEvent from '@/models/iot/Event';
 import IotTag from '@/models/iot/Tag';
@@ -8,7 +8,7 @@ import IotGateway from '@/models/iot/Gateway';
 // Ingestão HTTP de telemetria
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

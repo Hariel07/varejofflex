@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotProduct from '@/models/iot/Product';
 import IotLog from '@/models/iot/Log';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Criar produto
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { 
       storeId, 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       entityId: productId,
       after: product.toObject(),
       notes: `Produto ${sku} criado`,
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
 // Listar produtos
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');

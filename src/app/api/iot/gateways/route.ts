@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotGateway from '@/models/iot/Gateway';
 import IotLog from '@/models/iot/Log';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +8,7 @@ import crypto from 'crypto';
 // Provisionar gateway (gerar token)
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { storeId, kind, pos, notes, userId, userRole } = await request.json();
     
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       entityId: gatewayId,
       after: gateway.toObject(),
       notes: `Gateway provisionado na zona ${pos.zone}`,
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 // Listar gateways
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
 // Atualizar status/configuração
 export async function PUT(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { gatewayId, updates, userId, userRole } = await request.json();
     
@@ -167,7 +167,7 @@ export async function PUT(request: NextRequest) {
       before,
       after: gateway.toObject(),
       notes: 'Gateway atualizado',
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 

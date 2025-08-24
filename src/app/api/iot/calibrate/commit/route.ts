@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotGateway from '@/models/iot/Gateway';
 import IotEvent from '@/models/iot/Event';
 import IotLog from '@/models/iot/Log';
@@ -7,7 +7,7 @@ import IotLog from '@/models/iot/Log';
 // Finalizar e salvar calibração
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { 
       storeId, 
@@ -36,14 +36,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar se todas as zonas foram calibradas
-    const uncalibratedZones = gateway.calib.zones.filter(zone => 
+    const uncalibratedZones = gateway.calib.zones.filter((zone: any) => 
       !zone.rssiRef || zone.rssiRef.length === 0
     );
 
     if (uncalibratedZones.length > 0) {
       return NextResponse.json({
         success: false,
-        error: `Zonas não calibradas: ${uncalibratedZones.map(z => z.name).join(', ')}`
+        error: `Zonas não calibradas: ${uncalibratedZones.map((z: any) => z.name).join(', ')}`
       }, { status: 400 });
     }
 
@@ -78,12 +78,12 @@ export async function POST(request: NextRequest) {
       entityId: gatewayId,
       after: gateway.calib,
       notes: `Calibração finalizada com ${gateway.calib.zones.length} zonas`,
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 
     // Calcular estatísticas da calibração
-    const calibrationStats = gateway.calib.zones.map(zone => {
+    const calibrationStats = gateway.calib.zones.map((zone: any) => {
       const ref = zone.rssiRef[0];
       return {
         zoneId: zone.zoneId,

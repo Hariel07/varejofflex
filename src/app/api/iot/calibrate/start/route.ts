@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotGateway from '@/models/iot/Gateway';
 import IotLog from '@/models/iot/Log';
 
 // Iniciar sessão de calibração BLE
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { storeId, gatewayId, zones, userId, userRole } = await request.json();
     
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       entityId: gatewayId,
       after: { zones: calibrationZones },
       notes: `Iniciada calibração para ${zones.length} zonas`,
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 

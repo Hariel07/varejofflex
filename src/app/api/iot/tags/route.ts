@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotTag from '@/models/iot/Tag';
 import IotProduct from '@/models/iot/Product';
 import IotLog from '@/models/iot/Log';
@@ -7,7 +7,7 @@ import IotLog from '@/models/iot/Log';
 // Criar tag
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { 
       storeId, 
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       entityId: tagId,
       after: tag.toObject(),
       notes: `Tag ${type} criada para produto ${productSku}`,
-      ip: request.ip || '',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 // Listar tags
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');

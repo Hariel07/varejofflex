@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotProduct from '@/models/iot/Product';
 import IotTag from '@/models/iot/Tag';
 import IotEvent from '@/models/iot/Event';
@@ -8,7 +8,7 @@ import IotLog from '@/models/iot/Log';
 // Inventário rápido via QR/NFC scan
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const { storeId, scans, userId, userRole } = await request.json();
     
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       entityId: 'bulk_scan',
       after: { scansProcessed: results.length, successCount: results.filter(r => r.success).length },
       notes: `Inventário rápido: ${scans.length} scans processados`,
-      ip: request.ip || '',
+      ip: '',
       userAgent: request.headers.get('user-agent') || ''
     }).save();
 

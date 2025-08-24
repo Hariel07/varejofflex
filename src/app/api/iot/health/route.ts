@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import IotGateway from '@/models/iot/Gateway';
 import IotTag from '@/models/iot/Tag';
 import IotEvent from '@/models/iot/Event';
@@ -8,7 +8,7 @@ import IotProduct from '@/models/iot/Product';
 // Retorna status de tags/gateways e estatísticas
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
     
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');
