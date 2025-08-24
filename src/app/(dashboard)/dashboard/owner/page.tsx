@@ -2,6 +2,7 @@
 
 import { useAuthUser } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
+import CouponsManagement from "@/components/dashboard/CouponsManagement";
 
 export default function OwnerDashboard() {
   const { user, isLoading } = useAuthUser();
@@ -418,7 +419,7 @@ export default function OwnerDashboard() {
         </section>
 
         {/* Pricing Control Section */}
-        <section>
+        <section style={{ marginBottom: '40px' }}>
           <h2 style={{
             color: '#1E293B',
             fontSize: '1.5rem',
@@ -452,7 +453,7 @@ export default function OwnerDashboard() {
                   margin: '0 0 10px 0',
                   fontWeight: 'bold'
                 }}>
-                  📱 BASIC
+                  📱 BÁSICO
                 </h3>
                 <div style={{
                   color: '#1E293B',
@@ -539,7 +540,7 @@ export default function OwnerDashboard() {
                   margin: '0 0 10px 0',
                   fontWeight: 'bold'
                 }}>
-                  🚀 PRO
+                  🚀 PROFISSIONAL
                 </h3>
                 <div style={{
                   color: '#1E293B',
@@ -679,6 +680,9 @@ export default function OwnerDashboard() {
             </div>
           </div>
         </section>
+
+        {/* Coupons Management Section */}
+        <CouponsManagement />
       </main>
     </div>
   );

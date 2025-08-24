@@ -3,36 +3,45 @@
 import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import CouponSection from "@/components/CouponSection";
 
 function RegisterContent() {
   const searchParams = useSearchParams();
   const selectedPlan = searchParams.get('plan');
   const [showOwnerOption, setShowOwnerOption] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
 
   // Dados dos planos
   const plansData = {
     basico: {
       name: "Básico",
-      price: "R$ 89",
+      price: "R$ 49",
+      basePrice: 49,
       features: ["Até 100 produtos", "1 usuário", "PDV básico", "Relatórios essenciais", "Suporte por email"],
       color: "#0d6efd",
       popular: false
     },
     profissional: {
       name: "Profissional",
-      price: "R$ 179", 
+      price: "R$ 149", 
+      basePrice: 149,
       features: ["Até 1.000 produtos", "5 usuários", "PDV completo", "Relatórios avançados", "Gestão de estoque", "Suporte prioritário"],
       color: "#0d6efd",
       popular: true
     },
     empresarial: {
       name: "Empresarial",
-      price: "R$ 349",
+      price: "R$ 299",
+      basePrice: 299,
       features: ["Produtos ilimitados", "Usuários ilimitados", "Multi-loja", "BI e Analytics", "API completa", "Suporte 24/7"],
       color: "#198754",
       popular: false
     }
+  };
+
+  const handleCouponApplied = (couponData: any) => {
+    setAppliedCoupon(couponData);
   };
 
   useEffect(() => {
@@ -212,21 +221,66 @@ function RegisterContent() {
                         Plano {plan.name}
                       </h3>
                       <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
-                        {plan.price}
-                        <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>/mês</small>
+                        {appliedCoupon && appliedCoupon.finalPrice !== undefined ? (
+                          <div>
+                            {appliedCoupon.discount > 0 && (
+                              <div style={{ 
+                                fontSize: '1.5rem', 
+                                textDecoration: 'line-through', 
+                                color: '#9ca3af',
+                                marginBottom: '0.25rem'
+                              }}>
+                                R$ {appliedCoupon.originalPrice}
+                              </div>
+                            )}
+                            <div style={{ color: appliedCoupon.finalPrice === 0 ? '#10b981' : '#1e293b' }}>
+                              {appliedCoupon.finalPrice === 0 ? 'GRATUITO' : `R$ ${appliedCoupon.finalPrice}`}
+                              {appliedCoupon.finalPrice > 0 && (
+                                <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>/mês</small>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            {plan.price}
+                            <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>/mês</small>
+                          </div>
+                        )}
                       </div>
-                      <div 
-                        style={{
-                          background: `${plan.color}15`,
-                          color: plan.color,
-                          padding: '0.75rem 1rem',
-                          borderRadius: '12px',
-                          fontWeight: '700',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        🎁 14 dias completamente grátis
-                      </div>
+                      
+                      {appliedCoupon && appliedCoupon.discount > 0 ? (
+                        <div 
+                          style={{
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            color: 'white',
+                            padding: '0.75rem 1rem',
+                            borderRadius: '12px',
+                            fontWeight: '700',
+                            fontSize: '0.9rem',
+                            marginBottom: '1rem'
+                          }}
+                        >
+                          🎉 Cupom {appliedCoupon.coupon.code} aplicado!
+                          <br />
+                          <small style={{ opacity: 0.9 }}>
+                            Economia de R$ {appliedCoupon.discount.toFixed(2)}
+                            {appliedCoupon.trialDays > 0 && ` + ${appliedCoupon.trialDays} dias grátis`}
+                          </small>
+                        </div>
+                      ) : (
+                        <div 
+                          style={{
+                            background: `${plan.color}15`,
+                            color: plan.color,
+                            padding: '0.75rem 1rem',
+                            borderRadius: '12px',
+                            fontWeight: '700',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          🎁 14 dias completamente grátis
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-4">
@@ -473,6 +527,17 @@ function RegisterContent() {
                             required 
                           />
                         </div>
+                      </div>
+
+                      {/* Seção de Cupom */}
+                      <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+                        <CouponSection 
+                          selectedPlan={selectedPlan} 
+                          onCouponApplied={handleCouponApplied}
+                        />
+                      </div>
+
+                      <div className="row g-3">
                         
                         <div className="col-12">
                           <div 
@@ -487,8 +552,22 @@ function RegisterContent() {
                               🎁 Período de Teste Gratuito
                             </h6>
                             <p style={{ color: '#4a5568', fontSize: '0.9rem', margin: 0 }}>
-                              Você terá <strong>14 dias completamente grátis</strong> para testar todos os recursos do plano {plan.name}. 
-                              Após o período, será cobrado <strong>{plan.price}/mês</strong>. Cancele a qualquer momento sem compromisso.
+                              {appliedCoupon && appliedCoupon.trialDays > 0 ? (
+                                <>
+                                  Você terá <strong>{appliedCoupon.trialDays} dias adicionais gratuitos</strong> através do seu cupom, 
+                                  além dos <strong>14 dias padrão</strong> para testar todos os recursos do plano {plan.name}.
+                                </>
+                              ) : (
+                                <>
+                                  Você terá <strong>14 dias completamente grátis</strong> para testar todos os recursos do plano {plan.name}.
+                                </>
+                              )}
+                              {' '}Após o período, será cobrado <strong>
+                                {appliedCoupon && appliedCoupon.finalPrice !== undefined ? 
+                                  (appliedCoupon.finalPrice === 0 ? 'gratuito' : `R$ ${appliedCoupon.finalPrice}/mês`) :
+                                  `${plan.price}/mês`
+                                }
+                              </strong>. Cancele a qualquer momento sem compromisso.
                             </p>
                           </div>
                         </div>
@@ -526,7 +605,12 @@ function RegisterContent() {
                             transition: 'all 0.3s ease'
                           }}
                         >
-                          🚀 Criar Conta e Iniciar 14 Dias Grátis
+                          {appliedCoupon && appliedCoupon.finalPrice === 0 ? 
+                            '🎉 Criar Conta GRATUITA com Cupom' :
+                            appliedCoupon && appliedCoupon.discount > 0 ?
+                            `🎯 Criar Conta com Desconto (R$ ${appliedCoupon.finalPrice})` :
+                            '🚀 Criar Conta e Iniciar 14 Dias Grátis'
+                          }
                         </button>
                         <div className="text-center mt-3">
                           <small style={{ color: '#6b7280' }}>
