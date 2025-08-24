@@ -42,6 +42,7 @@ const PUBLIC_ROUTES = [
   "/reset-password",
   "/demo",
   "/api/auth",
+  "/api/plans", // Rota pública para carregar planos na home
   "/api/debug", // Adicionar rota de debug
 ];
 
