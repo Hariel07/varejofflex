@@ -4,44 +4,35 @@ import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import CouponSection from "@/components/CouponSection";
+import { usePlans } from "@/hooks/usePlans";
 
 function RegisterContent() {
   const searchParams = useSearchParams();
-  const selectedPlan = searchParams.get('plan');
+  const selectedPlanId = searchParams.get('plan');
   const [showOwnerOption, setShowOwnerOption] = useState(false);
   const [loading, setLoading] = useState(true);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [billingCycle, setBillingCycle] = useState<'weekly' | 'monthly' | 'annual'>('monthly');
 
-  // Dados dos planos
-  const plansData = {
-    basico: {
-      name: "Básico",
-      price: "R$ 89",
-      basePrice: 89,
-      features: ["Até 100 produtos", "1 usuário", "PDV básico", "Relatórios essenciais", "Suporte por email"],
-      color: "#0d6efd",
-      popular: false
-    },
-    profissional: {
-      name: "Profissional",
-      price: "R$ 189", 
-      basePrice: 189,
-      features: ["Até 1.000 produtos", "5 usuários", "PDV completo", "Relatórios avançados", "Gestão de estoque", "Suporte prioritário"],
-      color: "#0d6efd",
-      popular: true
-    },
-    empresarial: {
-      name: "Empresarial",
-      price: "R$ 389",
-      basePrice: 389,
-      features: ["Produtos ilimitados", "Usuários ilimitados", "Multi-loja", "BI e Analytics", "API completa", "Suporte 24/7"],
-      color: "#198754",
-      popular: false
-    }
-  };
+  const { plans, loading: plansLoading, error: plansError } = usePlans();
+  const selectedPlan = plans.find(plan => plan.planId === selectedPlanId);
 
   const handleCouponApplied = (couponData: any) => {
     setAppliedCoupon(couponData);
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price).replace('R$', 'R$');
+  };
+
+  const calculateDiscountedPrice = (originalPrice: number, discount?: number) => {
+    if (!discount || discount <= 0) return originalPrice;
+    return originalPrice * (1 - discount / 100);
   };
 
   useEffect(() => {
@@ -58,7 +49,7 @@ function RegisterContent() {
       });
   }, []);
 
-  if (loading) {
+  if (loading || plansLoading) {
     return (
       <div 
         className="min-vh-100 d-flex align-items-center justify-content-center"
@@ -90,9 +81,34 @@ function RegisterContent() {
     );
   }
 
+  if (plansError) {
+    return (
+      <div 
+        className="min-vh-100 d-flex align-items-center justify-content-center"
+        style={{ 
+          background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+          position: 'relative'
+        }}
+      >
+        <div className="text-center">
+          <div className="alert alert-warning" role="alert">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            Erro ao carregar informações dos planos: {plansError}
+          </div>
+          <Link href="/#pricing" className="btn btn-primary">
+            Voltar aos Planos
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   // Se um plano foi selecionado, mostrar página de checkout/cadastro
-  if (selectedPlan && plansData[selectedPlan as keyof typeof plansData]) {
-    const plan = plansData[selectedPlan as keyof typeof plansData];
+  if (selectedPlanId && selectedPlan) {
+    const pricing = selectedPlan.pricing[billingCycle];
+    const originalPrice = pricing.price;
+    const discountedPrice = calculateDiscountedPrice(originalPrice, pricing.discount);
+    const hasDiscount = pricing.discount && pricing.discount > 0;
     
     return (
       <div className="min-vh-100" style={{ 
@@ -179,8 +195,36 @@ function RegisterContent() {
                     fontWeight: '400',
                     marginBottom: 0
                   }}>
-                    Plano <strong style={{ color: plan.color }}>{plan.name}</strong> selecionado - 14 dias grátis garantidos!
+                    Plano <strong style={{ color: selectedPlan.color }}>{selectedPlan.name}</strong> selecionado - {selectedPlan.trialDays} dias grátis garantidos!
                   </p>
+
+                  {/* Seletor de Ciclo de Cobrança */}
+                  <div className="d-inline-flex bg-white rounded-pill p-1 shadow-sm mt-4">
+                    <button
+                      className={`btn ${billingCycle === 'weekly' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-3`}
+                      onClick={() => setBillingCycle('weekly')}
+                      disabled={!selectedPlan.pricing.weekly.enabled}
+                    >
+                      📅 Semanal
+                    </button>
+                    <button
+                      className={`btn ${billingCycle === 'monthly' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-3`}
+                      onClick={() => setBillingCycle('monthly')}
+                      disabled={!selectedPlan.pricing.monthly.enabled}
+                    >
+                      🗓️ Mensal
+                    </button>
+                    <button
+                      className={`btn ${billingCycle === 'annual' ? 'btn-primary' : 'btn-outline-light'} rounded-pill px-3`}
+                      onClick={() => setBillingCycle('annual')}
+                      disabled={!selectedPlan.pricing.annual.enabled}
+                    >
+                      📆 Anual
+                      {selectedPlan.pricing.annual.discount && selectedPlan.pricing.annual.discount > 0 && (
+                        <span className="badge bg-success ms-1">-{selectedPlan.pricing.annual.discount}%</span>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -193,19 +237,19 @@ function RegisterContent() {
                       background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(30px)',
                       borderRadius: '24px',
-                      border: `2px solid ${plan.color}30`,
+                      border: `2px solid ${selectedPlan.color}30`,
                       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
                       padding: '2rem',
                       position: 'sticky',
                       top: '2rem'
                     }}
                   >
-                    {plan.popular && (
+                    {selectedPlan.popular && (
                       <div className="text-center mb-3">
                         <span 
                           className="badge px-3 py-2 rounded-pill"
                           style={{
-                            background: plan.color,
+                            background: selectedPlan.color,
                             color: 'white',
                             fontSize: '0.9rem',
                             fontWeight: '700'
@@ -217,8 +261,8 @@ function RegisterContent() {
                     )}
                     
                     <div className="text-center mb-4">
-                      <h3 style={{ color: plan.color, fontWeight: '800', marginBottom: '1rem' }}>
-                        Plano {plan.name}
+                      <h3 style={{ color: selectedPlan.color, fontWeight: '800', marginBottom: '1rem' }}>
+                        Plano {selectedPlan.name}
                       </h3>
                       <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
                         {appliedCoupon && appliedCoupon.finalPrice !== undefined ? (
@@ -230,20 +274,48 @@ function RegisterContent() {
                                 color: '#9ca3af',
                                 marginBottom: '0.25rem'
                               }}>
-                                R$ {appliedCoupon.originalPrice}
+                                {formatPrice(appliedCoupon.originalPrice)}
                               </div>
                             )}
                             <div style={{ color: appliedCoupon.finalPrice === 0 ? '#10b981' : '#1e293b' }}>
-                              {appliedCoupon.finalPrice === 0 ? 'GRATUITO' : `R$ ${appliedCoupon.finalPrice}`}
+                              {appliedCoupon.finalPrice === 0 ? 'GRATUITO' : formatPrice(appliedCoupon.finalPrice)}
                               {appliedCoupon.finalPrice > 0 && (
-                                <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>/mês</small>
+                                <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
+                                  /{billingCycle === 'weekly' ? 'sem' : billingCycle === 'monthly' ? 'mês' : 'ano'}
+                                </small>
                               )}
                             </div>
                           </div>
                         ) : (
                           <div>
-                            {plan.price}
-                            <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>/mês</small>
+                            {hasDiscount ? (
+                              <div>
+                                <div style={{ 
+                                  fontSize: '1.5rem', 
+                                  textDecoration: 'line-through', 
+                                  color: '#9ca3af',
+                                  marginBottom: '0.25rem'
+                                }}>
+                                  {formatPrice(originalPrice)}
+                                </div>
+                                <div>
+                                  {formatPrice(discountedPrice)}
+                                  <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
+                                    /{billingCycle === 'weekly' ? 'sem' : billingCycle === 'monthly' ? 'mês' : 'ano'}
+                                  </small>
+                                </div>
+                                <div style={{ color: '#28a745', fontSize: '0.9rem', fontWeight: '600' }}>
+                                  -{pricing.discount}% de desconto
+                                </div>
+                              </div>
+                            ) : (
+                              <div>
+                                {formatPrice(originalPrice)}
+                                <small style={{ fontSize: '1rem', color: '#64748b', fontWeight: '500' }}>
+                                  /{billingCycle === 'weekly' ? 'sem' : billingCycle === 'monthly' ? 'mês' : 'ano'}
+                                </small>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -263,22 +335,22 @@ function RegisterContent() {
                           🎉 Cupom {appliedCoupon.coupon.code} aplicado!
                           <br />
                           <small style={{ opacity: 0.9 }}>
-                            Economia de R$ {appliedCoupon.discount.toFixed(2)}
+                            Economia de {formatPrice(appliedCoupon.discount)}
                             {appliedCoupon.trialDays > 0 && ` + ${appliedCoupon.trialDays} dias grátis`}
                           </small>
                         </div>
                       ) : (
                         <div 
                           style={{
-                            background: `${plan.color}15`,
-                            color: plan.color,
+                            background: `${selectedPlan.color}15`,
+                            color: selectedPlan.color,
                             padding: '0.75rem 1rem',
                             borderRadius: '12px',
                             fontWeight: '700',
                             fontSize: '0.9rem'
                           }}
                         >
-                          🎁 14 dias completamente grátis
+                          🎁 {selectedPlan.trialDays} dias completamente grátis
                         </div>
                       )}
                     </div>
@@ -288,9 +360,9 @@ function RegisterContent() {
                         ✨ Recursos inclusos:
                       </h6>
                       <ul className="list-unstyled">
-                        {plan.features.map((feature, index) => (
+                        {selectedPlan.features.map((feature, index) => (
                           <li key={index} className="mb-2 d-flex align-items-start">
-                            <i className="bi bi-check-circle-fill me-2 mt-1" style={{ color: plan.color }}></i>
+                            <i className="bi bi-check-circle-fill me-2 mt-1" style={{ color: selectedPlan.color }}></i>
                             <span style={{ color: '#4a5568', fontWeight: '500' }}>{feature}</span>
                           </li>
                         ))}
@@ -299,8 +371,8 @@ function RegisterContent() {
 
                     <div 
                       style={{
-                        background: `${plan.color}10`,
-                        border: `1px solid ${plan.color}30`,
+                        background: `${selectedPlan.color}10`,
+                        border: `1px solid ${selectedPlan.color}30`,
                         borderRadius: '16px',
                         padding: '1.5rem',
                         textAlign: 'center'
@@ -532,18 +604,17 @@ function RegisterContent() {
                       {/* Seção de Cupom */}
                       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
                         <CouponSection 
-                          selectedPlan={selectedPlan} 
+                          selectedPlan={selectedPlanId} 
                           onCouponApplied={handleCouponApplied}
                         />
                       </div>
 
                       <div className="row g-3">
-                        
                         <div className="col-12">
                           <div 
                             style={{
-                              background: `${plan.color}08`,
-                              border: `1px solid ${plan.color}30`,
+                              background: `${selectedPlan.color}08`,
+                              border: `1px solid ${selectedPlan.color}30`,
                               borderRadius: '12px',
                               padding: '1rem'
                             }}
@@ -555,17 +626,17 @@ function RegisterContent() {
                               {appliedCoupon && appliedCoupon.trialDays > 0 ? (
                                 <>
                                   Você terá <strong>{appliedCoupon.trialDays} dias adicionais gratuitos</strong> através do seu cupom, 
-                                  além dos <strong>14 dias padrão</strong> para testar todos os recursos do plano {plan.name}.
+                                  além dos <strong>{selectedPlan.trialDays} dias padrão</strong> para testar todos os recursos do plano {selectedPlan.name}.
                                 </>
                               ) : (
                                 <>
-                                  Você terá <strong>14 dias completamente grátis</strong> para testar todos os recursos do plano {plan.name}.
+                                  Você terá <strong>{selectedPlan.trialDays} dias completamente grátis</strong> para testar todos os recursos do plano {selectedPlan.name}.
                                 </>
                               )}
                               {' '}Após o período, será cobrado <strong>
                                 {appliedCoupon && appliedCoupon.finalPrice !== undefined ? 
-                                  (appliedCoupon.finalPrice === 0 ? 'gratuito' : `R$ ${appliedCoupon.finalPrice}/mês`) :
-                                  `${plan.price}/mês`
+                                  (appliedCoupon.finalPrice === 0 ? 'gratuito' : `${formatPrice(appliedCoupon.finalPrice)}/${billingCycle === 'weekly' ? 'sem' : billingCycle === 'monthly' ? 'mês' : 'ano'}`) :
+                                  `${formatPrice(hasDiscount ? discountedPrice : originalPrice)}/${billingCycle === 'weekly' ? 'sem' : billingCycle === 'monthly' ? 'mês' : 'ano'}`
                                 }
                               </strong>. Cancele a qualquer momento sem compromisso.
                             </p>
@@ -577,8 +648,8 @@ function RegisterContent() {
                         <div className="form-check">
                           <input className="form-check-input" type="checkbox" id="terms" required />
                           <label className="form-check-label" htmlFor="terms" style={{ color: '#4a5568' }}>
-                            Aceito os <a href="#" style={{ color: plan.color }}>Termos de Uso</a> e 
-                            <a href="#" style={{ color: plan.color }}> Política de Privacidade</a>
+                            Aceito os <a href="#" style={{ color: selectedPlan.color }}>Termos de Uso</a> e 
+                            <a href="#" style={{ color: selectedPlan.color }}> Política de Privacidade</a>
                           </label>
                         </div>
                         <div className="form-check">
@@ -594,22 +665,22 @@ function RegisterContent() {
                           type="submit"
                           className="btn btn-lg w-100"
                           style={{
-                            background: `linear-gradient(135deg, ${plan.color} 0%, ${plan.color}dd 100%)`,
+                            background: `linear-gradient(135deg, ${selectedPlan.color} 0%, ${selectedPlan.color}dd 100%)`,
                             border: 'none',
                             borderRadius: '16px',
                             padding: '1rem 2rem',
                             color: 'white',
                             fontWeight: '800',
                             fontSize: '1.1rem',
-                            boxShadow: `0 8px 25px ${plan.color}40`,
+                            boxShadow: `0 8px 25px ${selectedPlan.color}40`,
                             transition: 'all 0.3s ease'
                           }}
                         >
                           {appliedCoupon && appliedCoupon.finalPrice === 0 ? 
                             '🎉 Criar Conta GRATUITA com Cupom' :
                             appliedCoupon && appliedCoupon.discount > 0 ?
-                            `🎯 Criar Conta com Desconto (R$ ${appliedCoupon.finalPrice})` :
-                            '🚀 Criar Conta e Iniciar 14 Dias Grátis'
+                            `🎯 Criar Conta com Desconto (${formatPrice(appliedCoupon.finalPrice)})` :
+                            `🚀 Criar Conta e Iniciar ${selectedPlan.trialDays} Dias Grátis`
                           }
                         </button>
                         <div className="text-center mt-3">
@@ -697,48 +768,8 @@ function RegisterContent() {
               }}>
                 Para criar sua conta, primeiro você precisa escolher o plano ideal para seu negócio. 
                 <br />
-                <strong style={{ color: '#3b82f6' }}>Todos os planos incluem 14 dias grátis!</strong>
+                <strong style={{ color: '#3b82f6' }}>Todos os planos incluem período de teste grátis!</strong>
               </p>
-
-              <div 
-                style={{
-                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05))',
-                  border: '1px solid rgba(59, 130, 246, 0.2)',
-                  borderRadius: '20px',
-                  padding: '2rem',
-                  marginBottom: '3rem'
-                }}
-              >
-                <h5 style={{ color: '#1e293b', fontWeight: '800', marginBottom: '1rem' }}>
-                  ✨ Por que escolher primeiro?
-                </h5>
-                <div className="row g-3">
-                  <div className="col-md-4">
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚡</div>
-                      <small style={{ color: '#4a5568', fontWeight: '600' }}>
-                        Setup personalizado para seu plano
-                      </small>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎁</div>
-                      <small style={{ color: '#4a5568', fontWeight: '600' }}>
-                        14 dias grátis garantidos
-                      </small>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔒</div>
-                      <small style={{ color: '#4a5568', fontWeight: '600' }}>
-                        Sem compromisso, cancele quando quiser
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               <Link 
                 href="/#pricing"
@@ -755,14 +786,6 @@ function RegisterContent() {
                   boxShadow: '0 16px 40px rgba(59, 130, 246, 0.4)',
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   marginBottom: '2rem'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 20px 50px rgba(59, 130, 246, 0.6)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.4)';
                 }}
               >
                 🚀 Ver Planos e Preços
