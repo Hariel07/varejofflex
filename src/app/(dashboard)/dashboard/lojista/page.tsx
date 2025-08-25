@@ -3,6 +3,8 @@
 import { useAuthUser, usePermissions, useTenantApi, useCompanyAccess } from "@/hooks/useAuth";
 import { ProtectedContent, LojistaOnly } from "@/components/auth/ProtectedContent";
 import { useEffect, useState, Suspense } from "react";
+import FiscalPrinterWidget from "@/components/dashboard/FiscalPrinterWidget";
+import FiscalPrinterConfig from "@/components/dashboard/FiscalPrinterConfig";
 
 // Força renderização do lado do cliente
 export const dynamic = 'force-dynamic';
@@ -32,6 +34,7 @@ function LojistaDashboardContent() {
   const { get } = useTenantApi();
   const [stats, setStats] = useState<CompanyStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showFiscalConfig, setShowFiscalConfig] = useState(false);
 
   const companyId = getCurrentCompanyId();
   const segment = user?.segment || "lanchonete";
@@ -165,6 +168,113 @@ function LojistaDashboardContent() {
                 </div>
               </div>
             </div>
+
+            {/* Fiscal Printer & System Tools */}
+            <div className="row mb-4">
+              <div className="col-md-4">
+                <FiscalPrinterWidget />
+              </div>
+              
+              <div className="col-md-4">
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <div className="d-flex align-items-center">
+                      <div style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>⚙️</div>
+                      <div>
+                        <h6 style={{ margin: 0, fontWeight: '700', color: '#1e293b' }}>
+                          Configurações
+                        </h6>
+                        <small style={{ color: '#64748b' }}>Sistema e impressora</small>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="d-grid gap-2">
+                    <button 
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => setShowFiscalConfig(!showFiscalConfig)}
+                    >
+                      <i className="bi bi-printer me-2"></i>
+                      {showFiscalConfig ? 'Ocultar' : 'Configurar'} Impressora Fiscal
+                    </button>
+                    
+                    <button className="btn btn-outline-secondary btn-sm">
+                      <i className="bi bi-gear me-2"></i>
+                      Configurações Gerais
+                    </button>
+                    
+                    <button className="btn btn-outline-info btn-sm">
+                      <i className="bi bi-question-circle me-2"></i>
+                      Ajuda & Suporte
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="col-md-4">
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <div className="d-flex align-items-center mb-3">
+                    <div style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>📊</div>
+                    <div>
+                      <h6 style={{ margin: 0, fontWeight: '700', color: '#1e293b' }}>
+                        Status do Sistema
+                      </h6>
+                      <small style={{ color: '#64748b' }}>Tudo funcionando</small>
+                    </div>
+                  </div>
+                  
+                  <div className="row g-2">
+                    <div className="col-6">
+                      <div style={{
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid #10b981',
+                        borderRadius: '8px',
+                        padding: '0.5rem',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>🟢</div>
+                        <small style={{ fontWeight: '600', color: '#059669' }}>Online</small>
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div style={{
+                        background: 'rgba(59, 130, 246, 0.1)',
+                        border: '1px solid #3b82f6',
+                        borderRadius: '8px',
+                        padding: '0.5rem',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>⚡</div>
+                        <small style={{ fontWeight: '600', color: '#2563eb' }}>Rápido</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Configuração da Impressora Fiscal (Modal/Expansível) */}
+            {showFiscalConfig && (
+              <div className="row mb-4">
+                <div className="col-12">
+                  <FiscalPrinterConfig />
+                </div>
+              </div>
+            )}
 
             {/* Main Content */}
             <div className="row mb-4">

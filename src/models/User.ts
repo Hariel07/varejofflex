@@ -13,6 +13,21 @@ export interface IUser {
   lastLoginAt?: Date;           // último login
   permissions: string[];        // permissões específicas
   segment?: string;             // segmento de negócio do lojista
+  fiscalSettings?: {            // configurações da impressora fiscal
+    cnpj: string;
+    razaoSocial: string;
+    nomeFantasia?: string;
+    endereco: string;
+    telefone?: string;
+    email?: string;
+    printerType: 'SAT' | 'ECF' | 'NFCE' | 'ESC_POS';
+    printerPort?: string;
+    printerModel?: string;
+    satCertificate?: string;
+    autoprint: boolean;
+    enabled: boolean;
+    updatedAt: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +43,21 @@ const UserSchema = new Schema<IUser>({
   lastLoginAt: { type: Date },
   permissions: [{ type: String }],
   segment: { type: String, enum: ["lanchonete", "pizzaria", "moda", "mercado", "petshop", "salao", "farmacia", "conveniencia"] },
+  fiscalSettings: {
+    cnpj: { type: String },
+    razaoSocial: { type: String },
+    nomeFantasia: { type: String },
+    endereco: { type: String },
+    telefone: { type: String },
+    email: { type: String },
+    printerType: { type: String, enum: ['SAT', 'ECF', 'NFCE', 'ESC_POS'], default: 'ESC_POS' },
+    printerPort: { type: String },
+    printerModel: { type: String },
+    satCertificate: { type: String },
+    autoprint: { type: Boolean, default: false },
+    enabled: { type: Boolean, default: false },
+    updatedAt: { type: Date, default: Date.now }
+  }
 }, { timestamps: true });
 
 UserSchema.index({ email: 1 }, { unique: true });

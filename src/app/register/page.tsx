@@ -665,6 +665,8 @@ function RegisterContent() {
                             >
                               <option value="">Selecione seu segmento</option>
                               <option value="alimentacao">🍔 Alimentação</option>
+                              <option value="lanchonete">🌭 Lanchonete/Delivery</option>
+                              <option value="pizzaria">🍕 Pizzaria</option>
                               <option value="moda">👗 Moda e Vestuário</option>
                               <option value="beleza">💄 Beleza e Estética</option>
                               <option value="saude">💊 Saúde e Farmácia</option>
