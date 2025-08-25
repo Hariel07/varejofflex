@@ -10,6 +10,7 @@ export interface IUser {
   userType: UserType;           // owner_saas ou lojista
   companyId?: Types.ObjectId;   // vazio para owner_saas
   isActive: boolean;            // controle de usuários ativos
+  lastLogin?: Date;             // último login
   lastLoginAt?: Date;           // último login
   permissions: string[];        // permissões específicas
   segment?: string;             // segmento de negócio do lojista
@@ -40,6 +41,7 @@ const UserSchema = new Schema<IUser>({
   userType: { type: String, required: true, enum: ["owner_saas", "lojista"] },
   companyId: { type: Schema.Types.ObjectId, ref: "Company" },
   isActive: { type: Boolean, default: true },
+  lastLogin: { type: Date },
   lastLoginAt: { type: Date },
   permissions: [{ type: String }],
   segment: { type: String, enum: ["lanchonete", "pizzaria", "moda", "mercado", "petshop", "salao", "farmacia", "conveniencia"] },

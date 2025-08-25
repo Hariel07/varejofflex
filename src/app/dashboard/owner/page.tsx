@@ -28,6 +28,17 @@ const PlanCouponsManagement = dynamic(() => import('@/components/dashboard/PlanC
   )
 });
 
+const UserManagement = dynamic(() => import('@/components/dashboard/UserManagement'), {
+  ssr: false,
+  loading: () => (
+    <div className="d-flex justify-content-center py-5">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  )
+});
+
 export default function OwnerDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -335,6 +346,38 @@ export default function OwnerDashboard() {
                       </button>
                     </div>
                   </div>
+                  
+                  {/* Seção de desenvolvimento */}
+                  <hr className="my-4" />
+                  <h6 className="mb-3" style={{ fontWeight: '600', color: '#6c757d' }}>
+                    <i className="bi bi-tools me-2"></i>
+                    Ferramentas de Desenvolvimento
+                  </h6>
+                  <div className="row g-2">
+                    <div className="col-12">
+                      <button 
+                        className="btn btn-outline-info w-100"
+                        onClick={async () => {
+                          if (confirm('Isso criará dados de teste (empresas e usuários). Continuar?')) {
+                            try {
+                              const response = await fetch('/api/admin/seed-test-data', { method: 'POST' });
+                              const data = await response.json();
+                              if (data.success) {
+                                alert(`Dados criados: ${data.data.companies} empresas, ${data.data.logistas} logistas, ${data.data.clients} clientes`);
+                              } else {
+                                alert('Erro: ' + data.error);
+                              }
+                            } catch (error) {
+                              alert('Erro ao criar dados de teste');
+                            }
+                          }
+                        }}
+                      >
+                        <i className="bi bi-database-add me-2"></i>
+                        Popular Dados de Teste
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -387,90 +430,7 @@ export default function OwnerDashboard() {
         
         {activeTab === 'coupons' && <PlanCouponsManagement />}
 
-        {activeTab === 'users' && (
-          <div className="row g-4">
-            {/* Header da seção de usuários */}
-            <div className="col-12">
-              <div 
-                className="card border-0"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '20px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-                }}
-              >
-                <div className="card-body p-5">
-                  <div className="text-center mb-4">
-                    <i className="bi bi-people" style={{ fontSize: '4rem', color: '#4facfe' }}></i>
-                    <h4 className="mt-3 mb-3" style={{ fontWeight: '700', color: '#2d3748' }}>
-                      Gerenciamento de Usuários
-                    </h4>
-                    <p className="text-muted mb-4" style={{ fontSize: '1.1rem' }}>
-                      Aqui você gerenciará todos os logistas e seus clientes da plataforma
-                    </p>
-                  </div>
-
-                  {/* Preview da estrutura futura */}
-                  <div className="row g-4">
-                    <div className="col-md-6">
-                      <div className="border rounded-3 p-4 h-100" style={{ borderColor: '#4facfe' }}>
-                        <div className="text-center">
-                          <i className="bi bi-shop" style={{ fontSize: '2.5rem', color: '#4facfe' }}></i>
-                          <h5 className="mt-2 mb-3" style={{ color: '#2d3748' }}>Logistas</h5>
-                          <p className="text-muted small mb-3">
-                            Dono de lanchonetes, pizzarias e outros estabelecimentos
-                          </p>
-                          <div className="mb-3">
-                            <span className="badge bg-primary px-3 py-2">123 Logistas Ativos</span>
-                          </div>
-                          <p className="small text-muted">
-                            • Visualizar perfil e estabelecimento<br/>
-                            • Acessar sistema de gestão de custos<br/>
-                            • Ver cardápio e configurações<br/>
-                            • Monitorar vendas e estoque
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="border rounded-3 p-4 h-100" style={{ borderColor: '#43e97b' }}>
-                        <div className="text-center">
-                          <i className="bi bi-person-check" style={{ fontSize: '2.5rem', color: '#43e97b' }}></i>
-                          <h5 className="mt-2 mb-3" style={{ color: '#2d3748' }}>Clientes</h5>
-                          <p className="text-muted small mb-3">
-                            Clientes finais que fazem pedidos nos estabelecimentos
-                          </p>
-                          <div className="mb-3">
-                            <span className="badge bg-success px-3 py-2">5,847 Clientes</span>
-                          </div>
-                          <p className="small text-muted">
-                            • Histórico de pedidos<br/>
-                            • Preferências alimentares<br/>
-                            • Dados de contato<br/>
-                            • Estatísticas de consumo
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-center mt-4">
-                    <div className="badge bg-info text-white px-4 py-2 rounded-pill">
-                      <i className="bi bi-gear me-2"></i>
-                      Funcionalidade em desenvolvimento
-                    </div>
-                    <p className="small text-muted mt-3">
-                      Quando pronto, você poderá clicar em qualquer logista para acessar<br/>
-                      o sistema de gestão de custos e todas as funcionalidades desse usuário
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'users' && <UserManagement />}
 
         {activeTab === 'analytics' && (
           <div className="row">
