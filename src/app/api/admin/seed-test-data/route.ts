@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import User from '@/models/User';
 import Company from '@/models/Company';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    await dbConnect();
 
     // Hash da senha padrão para usuários de teste
     const defaultPassword = await bcrypt.hash('123456', 12);

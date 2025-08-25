@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { connectDB } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import User from '@/models/User';
 import Company from '@/models/Company';
 
@@ -14,11 +14,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Verificar se é owner/admin
-    if (session.user.role !== 'owner' && session.user.role !== 'admin') {
+    if ((session.user as any).role !== 'owner_saas' && (session.user as any).role !== 'admin') {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
     }
 
-    await connectDB();
+    await dbConnect();
 
     // Buscar parâmetros de query
     const { searchParams } = new URL(request.url);
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
     
     const users = await User.find(filters)
-      .select('-password')
+      .select('-passwordHash')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     }, {});
 
     // Enriquecer dados dos usuários
-    const enrichedUsers = users.map(user => ({
+    const enrichedUsers = users.map((user: any) => ({
       ...user,
       company: companiesByUser[user._id.toString()] || null,
       lastLogin: user.lastLogin || null,
@@ -119,7 +119,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    if (session.user.role !== 'owner' && session.user.role !== 'admin') {
+    if ((session.user as any).role !== 'owner_saas' && (session.user as any).role !== 'admin') {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
     }
 
@@ -129,7 +129,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
     }
 
-    await connectDB();
+    await dbConnect();
 
     const user = await User.findById(userId);
     if (!user) {
@@ -162,7 +162,7 @@ export async function PUT(request: NextRequest) {
       message: 'Usuário atualizado com sucesso',
       user: {
         ...user.toObject(),
-        password: undefined
+        passwordHash: undefined
       }
     });
 

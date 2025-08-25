@@ -37,7 +37,7 @@ const UserSchema = new Schema<IUser>({
   name: { type: String, required: true, trim: true },
   email: { type: String, required: true, lowercase: true, trim: true },
   passwordHash: { type: String, required: true },
-  role: { type: String, required: true, enum: ["owner_saas","admin_company","manager","cashier","attendant","kitchen","courier"] },
+  role: { type: String, required: true, enum: ["owner_saas","admin_company","manager","cashier","attendant","kitchen","courier","logista","cliente"] },
   userType: { type: String, required: true, enum: ["owner_saas", "lojista"] },
   companyId: { type: Schema.Types.ObjectId, ref: "Company" },
   isActive: { type: Boolean, default: true },
