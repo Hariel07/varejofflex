@@ -275,12 +275,35 @@ export default function IngredientManager() {
   });
 
   const categories = [
+    // Ingredientes principais
     'Carnes', 'Frango', 'Peixes', 'Vegetais', 'Frutas', 'Laticínios',
-    'Grãos', 'Temperos', 'Molhos', 'Bebidas', 'Pães', 'Massas',
-    'Óleos', 'Açúcares', 'Conservas', 'Congelados', 'Outros'
+    'Grãos', 'Temperos', 'Molhos', 'Pães', 'Massas',
+    'Óleos', 'Açúcares', 'Conservas', 'Congelados',
+    
+    // Bebidas e complementos
+    'Bebidas', 'Refrigerantes', 'Sucos', 'Águas',
+    
+    // Utensílios e consumíveis para lanchonetes/pizzarias
+    'Embalagens', 'Canudos', 'Guardanapos', 'Copos', 'Pratos',
+    'Talheres', 'Sacolas', 'Papel Alumínio', 'Filme Plástico',
+    'Produtos de Limpeza', 'Descartáveis',
+    
+    // Categoria geral
+    'Outros'
   ];
 
-  const units = ['kg', 'g', 'L', 'mL', 'un', 'pct', 'cx', 'dz'];
+  const units = [
+    // Unidades de peso
+    'kg', 'g', 
+    // Unidades de volume
+    'L', 'mL', 
+    // Unidades de quantidade
+    'un', 'pct', 'cx', 'dz', 'pç',
+    // Unidades específicas para consumíveis
+    'rolo', 'pacote', 'fardo', 'caixa', 'saco',
+    // Unidades de medida linear
+    'm', 'cm'
+  ];
 
   const storageConditions = [
     'ambiente', 'refrigerado', 'congelado', 'seco', 'fresco'
