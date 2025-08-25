@@ -3,6 +3,30 @@
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Importação dinâmica para evitar problemas de SSR
+const PlansManagement = dynamic(() => import('@/components/dashboard/PlansManagement'), {
+  ssr: false,
+  loading: () => (
+    <div className="d-flex justify-content-center py-5">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  )
+});
+
+const PlanCouponsManagement = dynamic(() => import('@/components/dashboard/PlanCouponsManagement'), {
+  ssr: false,
+  loading: () => (
+    <div className="d-flex justify-content-center py-5">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  )
+});
 
 export default function OwnerDashboard() {
   const { data: session, status } = useSession();
@@ -71,6 +95,8 @@ export default function OwnerDashboard() {
   const tabs = [
     { id: 'dashboard', name: 'Visão Geral', icon: 'bi-speedometer2', color: '#667eea' },
     { id: 'cost-management', name: 'Gestão de Custos', icon: 'bi-calculator', color: '#f093fb' },
+    { id: 'plans', name: 'Gerenciar Planos', icon: 'bi-layers', color: '#667eea' },
+    { id: 'coupons', name: 'Cupons de Desconto', icon: 'bi-ticket-perforated', color: '#f093fb' },
     { id: 'users', name: 'Usuários', icon: 'bi-people', color: '#4facfe' },
     { id: 'analytics', name: 'Analytics', icon: 'bi-graph-up', color: '#43e97b' },
     { id: 'settings', name: 'Configurações', icon: 'bi-gear', color: '#38ef7d' }
@@ -261,10 +287,10 @@ export default function OwnerDashboard() {
                           borderRadius: '15px',
                           fontWeight: '600'
                         }}
-                        onClick={() => setActiveTab('cost-management')}
+                        onClick={() => setActiveTab('plans')}
                       >
-                        <i className="bi bi-calculator me-3"></i>
-                        Gestão de Custos
+                        <i className="bi bi-layers me-3"></i>
+                        Gerenciar Planos
                       </button>
                     </div>
                     <div className="col-md-6">
@@ -277,10 +303,10 @@ export default function OwnerDashboard() {
                           borderRadius: '15px',
                           fontWeight: '600'
                         }}
-                        onClick={() => window.open('/cost-management', '_blank')}
+                        onClick={() => setActiveTab('coupons')}
                       >
-                        <i className="bi bi-box-arrow-up-right me-3"></i>
-                        Abrir Sistema
+                        <i className="bi bi-ticket-perforated me-3"></i>
+                        Criar Cupons
                       </button>
                     </div>
                     <div className="col-md-6">
@@ -413,6 +439,10 @@ export default function OwnerDashboard() {
             </div>
           </div>
         )}
+
+        {activeTab === 'plans' && <PlansManagement />}
+        
+        {activeTab === 'coupons' && <PlanCouponsManagement />}
 
         {activeTab === 'users' && (
           <div className="row">
