@@ -18,20 +18,17 @@ export interface IStockMovement extends Document {
 const StockMovementSchema = new Schema<IStockMovement>({
   userId: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   ingredientId: {
     type: Schema.Types.ObjectId,
     ref: 'Ingredient',
-    required: true,
-    index: true
+    required: true
   },
   type: {
     type: String,
     enum: ['entrada', 'saida'],
-    required: true,
-    index: true
+    required: true
   },
   quantity: {
     type: Number,
@@ -49,8 +46,7 @@ const StockMovementSchema = new Schema<IStockMovement>({
   },
   performedBy: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   performedByName: {
     type: String,
@@ -59,8 +55,7 @@ const StockMovementSchema = new Schema<IStockMovement>({
   userRole: {
     type: String,
     enum: ['owner', 'logista'],
-    required: true,
-    index: true
+    required: true
   }
 }, {
   timestamps: true

@@ -4,13 +4,11 @@ const TelemetrySchema = new mongoose.Schema({
   ts: {
     type: Date,
     required: true,
-    default: Date.now,
-    index: true
+    default: Date.now
   },
   storeId: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   source: {
     type: String,
@@ -25,8 +23,7 @@ const TelemetrySchema = new mongoose.Schema({
   metric: {
     type: String,
     required: true,
-    enum: ['rssi', 'temp', 'gps', 'weight', 'battery'],
-    index: true
+    enum: ['rssi', 'temp', 'gps', 'weight', 'battery']
   },
   value: {
     type: Number,

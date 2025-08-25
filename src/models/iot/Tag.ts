@@ -7,8 +7,7 @@ const TagSchema = new mongoose.Schema({
   },
   storeId: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   productId: {
     type: String,
@@ -18,8 +17,7 @@ const TagSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['qr', 'nfc', 'ble'],
-    index: true
+    enum: ['qr', 'nfc', 'ble']
   },
   serial: {
     type: String,
@@ -34,8 +32,7 @@ const TagSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['active', 'lost', 'error'],
-    default: 'active',
-    index: true
+    default: 'active'
   },
   lastSeen: {
     type: Date,
