@@ -3,42 +3,30 @@
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import PlansManagement from '@/components/dashboard/PlansManagement';
-import PlanCouponsManagement from '@/components/dashboard/PlanCouponsManagement';
 
 export default function OwnerDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalPlans: 0,
-    activeSubscriptions: 0,
-    monthlyRevenue: 0
-  });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === 'loading') return;
+    console.log('[OWNER-PAGE] useEffect triggered, status:', status, 'session:', !!session);
+    
+    if (status === 'loading') {
+      console.log('[OWNER-PAGE] Session loading...');
+      return;
+    }
     
     if (!session) {
+      console.log('[OWNER-PAGE] No session, redirecting to login');
       router.push('/login');
       return;
     }
 
-    // Verificar se o usuário é owner
-    fetch('/api/platform/owner-status')
-      .then(res => res.json())
-      .then(data => {
-        if (!data.isOwner) {
-          router.push('/dashboard');
-          return;
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        router.push('/dashboard');
-      });
+    console.log('[OWNER-PAGE] Session found, setting as owner dashboard');
+    setLoading(false);
   }, [session, status, router]);
 
   const handleLogout = async () => {
@@ -57,7 +45,24 @@ export default function OwnerDashboard() {
             <span className="visually-hidden">Carregando...</span>
           </div>
           <h4 className="text-white">Carregando Dashboard Owner</h4>
-          <p className="text-white-50">Verificando permissões...</p>
+          <p className="text-white-50">Preparando sua área administrativa...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-vh-100 d-flex align-items-center justify-content-center" 
+           style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="text-center">
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading">Erro de Acesso</h4>
+            <p>{error}</p>
+          </div>
+          <button className="btn btn-light" onClick={() => router.push('/dashboard')}>
+            Voltar ao Dashboard
+          </button>
         </div>
       </div>
     );
@@ -65,8 +70,7 @@ export default function OwnerDashboard() {
 
   const tabs = [
     { id: 'dashboard', name: 'Visão Geral', icon: 'bi-speedometer2', color: '#667eea' },
-    { id: 'plans', name: 'Gerenciar Planos', icon: 'bi-layers', color: '#667eea' },
-    { id: 'coupons', name: 'Cupons de Desconto', icon: 'bi-ticket-perforated', color: '#f093fb' },
+    { id: 'cost-management', name: 'Gestão de Custos', icon: 'bi-calculator', color: '#f093fb' },
     { id: 'users', name: 'Usuários', icon: 'bi-people', color: '#4facfe' },
     { id: 'analytics', name: 'Analytics', icon: 'bi-graph-up', color: '#43e97b' },
     { id: 'settings', name: 'Configurações', icon: 'bi-gear', color: '#38ef7d' }
@@ -75,8 +79,8 @@ export default function OwnerDashboard() {
   const quickStats = [
     { title: 'Usuários Ativos', value: '1,247', change: '+12%', icon: 'bi-people', color: '#667eea' },
     { title: 'Receita Mensal', value: 'R$ 45.890', change: '+8%', icon: 'bi-cash-stack', color: '#f093fb' },
-    { title: 'Planos Ativos', value: '3', change: '0%', icon: 'bi-layers', color: '#4facfe' },
-    { title: 'Assinantes', value: '892', change: '+15%', icon: 'bi-star', color: '#43e97b' }
+    { title: 'Lanchonetes', value: '125', change: '+15%', icon: 'bi-shop', color: '#4facfe' },
+    { title: 'Transações', value: '2.845', change: '+22%', icon: 'bi-receipt', color: '#43e97b' }
   ];
 
   return (
@@ -117,9 +121,9 @@ export default function OwnerDashboard() {
                   </button>
                   <ul className="dropdown-menu dropdown-menu-end">
                     <li>
-                      <a className="dropdown-item" href="/dashboard">
-                        <i className="bi bi-speedometer2 me-2"></i>
-                        Dashboard Normal
+                      <a className="dropdown-item" href="/cost-management">
+                        <i className="bi bi-calculator me-2"></i>
+                        Gestão de Custos
                       </a>
                     </li>
                     <li><hr className="dropdown-divider" /></li>
@@ -257,10 +261,10 @@ export default function OwnerDashboard() {
                           borderRadius: '15px',
                           fontWeight: '600'
                         }}
-                        onClick={() => setActiveTab('plans')}
+                        onClick={() => setActiveTab('cost-management')}
                       >
-                        <i className="bi bi-layers me-3"></i>
-                        Gerenciar Planos
+                        <i className="bi bi-calculator me-3"></i>
+                        Gestão de Custos
                       </button>
                     </div>
                     <div className="col-md-6">
@@ -273,10 +277,10 @@ export default function OwnerDashboard() {
                           borderRadius: '15px',
                           fontWeight: '600'
                         }}
-                        onClick={() => setActiveTab('coupons')}
+                        onClick={() => window.open('/cost-management', '_blank')}
                       >
-                        <i className="bi bi-ticket-perforated me-3"></i>
-                        Criar Cupom
+                        <i className="bi bi-box-arrow-up-right me-3"></i>
+                        Abrir Sistema
                       </button>
                     </div>
                     <div className="col-md-6">
@@ -352,7 +356,7 @@ export default function OwnerDashboard() {
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <span style={{ fontWeight: '600' }}>Última Atualização</span>
-                    <small className="text-muted">Há 2 min</small>
+                    <small className="text-muted">Agora</small>
                   </div>
                 </div>
               </div>
@@ -360,9 +364,55 @@ export default function OwnerDashboard() {
           </div>
         )}
         
-        {activeTab === 'plans' && <PlansManagement />}
-        
-        {activeTab === 'coupons' && <PlanCouponsManagement />}
+        {activeTab === 'cost-management' && (
+          <div className="row">
+            <div className="col-12">
+              <div 
+                className="card border-0"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '20px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                }}
+              >
+                <div className="card-body p-5">
+                  <div className="text-center">
+                    <i className="bi bi-calculator" style={{ fontSize: '4rem', color: '#f093fb' }}></i>
+                    <h4 className="mt-3 mb-3" style={{ fontWeight: '700', color: '#2d3748' }}>
+                      Sistema de Gestão de Custos
+                    </h4>
+                    <p className="text-muted mb-4" style={{ fontSize: '1.1rem' }}>
+                      Sistema completo para gestão de ingredientes, produtos, compras e movimentações de estoque.
+                    </p>
+                    <div className="d-flex justify-content-center gap-3">
+                      <a 
+                        href="/cost-management" 
+                        className="btn btn-lg rounded-pill px-5"
+                        style={{
+                          background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                          color: 'white',
+                          border: 'none',
+                          fontWeight: '600'
+                        }}
+                      >
+                        <i className="bi bi-box-arrow-up-right me-2"></i>
+                        Acessar Sistema
+                      </a>
+                      <button 
+                        className="btn btn-outline-primary btn-lg rounded-pill px-5"
+                        onClick={() => window.open('/cost-management', '_blank')}
+                      >
+                        <i className="bi bi-window me-2"></i>
+                        Nova Aba
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeTab === 'users' && (
           <div className="row">
