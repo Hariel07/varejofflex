@@ -6,6 +6,8 @@ interface CouponSectionProps {
   selectedPlan: string;
   selectedPlanData?: any; // Dados do plano do banco
   onCouponApplied: (couponData: any) => void;
+  billingCycle: 'weekly' | 'monthly' | 'annual';
+  onBillingCycleChange: (cycle: 'weekly' | 'monthly' | 'annual') => void;
 }
 
 interface PlanPrices {
@@ -16,12 +18,11 @@ interface PlanPrices {
   };
 }
 
-export default function CouponSection({ selectedPlan, selectedPlanData, onCouponApplied }: CouponSectionProps) {
+export default function CouponSection({ selectedPlan, selectedPlanData, onCouponApplied, billingCycle, onBillingCycleChange }: CouponSectionProps) {
   const [couponCode, setCouponCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [error, setError] = useState("");
-  const [billingCycle, setBillingCycle] = useState("monthly");
 
   // Usar dados do banco quando disponíveis, senão usar fallback
   const getPlanPrice = (cycle: string) => {
@@ -108,7 +109,7 @@ export default function CouponSection({ selectedPlan, selectedPlanData, onCoupon
           <div className="col-4">
             <button
               type="button"
-              onClick={() => setBillingCycle("weekly")}
+              onClick={() => onBillingCycleChange("weekly")}
               style={{
                 width: '100%',
                 padding: '0.75rem',
@@ -131,7 +132,7 @@ export default function CouponSection({ selectedPlan, selectedPlanData, onCoupon
           <div className="col-4">
             <button
               type="button"
-              onClick={() => setBillingCycle("monthly")}
+              onClick={() => onBillingCycleChange("monthly")}
               style={{
                 width: '100%',
                 padding: '0.75rem',
@@ -168,7 +169,7 @@ export default function CouponSection({ selectedPlan, selectedPlanData, onCoupon
           <div className="col-4">
             <button
               type="button"
-              onClick={() => setBillingCycle("annual")}
+              onClick={() => onBillingCycleChange("annual")}
               style={{
                 width: '100%',
                 padding: '0.75rem',

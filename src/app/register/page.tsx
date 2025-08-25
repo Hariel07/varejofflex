@@ -383,7 +383,7 @@ function RegisterContent() {
                           R$ {originalPrice?.toFixed(2) || '0,00'}
                         </div>
                         <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>
-                          por mês
+                          por {billingCycle === 'weekly' ? 'semana' : billingCycle === 'monthly' ? 'mês' : 'ano'}
                         </div>
                       </div>
                     </div>
@@ -903,7 +903,9 @@ function RegisterContent() {
                         <CouponSection 
                           selectedPlan={selectedPlanId}
                           selectedPlanData={selectedPlan}
-                          onCouponApplied={handleCouponApplied} 
+                          onCouponApplied={handleCouponApplied}
+                          billingCycle={billingCycle}
+                          onBillingCycleChange={setBillingCycle}
                         />
                       </div>
 
