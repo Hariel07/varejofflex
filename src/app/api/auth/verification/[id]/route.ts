@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/db";
 import VerificationCode from "@/models/VerificationCode";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await context.params;
+    
     await dbConnect();
     
-    const verification = await VerificationCode.findById(params.id);
+    const verification = await VerificationCode.findById(id);
 
     if (!verification) {
       return NextResponse.json({

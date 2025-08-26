@@ -2,13 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/db";
 import Coupon from "@/models/Coupon";
 
-export async function GET(req: NextRequest, { params }: { params: { code: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ code: string }> }
+) {
   try {
+    const { code } = await context.params;
+    
     await dbConnect();
     
     const coupon = await Coupon.findOne({ 
       tenantId: "varejoflex",
-      code: params.code.toUpperCase()
+      code: code.toUpperCase()
     });
 
     if (!coupon) {
