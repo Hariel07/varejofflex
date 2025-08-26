@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/db";
 import VerificationCode from "@/models/VerificationCode";
-import nodemailer from "nodemailer";
 
 // Função para gerar código de 6 dígitos
 function generateCode() {
