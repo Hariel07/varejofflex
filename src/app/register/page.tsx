@@ -5,6 +5,27 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import CouponSection from "@/components/CouponSection";
 import { usePlans } from "@/hooks/usePlans";
+import PasswordStrength from "@/components/PasswordStrength";
+
+// Função para validar força da senha
+function validatePasswordStrength(password: string): { isValid: boolean; message: string } {
+  if (password.length < 8) {
+    return { isValid: false, message: 'A senha deve ter pelo menos 8 caracteres' };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { isValid: false, message: 'A senha deve conter pelo menos uma letra maiúscula' };
+  }
+  if (!/[a-z]/.test(password)) {
+    return { isValid: false, message: 'A senha deve conter pelo menos uma letra minúscula' };
+  }
+  if (!/\d/.test(password)) {
+    return { isValid: false, message: 'A senha deve conter pelo menos um número' };
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return { isValid: false, message: 'A senha deve conter pelo menos um caractere especial' };
+  }
+  return { isValid: true, message: 'Senha forte' };
+}
 
 // Hook para formatação e validação automática
 function useSmartForm() {
@@ -21,7 +42,8 @@ function useSmartForm() {
     numero: '',
     bairro: '',
     segmento: '',
-    senha: ''
+    senha: '',
+    confirmSenha: ''
   });
 
   const [loading, setLoading] = useState({
@@ -187,6 +209,19 @@ function RegisterContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar força da senha
+    const passwordValidation = validatePasswordStrength(formData.senha);
+    if (!passwordValidation.isValid) {
+      alert(passwordValidation.message);
+      return;
+    }
+
+    // Validar confirmação de senha
+    if (formData.senha !== formData.confirmSenha) {
+      alert('As senhas não coincidem');
+      return;
+    }
     
     // Aqui você implementaria a lógica de cadastro
     console.log('Dados do formulário:', {
@@ -856,26 +891,12 @@ function RegisterContent() {
                           Segurança
                         </h4>
                         
-                        <div className="col-md-6">
-                          <label className="form-label" style={{ fontWeight: '600', color: '#374151', marginBottom: '8px' }}>
-                            Senha *
-                          </label>
-                          <input
-                            type="password"
-                            value={formData.senha}
-                            onChange={(e) => updateField('senha', e.target.value)}
-                            className="form-control form-control-lg"
-                            style={{
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '12px',
-                              padding: '1rem',
-                              fontSize: '1rem'
-                            }}
-                            placeholder="Mínimo 8 caracteres"
-                            required
-                            minLength={8}
-                          />
-                        </div>
+                        <PasswordStrength
+                          password={formData.senha}
+                          confirmPassword={formData.confirmSenha}
+                          onPasswordChange={(senha) => updateField('senha', senha)}
+                          onConfirmPasswordChange={(confirmSenha) => updateField('confirmSenha', confirmSenha)}
+                        />
                       </div>
 
                       {/* Botão de Submit */}
