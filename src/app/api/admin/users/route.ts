@@ -174,3 +174,88 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
+    // Apenas owner_saas pode excluir usuários
+    if ((session.user as any).role !== 'owner_saas') {
+      return NextResponse.json({ error: 'Acesso negado - apenas owners podem excluir usuários' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({ error: 'ID do usuário é obrigatório' }, { status: 400 });
+    }
+
+    // Verificar se não está tentando excluir a si mesmo
+    if (userId === (session.user as any).id) {
+      return NextResponse.json({ error: 'Você não pode excluir sua própria conta' }, { status: 400 });
+    }
+
+    await dbConnect();
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    // Verificar se não está tentando excluir outro owner_saas
+    if (user.role === 'owner_saas') {
+      return NextResponse.json({ error: 'Não é possível excluir outros owners' }, { status: 400 });
+    }
+
+    // Buscar e excluir dados relacionados
+    const userObjectId = user._id;
+
+    // Excluir empresa relacionada
+    await Company.deleteMany({ userId: userObjectId });
+
+    // Excluir códigos de verificação
+    const VerificationCode = (await import('@/models/VerificationCode')).default;
+    await VerificationCode.deleteMany({ 
+      $or: [
+        { email: user.email },
+        { 'userData.email': user.email }
+      ]
+    });
+
+    // Excluir tentativas de pagamento
+    const PaymentAttempt = (await import('@/models/PaymentAttempt')).default;
+    await PaymentAttempt.deleteMany({ email: user.email });
+
+    // Excluir tokens de reset de senha
+    const PasswordResetToken = (await import('@/models/PasswordResetToken')).default;
+    await PasswordResetToken.deleteMany({ userId: userObjectId });
+
+    // Por último, excluir o usuário
+    await User.findByIdAndDelete(userId);
+
+    console.log(`[ADMIN DELETE] Usuário ${user.email} (${userId}) excluído por ${(session.user as any).email}`);
+
+    return NextResponse.json({
+      success: true,
+      message: `Usuário ${user.email} excluído com sucesso`,
+      deletedUser: {
+        id: userId,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      }
+    });
+
+  } catch (error: any) {
+    console.error('Erro ao excluir usuário:', error);
+    return NextResponse.json(
+      { error: 'Erro interno do servidor' },
+      { status: 500 }
+    );
+  }
+}
