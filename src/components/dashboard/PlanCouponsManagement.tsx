@@ -34,7 +34,7 @@ export default function PlanCouponsManagement({}: PlanCouponsManagementProps) {
   const fetchCoupons = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/plan-coupons');
+      const response = await fetch('/api/coupons?category=subscription');
       const data = await response.json();
       
       if (data.success) {

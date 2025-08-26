@@ -56,7 +56,8 @@ export default function CouponSection({ selectedPlan, selectedPlanData, onCoupon
     setError("");
 
     try {
-      const response = await fetch("/api/coupons/validate", {
+      // Primeiro tenta a API nova (sistema subscription)
+      let response = await fetch("/api/coupons/validate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +71,27 @@ export default function CouponSection({ selectedPlan, selectedPlanData, onCoupon
         }),
       });
 
-      const data = await response.json();
+      let data = await response.json();
+
+      // Se não encontrou na API nova, tenta a API antiga (plan-coupons)
+      if (!data.success || !data.valid) {
+        console.log("Tentando API plan-coupons...");
+        
+        response = await fetch("/api/plan-coupons/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: couponCode,
+            planId: selectedPlan,
+            billingCycle: billingCycle,
+            amount: getPlanPrice(billingCycle)
+          }),
+        });
+
+        data = await response.json();
+      }
 
       if (data.success && data.valid) {
         setAppliedCoupon(data);
