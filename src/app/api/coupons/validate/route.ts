@@ -41,6 +41,18 @@ export async function POST(req: NextRequest) {
       category: category 
     });
 
+    console.log("Debug cupom encontrado:", {
+      code: code.toUpperCase(),
+      category,
+      couponFound: !!coupon,
+      couponData: coupon ? {
+        code: coupon.code,
+        category: coupon.category,
+        subscriptionPlan: coupon.subscriptionPlan,
+        active: coupon.active
+      } : null
+    });
+
     if (!coupon) {
       return NextResponse.json({ 
         success: false,
@@ -69,6 +81,11 @@ export async function POST(req: NextRequest) {
 
     // Para cupons de assinatura, verificar se o plano corresponde
     if (category === "subscription" && coupon.subscriptionPlan && coupon.subscriptionPlan !== subscriptionPlan) {
+      console.log("Debug validação de plano:", {
+        couponPlan: coupon.subscriptionPlan,
+        requestedPlan: subscriptionPlan,
+        match: coupon.subscriptionPlan === subscriptionPlan
+      });
       return NextResponse.json({
         success: false,
         valid: false,
