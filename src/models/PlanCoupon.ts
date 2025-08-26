@@ -118,5 +118,6 @@ CouponSchema.index({ code: 1 });
 CouponSchema.index({ validFrom: 1, validUntil: 1 });
 CouponSchema.index({ isActive: 1 });
 CouponSchema.index({ applicablePlans: 1 });
+CouponSchema.index({ planId: 1 }); // Para compatibilidade com warning
 
 export default mongoose.models.Coupon || mongoose.model<ICoupon>('Coupon', CouponSchema);

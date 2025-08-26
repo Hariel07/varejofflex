@@ -21,8 +21,7 @@ const TagSchema = new mongoose.Schema({
   },
   serial: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   url: {
     type: String,

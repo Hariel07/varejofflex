@@ -4,13 +4,11 @@ const EventSchema = new mongoose.Schema({
   ts: {
     type: Date,
     required: true,
-    default: Date.now,
-    index: true
+    default: Date.now
   },
   storeId: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   type: {
     type: String,
@@ -25,15 +23,13 @@ const EventSchema = new mongoose.Schema({
       'battery_low',
       'tag_lost',
       'calibration_complete'
-    ],
-    index: true
+    ]
   },
   severity: {
     type: String,
     required: true,
     enum: ['info', 'warn', 'critical'],
-    default: 'info',
-    index: true
+    default: 'info'
   },
   context: {
     type: mongoose.Schema.Types.Mixed,
@@ -41,8 +37,7 @@ const EventSchema = new mongoose.Schema({
   },
   resolved: {
     type: Boolean,
-    default: false,
-    index: true
+    default: false
   },
   resolvedAt: {
     type: Date,
