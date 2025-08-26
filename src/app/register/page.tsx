@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import CouponSection from "@/components/CouponSection";
 import { usePlans } from "@/hooks/usePlans";
 import PasswordStrength from "@/components/PasswordStrength";
 
@@ -169,7 +168,16 @@ function RegisterContent() {
   const billingParam = searchParams.get('billing');
   const [showOwnerOption, setShowOwnerOption] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [step, setStep] = useState<'register' | 'verification' | 'payment'>('register');
+  const [verificationId, setVerificationId] = useState<string>('');
+  const [verificationCodes, setVerificationCodes] = useState({
+    email: '',
+    whatsapp: ''
+  });
+  const [verificationStatus, setVerificationStatus] = useState({
+    emailVerified: false,
+    whatsappVerified: false
+  });
   const [billingCycle, setBillingCycle] = useState<'weekly' | 'monthly' | 'annual'>(() => {
     // Define o ciclo inicial baseado no parâmetro da URL
     if (billingParam === 'weekly') return 'weekly';
@@ -180,10 +188,6 @@ function RegisterContent() {
   const { plans, loading: plansLoading, error: plansError } = usePlans();
   const selectedPlan = plans.find(plan => plan.planId === selectedPlanId);
   const { formData, loading: formLoading, countryCode, updateField } = useSmartForm();
-
-  const handleCouponApplied = (couponData: any) => {
-    setAppliedCoupon(couponData);
-  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -228,13 +232,93 @@ function RegisterContent() {
       alert('As senhas não coincidem');
       return;
     }
+
+    setLoading(true);
     
-    // Aqui você implementaria a lógica de cadastro
-    console.log('Dados do formulário:', {
-      ...formData,
-      telefone: `${countryCode} ${formData.telefone}`,
-      plano: selectedPlanId
-    });
+    try {
+      // Enviar códigos de verificação
+      const response = await fetch('/api/auth/send-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          phone: `${countryCode} ${formData.telefone}`,
+          nome: formData.nome,
+          empresa: formData.empresa,
+          cpfCnpj: formData.cpfCnpj,
+          endereco: formData.endereco,
+          cidade: formData.cidade,
+          estado: formData.estado,
+          planId: selectedPlanId,
+          billingCycle: billingCycle
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setVerificationId(data.verificationId);
+        setStep('verification');
+        alert('Códigos de verificação enviados para seu email e WhatsApp!');
+      } else {
+        alert('Erro: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar verificação:', error);
+      alert('Erro ao processar cadastro');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyCodes = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!verificationCodes.email && !verificationCodes.whatsapp) {
+      alert('Digite pelo menos um código de verificação');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const response = await fetch('/api/auth/verify-codes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          verificationId,
+          emailCode: verificationCodes.email,
+          whatsappCode: verificationCodes.whatsapp
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setVerificationStatus({
+          emailVerified: data.emailVerified,
+          whatsappVerified: data.whatsappVerified
+        });
+        
+        if (data.allVerified) {
+          // Redirecionar para página de pagamento
+          window.location.href = `/payment?verification=${verificationId}`;
+        } else {
+          alert('Códigos verificados parcialmente. Complete a verificação.');
+        }
+      } else {
+        alert('Erro: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Erro ao verificar códigos:', error);
+      alert('Erro ao verificar códigos');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading || plansLoading) {
@@ -519,7 +603,8 @@ function RegisterContent() {
                       padding: '3rem'
                     }}
                   >
-                    <form onSubmit={handleSubmit}>
+                    {step === 'register' && (
+                      <form onSubmit={handleSubmit}>
                       {/* Dados Pessoais */}
                       <div className="mb-5">
                         <h4 
@@ -927,17 +1012,6 @@ function RegisterContent() {
                         </button>
                       </div>
 
-                      {/* Seção de Cupom - agora dentro do card principal */}
-                      <div className="mb-4">
-                        <CouponSection 
-                          selectedPlan={selectedPlanId}
-                          selectedPlanData={selectedPlan}
-                          onCouponApplied={handleCouponApplied}
-                          billingCycle={billingCycle}
-                          onBillingCycleChange={setBillingCycle}
-                        />
-                      </div>
-
                       <div className="text-center">
                         <p style={{ color: '#6b7280', marginBottom: 0 }}>
                           Já tem uma conta?{" "}
@@ -954,6 +1028,111 @@ function RegisterContent() {
                         </p>
                       </div>
                     </form>
+                    )}
+
+                    {step === 'verification' && (
+                      <div>
+                        <h3 className="text-center mb-4">
+                          <i className="fas fa-shield-check me-2"></i>
+                          Verificação de Segurança
+                        </h3>
+                        
+                        <div className="alert alert-info">
+                          <h6><i className="fas fa-info-circle me-2"></i>Códigos Enviados!</h6>
+                          <p className="mb-0">
+                            Enviamos códigos de verificação para:
+                            <br />
+                            📧 <strong>{formData.email}</strong>
+                            <br />
+                            📱 <strong>{formData.telefone}</strong>
+                          </p>
+                        </div>
+
+                        <form onSubmit={handleVerifyCodes}>
+                          <div className="row">
+                            <div className="col-md-6 mb-3">
+                              <label className="form-label">
+                                <i className="fas fa-envelope me-2"></i>
+                                Código do Email
+                                {verificationStatus.emailVerified && (
+                                  <i className="fas fa-check-circle text-success ms-2"></i>
+                                )}
+                              </label>
+                              <input
+                                type="text"
+                                className={`form-control ${verificationStatus.emailVerified ? 'is-valid' : ''}`}
+                                placeholder="Digite o código de 6 dígitos"
+                                value={verificationCodes.email}
+                                onChange={(e) => setVerificationCodes({
+                                  ...verificationCodes,
+                                  email: e.target.value
+                                })}
+                                maxLength={6}
+                                disabled={verificationStatus.emailVerified}
+                              />
+                            </div>
+                            
+                            <div className="col-md-6 mb-3">
+                              <label className="form-label">
+                                <i className="fas fa-mobile-alt me-2"></i>
+                                Código do WhatsApp
+                                {verificationStatus.whatsappVerified && (
+                                  <i className="fas fa-check-circle text-success ms-2"></i>
+                                )}
+                              </label>
+                              <input
+                                type="text"
+                                className={`form-control ${verificationStatus.whatsappVerified ? 'is-valid' : ''}`}
+                                placeholder="Digite o código de 6 dígitos"
+                                value={verificationCodes.whatsapp}
+                                onChange={(e) => setVerificationCodes({
+                                  ...verificationCodes,
+                                  whatsapp: e.target.value
+                                })}
+                                maxLength={6}
+                                disabled={verificationStatus.whatsappVerified}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="d-grid gap-2">
+                            <button
+                              type="submit"
+                              className="btn btn-primary btn-lg"
+                              disabled={loading}
+                            >
+                              {loading ? (
+                                <>
+                                  <span className="spinner-border spinner-border-sm me-2"></span>
+                                  Verificando...
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fas fa-check me-2"></i>
+                                  Verificar Códigos
+                                </>
+                              )}
+                            </button>
+                            
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary"
+                              onClick={() => setStep('register')}
+                            >
+                              <i className="fas fa-arrow-left me-2"></i>
+                              Voltar ao Cadastro
+                            </button>
+                          </div>
+                        </form>
+
+                        <div className="text-center mt-3">
+                          <small className="text-muted">
+                            Não recebeu os códigos? 
+                            <a href="#" className="text-primary ms-1">Reenviar</a>
+                          </small>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
