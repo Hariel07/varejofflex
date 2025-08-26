@@ -80,11 +80,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Para cupons de assinatura, verificar se o plano corresponde
+    // Se coupon.subscriptionPlan é null/undefined, o cupom é válido para todos os planos
     if (category === "subscription" && coupon.subscriptionPlan && coupon.subscriptionPlan !== subscriptionPlan) {
       console.log("Debug validação de plano:", {
         couponPlan: coupon.subscriptionPlan,
         requestedPlan: subscriptionPlan,
-        match: coupon.subscriptionPlan === subscriptionPlan
+        match: coupon.subscriptionPlan === subscriptionPlan,
+        isForAllPlans: !coupon.subscriptionPlan
       });
       return NextResponse.json({
         success: false,
