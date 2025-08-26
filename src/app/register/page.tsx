@@ -166,10 +166,16 @@ function useSmartForm() {
 function RegisterContent() {
   const searchParams = useSearchParams();
   const selectedPlanId = searchParams.get('plan');
+  const billingParam = searchParams.get('billing');
   const [showOwnerOption, setShowOwnerOption] = useState(false);
   const [loading, setLoading] = useState(true);
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
-  const [billingCycle, setBillingCycle] = useState<'weekly' | 'monthly' | 'annual'>('monthly');
+  const [billingCycle, setBillingCycle] = useState<'weekly' | 'monthly' | 'annual'>(() => {
+    // Define o ciclo inicial baseado no parâmetro da URL
+    if (billingParam === 'weekly') return 'weekly';
+    if (billingParam === 'annual') return 'annual';
+    return 'monthly'; // padrão
+  });
 
   const { plans, loading: plansLoading, error: plansError } = usePlans();
   const selectedPlan = plans.find(plan => plan.planId === selectedPlanId);

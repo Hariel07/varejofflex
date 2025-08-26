@@ -209,7 +209,7 @@ export default function PricingSection() {
                     
                     <div className="mt-auto pt-3">
                       <Link 
-                        href={`/register?plan=${plan.planId}`} 
+                        href={`/register?plan=${plan.planId}&billing=${billingCycle}`} 
                         className={`btn w-100 btn-lg ${plan.planId === 'empresarial' ? 'btn-success' : 'btn-primary'}`}
                         style={{
                           borderRadius: '12px',
