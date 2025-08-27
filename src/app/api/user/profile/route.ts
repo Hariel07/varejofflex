@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     
     // Buscar usuário com dados da empresa
-    const user = await User.findOne({ email: session.user.email }).lean();
+    const user = await User.findOne({ email: session.user.email }).lean() as any;
     
     if (!user) {
       return NextResponse.json(

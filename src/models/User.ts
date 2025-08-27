@@ -9,6 +9,11 @@ export interface IUser {
   role: Role;
   userType: UserType;           // owner_saas ou lojista
   companyId?: Types.ObjectId;   // vazio para owner_saas
+  phone?: string;               // telefone do usuário
+  address?: string;             // endereço do usuário
+  city?: string;                // cidade do usuário
+  state?: string;               // estado do usuário
+  zipCode?: string;             // CEP do usuário
   isActive: boolean;            // controle de usuários ativos
   lastLogin?: Date;             // último login
   lastLoginAt?: Date;           // último login
@@ -40,6 +45,11 @@ const UserSchema = new Schema<IUser>({
   role: { type: String, required: true, enum: ["owner_saas","admin_company","manager","cashier","attendant","kitchen","courier","logista","cliente"] },
   userType: { type: String, required: true, enum: ["owner_saas", "lojista", "cliente"] },
   companyId: { type: Schema.Types.ObjectId, ref: "Company" },
+  phone: { type: String, trim: true },
+  address: { type: String, trim: true },
+  city: { type: String, trim: true },
+  state: { type: String, trim: true, uppercase: true },
+  zipCode: { type: String, trim: true },
   isActive: { type: Boolean, default: true },
   lastLogin: { type: Date },
   lastLoginAt: { type: Date },

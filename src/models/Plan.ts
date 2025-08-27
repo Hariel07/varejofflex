@@ -6,6 +6,8 @@ export interface IPlan {
   name: string;
   description: string;
   features: string[];
+  iotEnabled?: boolean;
+  iotFeatures?: string[];
   pricing: {
     weekly: {
       price: number;
@@ -50,6 +52,13 @@ const PlanSchema = new mongoose.Schema<IPlan>({
   features: [{
     type: String,
     required: true
+  }],
+  iotEnabled: {
+    type: Boolean,
+    default: false
+  },
+  iotFeatures: [{
+    type: String
   }],
   pricing: {
     weekly: {
