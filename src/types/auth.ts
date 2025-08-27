@@ -5,9 +5,14 @@ export type Role =
   | "cashier"         // operador de caixa
   | "attendant"       // atendente
   | "kitchen"         // cozinha/produção
-  | "courier";        // entregador
+  | "courier"         // entregador
+  | "logista"         // lojista/proprietário da loja
+  | "cliente";        // cliente do sistema
 
-export type UserType = "owner_saas" | "lojista";
+export type UserType = 
+  | 'owner_saas'      // Único dono do SaaS (você) - nível mais alto
+  | 'lojista'         // Dono/proprietário de uma loja
+  | 'cliente';        // Cliente do sistema
 
 export type TenantType = "global" | "company";
 

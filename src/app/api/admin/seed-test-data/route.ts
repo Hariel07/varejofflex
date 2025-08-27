@@ -1,200 +1,272 @@
 import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import { dbConnect } from '@/lib/db';
 import User from '@/models/User';
 import Company from '@/models/Company';
-import bcrypt from 'bcryptjs';
+import Plan from '@/models/Plan';
+import Coupon from '@/models/Coupon';
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
 
-    // Hash da senha padrão para usuários de teste
-    const defaultPassword = await bcrypt.hash('123456', 12);
+    let results = {
+      companies: 0,
+      logistas: 0,
+      clients: 0,
+      plans: 0,
+      coupons: 0
+    };
 
-    // Dados das empresas de teste
-    const testCompanies = [
+    // 1. CRIAR SUA CONTA PROFISSIONAL (se não existir)
+    const professionalEmail = 'hariel.developer@gmail.com';
+    let professionalUser = await User.findOne({ email: professionalEmail });
+    
+    if (!professionalUser) {
+      const passwordHash = await bcrypt.hash('minhasenha123', 12);
+      professionalUser = await User.create({
+        name: 'Hariel - Developer',
+        email: professionalEmail,
+        passwordHash,
+        role: 'owner_saas',
+        userType: 'owner_saas',
+        isActive: true,
+        permissions: ['*'], // Acesso total
+        createdAt: new Date(),
+      });
+      console.log('✅ Conta profissional criada:', professionalEmail);
+    } else {
+      console.log('✅ Conta profissional já existe:', professionalEmail);
+    }
+
+    // 2. CRIAR PLANOS (se não existirem)
+    const plansData = [
       {
-        name: "Hamburguelandia Maran",
-        businessType: "Lanchonete",
-        segment: "lanchonete",
-        city: "Rurópolis",
-        state: "Pará",
-        plan: "Empresarial",
-        phone: "+55 93 91711-4403",
-        address: "Rua das Palmeiras, 123",
-        zip: "68165-000",
-        cnpj: "12.345.678/0001-90"
+        planId: 'basico',
+        name: 'Plano Básico',
+        description: 'Ideal para pequenos negócios',
+        features: ['Até 100 produtos', 'PDV básico', 'Relatórios simples'],
+        pricing: {
+          weekly: { price: 19.90, enabled: true },
+          monthly: { price: 59.90, enabled: true, discount: 10 },
+          annual: { price: 599.90, enabled: true, discount: 25 }
+        },
+        color: '#28a745',
+        popular: false,
+        enabled: true,
+        trialDays: 14,
+        order: 1
       },
       {
-        name: "Pizzaria Bella Vista",
-        businessType: "Pizzaria", 
-        segment: "pizzaria",
-        city: "São Paulo",
-        state: "São Paulo",
-        plan: "Avançado",
-        phone: "+55 11 98765-4321",
-        address: "Avenida Italia, 456",
-        zip: "01310-100",
-        cnpj: "98.765.432/0001-10"
+        planId: 'profissional',
+        name: 'Plano Profissional',
+        description: 'Para negócios em crescimento',
+        features: ['Produtos ilimitados', 'PDV avançado', 'Relatórios completos', 'Integração fiscal'],
+        pricing: {
+          weekly: { price: 39.90, enabled: true },
+          monthly: { price: 119.90, enabled: true, discount: 15 },
+          annual: { price: 1199.90, enabled: true, discount: 30 }
+        },
+        color: '#007bff',
+        popular: true,
+        enabled: true,
+        trialDays: 14,
+        order: 2
       },
       {
-        name: "Café & Cia",
-        businessType: "Cafeteria",
-        segment: "lanchonete", 
-        city: "Rio de Janeiro",
-        state: "Rio de Janeiro",
-        plan: "Básico",
-        phone: "+55 21 91234-5678",
-        address: "Rua do Café, 789",
-        zip: "22071-900",
-        cnpj: "11.222.333/0001-44"
-      },
-      {
-        name: "Moda Elegante",
-        businessType: "Loja de Roupas",
-        segment: "moda",
-        city: "Belo Horizonte", 
-        state: "Minas Gerais",
-        plan: "Avançado",
-        phone: "+55 31 92345-6789",
-        address: "Rua da Moda, 321",
-        zip: "30112-000",
-        cnpj: "22.333.444/0001-55"
-      },
-      {
-        name: "Supermercado Preço Bom",
-        businessType: "Supermercado",
-        segment: "mercado",
-        city: "Salvador",
-        state: "Bahia", 
-        plan: "Empresarial",
-        phone: "+55 71 93456-7890",
-        address: "Avenida do Comércio, 654",
-        zip: "40070-110",
-        cnpj: "33.444.555/0001-66"
+        planId: 'empresarial',
+        name: 'Plano Empresarial',
+        description: 'Para grandes operações',
+        features: ['Tudo ilimitado', 'Multi-lojas', 'API completa', 'Suporte prioritário'],
+        pricing: {
+          weekly: { price: 79.90, enabled: true },
+          monthly: { price: 239.90, enabled: true, discount: 20 },
+          annual: { price: 2399.90, enabled: true, discount: 35 }
+        },
+        color: '#6f42c1',
+        popular: false,
+        enabled: true,
+        trialDays: 14,
+        order: 3
       }
     ];
 
-    // Dados dos usuários de teste
-    const testUsers = [
+    for (const planData of plansData) {
+      const existingPlan = await Plan.findOne({ planId: planData.planId });
+      if (!existingPlan) {
+        await Plan.create(planData);
+        results.plans++;
+        console.log(`✅ Plano criado: ${planData.name}`);
+      }
+    }
+
+    // 3. CRIAR CUPOM DE 100% PARA ACESSO GRÁTIS
+    const freeCouponCode = 'TESTE100';
+    let freeCoupon = await Coupon.findOne({ code: freeCouponCode, category: 'subscription' });
+    
+    if (!freeCoupon) {
+      freeCoupon = await Coupon.create({
+        tenantId: 'GLOBAL', // Cupom global
+        code: freeCouponCode,
+        type: 'percent',
+        category: 'subscription',
+        value: 100, // 100% de desconto
+        title: 'Acesso Gratuito Completo',
+        description: 'Cupom de teste para acesso gratuito completo a todos os planos',
+        subscriptionPlan: 'pro', // Plano profissional
+        discountDuration: 12, // 12 meses de desconto
+        startsAt: new Date(),
+        endsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // Válido por 1 ano
+        maxUses: 1000, // Limite alto para testes
+        usedCount: 0,
+        minOrderTotal: 0,
+        active: true,
+        createdBy: 'SYSTEM_SEED',
+        createdAt: new Date()
+      });
+      results.coupons++;
+      console.log(`✅ Cupom de 100% criado: ${freeCouponCode}`);
+    }
+
+    // 4. CRIAR EMPRESAS FICTÍCIAS COM LOGISTAS
+    const companiesData = [
       {
-        name: "Hariel Soares Maran",
-        email: "hariel.maran@gmail.com",
-        cpf: "090.703.499-30",
-        companyIndex: 0 // Hamburguelandia
+        name: 'Lanchonete do João - TESTE',
+        email: 'joao.lanchonete@teste.com',
+        segment: 'lanchonete',
+        planId: 'basico',
+        logistName: 'João Silva - TESTE',
+        logistEmail: 'joao.teste@varejoflex.com'
       },
       {
-        name: "Maria Silva Santos",
-        email: "maria.bellavista@gmail.com", 
-        cpf: "123.456.789-01",
-        companyIndex: 1 // Pizzaria
+        name: 'Pizzaria Bella Vista - TESTE',
+        email: 'bella.pizzaria@teste.com', 
+        segment: 'pizzaria',
+        planId: 'profissional',
+        logistName: 'Maria Santos - TESTE',
+        logistEmail: 'maria.teste@varejoflex.com'
       },
       {
-        name: "João Pedro Oliveira",
-        email: "joao.cafeecia@gmail.com",
-        cpf: "987.654.321-09", 
-        companyIndex: 2 // Café
-      },
-      {
-        name: "Ana Carolina Souza",
-        email: "ana.modaelegante@gmail.com",
-        cpf: "456.789.123-45",
-        companyIndex: 3 // Moda
-      },
-      {
-        name: "Carlos Roberto Silva",
-        email: "carlos.supermercado@gmail.com", 
-        cpf: "789.123.456-78",
-        companyIndex: 4 // Supermercado
+        name: 'Mercado Central - TESTE',
+        email: 'central.mercado@teste.com',
+        segment: 'mercado', 
+        planId: 'empresarial',
+        logistName: 'Carlos Oliveira - TESTE',
+        logistEmail: 'carlos.teste@varejoflex.com'
       }
     ];
 
-    // Alguns clientes de teste
-    const testClients = [
-      { name: "Pedro Santos", email: "pedro.cliente@gmail.com" },
-      { name: "Ana Costa", email: "ana.cliente@gmail.com" },
-      { name: "João Silva", email: "joao.cliente@gmail.com" },
-      { name: "Maria Oliveira", email: "maria.cliente@gmail.com" },
-      { name: "Carlos Souza", email: "carlos.cliente@gmail.com" },
-      { name: "Lucia Ferreira", email: "lucia.cliente@gmail.com" },
-      { name: "Roberto Lima", email: "roberto.cliente@gmail.com" },
-      { name: "Patricia Rocha", email: "patricia.cliente@gmail.com" }
-    ];
+    for (const companyData of companiesData) {
+      // Verificar se empresa já existe
+      let company = await Company.findOne({ email: companyData.email });
+      
+      if (!company) {
+        // Criar empresa
+        company = await Company.create({
+          name: companyData.name,
+          personType: 'PJ',
+          documentType: 'CNPJ',
+          documentNumber: `12345678000${results.companies + 10}`, // CNPJ fake único
+          email: companyData.email,
+          segment: companyData.segment,
+          planType: 'premium', // Sempre premium para teste
+          planExpiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 ano
+          isActive: true,
+          settings: {
+            currency: 'BRL',
+            timezone: 'America/Sao_Paulo',
+            language: 'pt-BR',
+            couponApplied: freeCouponCode
+          },
+          createdAt: new Date()
+        });
+        results.companies++;
+        console.log(`✅ Empresa criada: ${company.name}`);
+      }
 
-    const createdCompanies = [];
-    const createdUsers = [];
+      // Verificar se logista já existe
+      let logist = await User.findOne({ email: companyData.logistEmail });
+      
+      if (!logist) {
+        // Criar logista
+        const passwordHash = await bcrypt.hash('senha123', 12);
+        logist = await User.create({
+          name: companyData.logistName,
+          email: companyData.logistEmail,
+          passwordHash,
+          role: 'logista',
+          userType: 'lojista',
+          companyId: company._id,
+          isActive: true,
+          permissions: ['company_admin'],
+          segment: companyData.segment,
+          createdAt: new Date()
+        });
+        results.logistas++;
+        console.log(`✅ Logista criado: ${logist.name} (${company.name})`);
+      }
 
-    // Criar empresas
-    for (const companyData of testCompanies) {
-      const company = new Company(companyData);
-      await company.save();
-      createdCompanies.push(company);
+      // Criar clientes para cada empresa
+      for (let i = 1; i <= 3; i++) {
+        const clientEmail = `cliente${i}.${companyData.segment}@teste.com`;
+        let client = await User.findOne({ email: clientEmail });
+        
+        if (!client) {
+          const passwordHash = await bcrypt.hash('cliente123', 12);
+          client = await User.create({
+            name: `Cliente ${i} - ${companyData.name}`,
+            email: clientEmail,
+            passwordHash,
+            role: 'cliente',
+            userType: 'cliente',
+            companyId: company._id,
+            isActive: true,
+            permissions: ['basic_client'],
+            createdAt: new Date()
+          });
+          results.clients++;
+          console.log(`✅ Cliente criado: ${client.name}`);
+        }
+      }
     }
 
-    // Criar usuários logistas
-    for (let i = 0; i < testUsers.length; i++) {
-      const userData = testUsers[i];
-      const company = createdCompanies[userData.companyIndex];
-      
-      const user = new User({
-        name: userData.name,
-        email: userData.email,
-        passwordHash: defaultPassword,
-        role: 'logista',
-        userType: 'lojista',
-        companyId: company._id,
-        isActive: true,
-        segment: company.segment,
-        lastLogin: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Último login nos últimos 7 dias
-        permissions: ['manage_products', 'manage_orders', 'view_reports']
-      });
-      
-      await user.save();
-      createdUsers.push(user);
-
-      // Atualizar empresa com userId
-      company.userId = user._id;
-      await company.save();
-    }
-
-    // Criar clientes de teste
-    for (let i = 0; i < testClients.length; i++) {
-      const clientData = testClients[i];
-      
-      const client = new User({
-        name: clientData.name,
-        email: clientData.email,
-        passwordHash: defaultPassword,
-        role: 'cliente',
-        userType: 'lojista', // Mesmo sendo cliente, pertence ao sistema de lojistas
-        isActive: true,
-        lastLogin: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // Último login nos últimos 30 dias
-        permissions: ['place_orders', 'view_profile']
-      });
-      
-      await client.save();
-      createdUsers.push(client);
-    }
+    // 5. CRIAR USUÁRIO EXTRA PARA TESTE DE EXCLUSÃO
+    const deleteTestEmail = `usuario.exclusao.${Date.now()}@teste.com`;
+    const passwordHash = await bcrypt.hash('exclusao123', 12);
+    const deleteTestUser = await User.create({
+      name: 'USUÁRIO PARA TESTAR EXCLUSÃO',
+      email: deleteTestEmail,
+      passwordHash,
+      role: 'cliente',
+      userType: 'cliente',
+      isActive: true,
+      permissions: ['test_deletion'],
+      createdAt: new Date()
+    });
+    results.clients++;
+    console.log(`✅ Usuário para teste de exclusão criado: ${deleteTestUser.email}`);
 
     return NextResponse.json({
       success: true,
-      message: 'Dados de teste criados com sucesso!',
-      data: {
-        companies: createdCompanies.length,
-        logistas: testUsers.length,
-        clients: testClients.length,
-        totalUsers: createdUsers.length
+      message: 'Dados de teste completos criados com sucesso!',
+      data: results,
+      details: {
+        professionalAccount: professionalEmail,
+        freeCoupon: freeCouponCode,
+        testDeletionUser: deleteTestEmail,
+        companies: companiesData.map(c => c.name),
+        instructions: 'Use o cupom TESTE100 para acesso gratuito a todos os planos!'
       }
     });
 
   } catch (error: any) {
-    console.error('Erro ao criar dados de teste:', error);
+    console.error('[SEED-TEST-DATA] Error:', error);
     
     // Se for erro de duplicata, informar
     if (error.code === 11000) {
       return NextResponse.json({
         success: false,
-        error: 'Alguns usuários já existem no sistema',
+        error: 'Alguns dados já existem no sistema',
         details: error.message
       }, { status: 400 });
     }
