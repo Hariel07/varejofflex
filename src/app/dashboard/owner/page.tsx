@@ -377,6 +377,36 @@ export default function OwnerDashboard() {
                         Popular Dados de Teste
                       </button>
                     </div>
+                    <div className="col-12">
+                      <button 
+                        className="btn btn-outline-warning w-100"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch('/api/auth/create-test-user', { 
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                name: 'Usuário Teste Para Excluir',
+                                email: `teste.exclusao.${Date.now()}@exemplo.com`,
+                                role: 'logista',
+                                password: 'senha123'
+                              })
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                              alert(`✅ Usuário criado: ${data.user.email}\n\n🎯 Agora vá na aba "Usuários" para ver o botão de excluir!`);
+                            } else {
+                              alert('Erro: ' + data.error);
+                            }
+                          } catch (error) {
+                            alert('Erro ao criar usuário de teste');
+                          }
+                        }}
+                      >
+                        <i className="bi bi-person-plus me-2"></i>
+                        Criar Usuário Para Teste de Exclusão
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
