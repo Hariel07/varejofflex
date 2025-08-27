@@ -43,6 +43,15 @@ function LojistaDashboardContent() {
   useEffect(() => {
     if (hasPermission("manage_products") && companyId) {
       loadCompanyStats();
+    } else {
+      // Se não há companyId, definir stats vazias e parar loading
+      setStats({
+        totalProducts: 0,
+        totalOrders: 0,
+        monthlyRevenue: 0,
+        pendingOrders: 0
+      });
+      setLoading(false);
     }
   }, [hasPermission, companyId]);
 

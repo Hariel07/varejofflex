@@ -190,6 +190,10 @@ export async function POST(request: NextRequest) {
       if (!logist) {
         // Criar logista
         const passwordHash = await bcrypt.hash('senha123', 12);
+        
+        // Log para debug
+        console.log(`Criando logista: ${companyData.logistName} - ${companyData.logistEmail}`);
+        
         logist = await User.create({
           name: companyData.logistName,
           email: companyData.logistEmail,
@@ -203,7 +207,9 @@ export async function POST(request: NextRequest) {
           createdAt: new Date()
         });
         results.logistas++;
-        console.log(`✅ Logista criado: ${logist.name} (${company.name})`);
+        console.log(`✅ Logista criado: ${logist.name} (${company.name}) - ID: ${logist._id}`);
+      } else {
+        console.log(`⚠️ Logista já existe: ${logist.email}`);
       }
 
       // Criar clientes para cada empresa
