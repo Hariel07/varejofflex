@@ -71,12 +71,6 @@ export const authOptions: AuthOptions = {
           console.log(`[AUTH-${timestamp}] 🔐 Password comparison result:`, passwordMatch);
           if (!passwordMatch) {
             console.log(`[AUTH-${timestamp}] ❌ Password mismatch for user: ${credentials.email}`);
-            
-            // DEBUG EXTRA: Teste manual para debug
-            console.log(`[AUTH-${timestamp}] 🔧 DEBUG: Manual test with exact values...`);
-            const manualTest = await bcrypt.compare('Thmpv1996@', (userDoc as any).passwordHash);
-            console.log(`[AUTH-${timestamp}] 🔧 DEBUG: Manual test result:`, manualTest);
-            
             return null;
           }
 
@@ -89,11 +83,11 @@ export const authOptions: AuthOptions = {
           // Retorna o objeto de usuário simples (inclui userType e companyId para o middleware via JWT)
           const authUser = {
             id: String((userDoc as any)._id),
-            name: (userDoc as any).name,
-            email: (userDoc as any).email,
-            role: role,
-            userType: userType,
-            companyId: (userDoc as any).companyId?._id?.toString(),
+            name: String((userDoc as any).name),
+            email: String((userDoc as any).email),
+            role: String(role),
+            userType: String(userType),
+            companyId: (userDoc as any).companyId?._id ? String((userDoc as any).companyId._id) : null,
           };
           
           console.log(`[AUTH-${timestamp}] 🎯 Returning authenticated user:`, {
@@ -140,10 +134,12 @@ export const authOptions: AuthOptions = {
           hasCompanyId: !!authUser.companyId
         });
         
-        token.role = authUser.role;
-        token.id = authUser.id;
-        token.userType = authUser.userType || (authUser.role === 'owner_saas' ? 'owner_saas' : 'lojista');
-        if (authUser.companyId) token.companyId = authUser.companyId;
+        token.role = String(authUser.role);
+        token.id = String(authUser.id);
+        token.userType = String(authUser.userType || (authUser.role === 'owner_saas' ? 'owner_saas' : 'lojista'));
+        if (authUser.companyId) {
+          token.companyId = String(authUser.companyId);
+        }
         
         console.log(`[JWT-${timestamp}] 🔑 Token enriched:`, {
           id: token.id,
