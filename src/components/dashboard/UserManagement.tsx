@@ -39,6 +39,7 @@ export default function UserManagement() {
   });
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
     loadUsers();
@@ -95,8 +96,78 @@ export default function UserManagement() {
     }
   };
 
-  const showNotification = (message: string, type: 'success' | 'error') => {
-    // Implementação simples de notificação
+  const deleteUser = async (userId: string, userEmail: string, userName: string) => {
+    // Confirmação com detalhes
+    const confirmMessage = `🚨 ATENÇÃO: Esta ação não pode ser desfeita!
+
+Deseja EXCLUIR PERMANENTEMENTE o usuário:
+👤 ${userName} (${userEmail})?
+
+Os seguintes dados serão REMOVIDOS:
+❌ Conta do usuário
+❌ Empresa associada
+❌ Códigos de verificação
+❌ Tentativas de pagamento
+❌ Tokens de reset de senha
+
+Digite "CONFIRMAR" para prosseguir:`;
+
+    const confirmation = prompt(confirmMessage);
+    
+    if (confirmation !== "CONFIRMAR") {
+      showNotification('Exclusão cancelada', 'info');
+      return;
+    }
+
+    try {
+      setDeleting(userId);
+      
+      const response = await fetch(`/api/admin/users?userId=${userId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification(`✅ Usuário ${userEmail} excluído com sucesso!`, 'success');
+        loadUsers(); // Recarregar lista
+        if (showModal && selectedUser?._id === userId) {
+          setShowModal(false); // Fechar modal se estiver aberto
+        }
+      } else {
+        showNotification(`❌ Erro ao excluir usuário: ${data.error}`, 'error');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      showNotification('❌ Erro interno. Tente novamente.', 'error');
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const showNotification = (message: string, type: 'success' | 'error' | 'info') => {
+    // Implementação melhorada de notificação
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'error' ? 'alert-danger' : 'alert-info';
+    
+    // Criar elemento de notificação
+    const notification = document.createElement('div');
+    notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+    notification.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover após 5 segundos
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 5000);
+    
     console.log(`${type.toUpperCase()}: ${message}`);
   };
 
@@ -336,6 +407,24 @@ export default function UserManagement() {
                               <i className="bi bi-box-arrow-up-right"></i>
                             </button>
                           )}
+                          
+                          {/* Botão de excluir - apenas para não-owners */}
+                          {user.role !== 'owner' && user.role !== 'owner_saas' && (
+                            <button
+                              className="btn btn-outline-danger"
+                              onClick={() => deleteUser(user._id, user.email, user.name)}
+                              disabled={deleting === user._id}
+                              title="Excluir usuário permanentemente"
+                            >
+                              {deleting === user._id ? (
+                                <div className="spinner-border spinner-border-sm" role="status">
+                                  <span className="visually-hidden">Excluindo...</span>
+                                </div>
+                              ) : (
+                                <i className="bi bi-trash"></i>
+                              )}
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -431,6 +520,32 @@ export default function UserManagement() {
                     Acessar Dashboard
                   </button>
                 )}
+                
+                {/* Botão de excluir no modal */}
+                {selectedUser.role !== 'owner' && selectedUser.role !== 'owner_saas' && (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      deleteUser(selectedUser._id, selectedUser.email, selectedUser.name);
+                    }}
+                    disabled={deleting === selectedUser._id}
+                  >
+                    {deleting === selectedUser._id ? (
+                      <>
+                        <div className="spinner-border spinner-border-sm me-2" role="status">
+                          <span className="visually-hidden">Excluindo...</span>
+                        </div>
+                        Excluindo...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-trash me-2"></i>
+                        Excluir Usuário
+                      </>
+                    )}
+                  </button>
+                )}
+                
                 <button
                   type="button"
                   className="btn btn-secondary"
