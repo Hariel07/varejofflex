@@ -19,14 +19,24 @@ export async function POST(request: NextRequest) {
     };
 
     // 1. CRIAR SUA CONTA PROFISSIONAL (se não existir)
-    const professionalEmail = 'hariel.developer@gmail.com';
-    let professionalUser = await User.findOne({ email: professionalEmail });
+    const professionalEmails = ['hariel.developer@gmail.com', 'hariel1996.hs@gmail.com'];
+    let professionalUser = null;
+    
+    // Verificar se já existe com qualquer um dos emails
+    for (const email of professionalEmails) {
+      professionalUser = await User.findOne({ email });
+      if (professionalUser) {
+        console.log('✅ Conta profissional já existe:', email);
+        break;
+      }
+    }
     
     if (!professionalUser) {
+      // Criar com o email que você está usando
       const passwordHash = await bcrypt.hash('minhasenha123', 12);
       professionalUser = await User.create({
         name: 'Hariel - Developer',
-        email: professionalEmail,
+        email: 'hariel1996.hs@gmail.com', // Usando seu email real
         passwordHash,
         role: 'owner_saas',
         userType: 'owner_saas',
@@ -34,9 +44,20 @@ export async function POST(request: NextRequest) {
         permissions: ['*'], // Acesso total
         createdAt: new Date(),
       });
-      console.log('✅ Conta profissional criada:', professionalEmail);
-    } else {
-      console.log('✅ Conta profissional já existe:', professionalEmail);
+      console.log('✅ Conta profissional criada:', 'hariel1996.hs@gmail.com');
+      
+      // Criar também com o email developer para compatibilidade
+      const professionalUser2 = await User.create({
+        name: 'Hariel - Developer Alt',
+        email: 'hariel.developer@gmail.com',
+        passwordHash,
+        role: 'owner_saas',
+        userType: 'owner_saas',
+        isActive: true,
+        permissions: ['*'],
+        createdAt: new Date(),
+      });
+      console.log('✅ Conta profissional alternativa criada:', 'hariel.developer@gmail.com');
     }
 
     // 2. CRIAR PLANOS (se não existirem)
@@ -257,11 +278,18 @@ export async function POST(request: NextRequest) {
       message: 'Dados de teste completos criados com sucesso!',
       data: results,
       details: {
-        professionalAccount: professionalEmail,
+        professionalAccounts: ['hariel1996.hs@gmail.com', 'hariel.developer@gmail.com'],
         freeCoupon: freeCouponCode,
         testDeletionUser: deleteTestEmail,
         companies: companiesData.map(c => c.name),
-        instructions: 'Use o cupom TESTE100 para acesso gratuito a todos os planos!'
+        instructions: 'Use o cupom TESTE100 para acesso gratuito a todos os planos!',
+        credentials: {
+          'hariel1996.hs@gmail.com': 'minhasenha123',
+          'hariel.developer@gmail.com': 'minhasenha123',
+          'joao.teste@varejoflex.com': 'senha123',
+          'maria.teste@varejoflex.com': 'senha123',
+          'carlos.teste@varejoflex.com': 'senha123'
+        }
       }
     });
 
