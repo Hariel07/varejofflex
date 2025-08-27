@@ -6,7 +6,7 @@ interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'owner' | 'logista' | 'cliente';
+  role: 'owner' | 'owner_saas' | 'logista' | 'cliente';
   isActive: boolean;
   createdAt: string;
   lastLogin?: string;
@@ -174,6 +174,7 @@ Digite "CONFIRMAR" para prosseguir:`;
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'owner': return 'bg-purple-100 text-purple-800';
+      case 'owner_saas': return 'bg-purple-100 text-purple-800';
       case 'logista': return 'bg-blue-100 text-blue-800';
       case 'cliente': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -183,6 +184,7 @@ Digite "CONFIRMAR" para prosseguir:`;
   const getRoleName = (role: string) => {
     switch (role) {
       case 'owner': return 'Owner';
+      case 'owner_saas': return 'Owner SaaS';
       case 'logista': return 'Logista';
       case 'cliente': return 'Cliente';
       default: return role;
