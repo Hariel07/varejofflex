@@ -15,7 +15,9 @@ const DEFAULT_PLANS = [
       '1 usuário',
       'PDV básico',
       'Relatórios essenciais',
-      'Suporte por email'
+      'Suporte por email',
+      'Loja online simples',
+      'Gestão básica de pedidos'
     ],
     pricing: {
       weekly: {
@@ -38,7 +40,9 @@ const DEFAULT_PLANS = [
     popular: false,
     enabled: true,
     trialDays: 14,
-    order: 1
+    order: 1,
+    iotEnabled: false,
+    iotFeatures: []
   },
   {
     planId: 'profissional',
@@ -50,7 +54,10 @@ const DEFAULT_PLANS = [
       'PDV completo',
       'Relatórios avançados',
       'Gestão de estoque',
-      'Suporte prioritário'
+      'Suporte prioritário',
+      'Loja online profissional',
+      'Sistema de delivery',
+      'IoT básico incluído'
     ],
     pricing: {
       weekly: {
@@ -73,7 +80,14 @@ const DEFAULT_PLANS = [
     popular: true,
     enabled: true,
     trialDays: 14,
-    order: 2
+    order: 2,
+    iotEnabled: true,
+    iotFeatures: [
+      'Até 10 sensores',
+      'Monitoramento básico',
+      'Alertas por email',
+      'Dashboard IoT simples'
+    ]
   },
   {
     planId: 'empresarial',
@@ -85,7 +99,10 @@ const DEFAULT_PLANS = [
       'Multi-loja',
       'BI e Analytics',
       'API completa',
-      'Suporte 24/7'
+      'Suporte 24/7',
+      'E-commerce avançado',
+      'Marketplace integration',
+      'IoT completo incluído'
     ],
     pricing: {
       weekly: {
@@ -108,7 +125,16 @@ const DEFAULT_PLANS = [
     popular: false,
     enabled: true,
     trialDays: 14,
-    order: 3
+    order: 3,
+    iotEnabled: true,
+    iotFeatures: [
+      'Sensores ilimitados',
+      'Analytics avançado com IA',
+      'Automação completa',
+      'Dashboard IoT empresarial',
+      'Integração com sistemas terceiros',
+      'Suporte IoT especializado'
+    ]
   }
 ];
 

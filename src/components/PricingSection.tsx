@@ -207,6 +207,43 @@ export default function PricingSection() {
                       ))}
                     </ul>
                     
+                    {/* Seção IoT */}
+                    {plan.iotEnabled && plan.iotFeatures && plan.iotFeatures.length > 0 && (
+                      <div className="mt-4 p-3 rounded-3" style={{ 
+                        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+                        border: '1px solid rgba(139, 92, 246, 0.2)'
+                      }}>
+                        <h6 className="fw-bold mb-3" style={{ color: '#8B5CF6' }}>
+                          <i className="bi bi-cpu me-2"></i>
+                          Recursos IoT Incluídos
+                        </h6>
+                        <ul className="list-unstyled mb-0">
+                          {plan.iotFeatures.map((iotFeature, index) => (
+                            <li key={index} className="mb-2 d-flex align-items-start">
+                              <i className="bi bi-lightning-charge-fill me-2 mt-1" style={{ color: '#8B5CF6', fontSize: '0.9rem' }}></i>
+                              <small style={{ color: '#495057', fontWeight: '500' }}>{iotFeature}</small>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {/* Plano sem IoT - incentivo para upgrade */}
+                    {!plan.iotEnabled && (
+                      <div className="mt-4 p-3 rounded-3" style={{ 
+                        background: 'rgba(108, 117, 125, 0.1)',
+                        border: '1px solid rgba(108, 117, 125, 0.2)'
+                      }}>
+                        <h6 className="fw-bold mb-2 text-muted">
+                          <i className="bi bi-cpu me-2"></i>
+                          IoT não disponível
+                        </h6>
+                        <small className="text-muted">
+                          Upgrade para o plano Profissional ou superior para acessar recursos de Internet das Coisas.
+                        </small>
+                      </div>
+                    )}
+                    
                     <div className="mt-auto pt-3">
                       <Link 
                         href={`/register?plan=${plan.planId}&billing=${billingCycle}`} 

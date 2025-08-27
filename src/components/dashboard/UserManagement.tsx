@@ -173,21 +173,31 @@ Digite "CONFIRMAR" para prosseguir:`;
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'owner': return 'bg-purple-100 text-purple-800';
-      case 'owner_saas': return 'bg-purple-100 text-purple-800';
-      case 'logista': return 'bg-blue-100 text-blue-800';
-      case 'cliente': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'owner': return 'bg-dark text-white';
+      case 'owner_saas': return 'bg-dark text-white';
+      case 'logista': return 'bg-primary text-white';
+      case 'cliente': return 'bg-success text-white';
+      default: return 'bg-secondary text-white';
     }
   };
 
   const getRoleName = (role: string) => {
     switch (role) {
-      case 'owner': return 'Owner';
-      case 'owner_saas': return 'Owner SaaS';
-      case 'logista': return 'Logista';
+      case 'owner': return 'Proprietário';
+      case 'owner_saas': return 'Proprietário SaaS';
+      case 'logista': return 'Lojista';
       case 'cliente': return 'Cliente';
       default: return role;
+    }
+  };
+
+  const getUserTypeIcon = (role: string) => {
+    switch (role) {
+      case 'owner': return 'bi-crown';
+      case 'owner_saas': return 'bi-crown-fill';
+      case 'logista': return 'bi-shop';
+      case 'cliente': return 'bi-person';
+      default: return 'bi-person';
     }
   };
 
@@ -346,9 +356,26 @@ Digite "CONFIRMAR" para prosseguir:`;
                   {users.map((user) => (
                     <tr key={user._id}>
                       <td>
-                        <div>
-                          <div className="fw-bold">{user.name}</div>
-                          <small className="text-muted">{user.email}</small>
+                        <div className="d-flex align-items-center">
+                          <div 
+                            className={`rounded-circle me-3 d-flex align-items-center justify-content-center`}
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              background: user.role === 'owner' || user.role === 'owner_saas' 
+                                ? 'linear-gradient(135deg, #6c757d 0%, #495057 100%)'
+                                : user.role === 'logista'
+                                ? 'linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%)'
+                                : 'linear-gradient(135deg, #198754 0%, #157347 100%)',
+                              color: 'white'
+                            }}
+                          >
+                            <i className={`bi ${getUserTypeIcon(user.role)}`}></i>
+                          </div>
+                          <div>
+                            <div className="fw-bold">{user.name}</div>
+                            <small className="text-muted">{user.email}</small>
+                          </div>
                         </div>
                       </td>
                       <td>
@@ -364,9 +391,26 @@ Digite "CONFIRMAR" para prosseguir:`;
                         )}
                       </td>
                       <td>
-                        <span className={`badge ${getRoleColor(user.role)}`}>
+                        <span className={`badge ${getRoleColor(user.role)} px-3 py-2`}>
+                          <i className={`bi ${getUserTypeIcon(user.role)} me-1`}></i>
                           {getRoleName(user.role)}
                         </span>
+                        {user.role === 'logista' && (
+                          <div className="mt-1">
+                            <small className="badge bg-info text-dark">
+                              <i className="bi bi-building me-1"></i>
+                              Comerciante
+                            </small>
+                          </div>
+                        )}
+                        {user.role === 'cliente' && (
+                          <div className="mt-1">
+                            <small className="badge bg-warning text-dark">
+                              <i className="bi bi-cart me-1"></i>
+                              Consumidor
+                            </small>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <span className={`badge ${user.isActive ? 'bg-success' : 'bg-danger'}`}>

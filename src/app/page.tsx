@@ -76,6 +76,16 @@ export default function HomePage() {
                   }}>Demos</a>
                 </li>
                 <li className="nav-item">
+                  <a className="nav-link" href="#iot" 
+                     onClick={closeNavbar}
+                     style={{
+                    color: '#1E293B',
+                    fontWeight: '500',
+                    transition: 'color 0.3s ease',
+                    margin: '0 0.5rem'
+                  }}>IoT</a>
+                </li>
+                <li className="nav-item">
                   <a className="nav-link" href="#pricing" 
                      onClick={closeNavbar}
                      style={{
@@ -1815,6 +1825,362 @@ export default function HomePage() {
 
       {/* Pricing */}
       <PricingSection />
+
+      {/* IoT Solutions */}
+      <section style={{
+        padding: '6rem 0',
+        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(16, 185, 129, 0.03) 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }} id="iot">
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '1rem',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '50px',
+              padding: '0.8rem 2rem',
+              marginBottom: '2rem',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.2)'
+            }}>
+              <div style={{ fontSize: '2rem' }}>🔧</div>
+              <span style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                fontWeight: '800',
+                fontSize: '1.2rem'
+              }}>
+                SOLUÇÕES IOT
+              </span>
+            </div>
+
+            <h2 style={{
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontWeight: '900',
+              marginBottom: '1.5rem',
+              color: '#1E293B',
+              lineHeight: '1.1'
+            }}>
+              Internet das Coisas para
+              <br/>
+              <span style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #06B6D4 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>seu negócio inteligente</span>
+            </h2>
+            
+            <p style={{
+              fontSize: '1.3rem',
+              color: '#64748B',
+              maxWidth: '800px',
+              margin: '0 auto 3rem auto',
+              lineHeight: '1.7',
+              fontWeight: '500'
+            }}>
+              Sensores, automação e monitoramento em tempo real.
+              <br />
+              <strong style={{ color: '#8B5CF6' }}>Transforme dados em decisões inteligentes</strong> para seu negócio.
+            </p>
+          </div>
+
+          <div className="row g-4 mb-5">
+            {/* Smart Sensors */}
+            <div className="col-lg-4 col-md-6">
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '24px',
+                border: '2px solid rgba(139, 92, 246, 0.2)',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)',
+                padding: '2.5rem',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.4s ease'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '-50%',
+                  right: '-50%',
+                  width: '200%',
+                  height: '200%',
+                  background: 'radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%)'
+                }}></div>
+                
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2.5rem',
+                    marginBottom: '1.5rem',
+                    boxShadow: '0 15px 30px rgba(139, 92, 246, 0.3)'
+                  }}>
+                    📡
+                  </div>
+                  
+                  <h4 style={{ fontWeight: '800', color: '#1E293B', marginBottom: '1rem' }}>
+                    Sensores Inteligentes
+                  </h4>
+                  
+                  <p style={{ color: '#64748B', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                    Monitoramento em tempo real de temperatura, umidade, movimento e consumo de energia.
+                  </p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Temperatura e umidade</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Detecção de movimento</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Monitoramento energético</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Smart Analytics */}
+            <div className="col-lg-4 col-md-6">
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '24px',
+                border: '2px solid rgba(59, 130, 246, 0.2)',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)',
+                padding: '2.5rem',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.4s ease'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '-50%',
+                  right: '-50%',
+                  width: '200%',
+                  height: '200%',
+                  background: 'radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%)'
+                }}></div>
+                
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2.5rem',
+                    marginBottom: '1.5rem',
+                    boxShadow: '0 15px 30px rgba(59, 130, 246, 0.3)'
+                  }}>
+                    🧠
+                  </div>
+                  
+                  <h4 style={{ fontWeight: '800', color: '#1E293B', marginBottom: '1rem' }}>
+                    Analytics Avançado
+                  </h4>
+                  
+                  <p style={{ color: '#64748B', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                    IA processa seus dados e gera insights acionáveis para otimizar operações.
+                  </p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Previsão de demanda</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Otimização energética</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Alertas inteligentes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Smart Automation */}
+            <div className="col-lg-4 col-md-6">
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '24px',
+                border: '2px solid rgba(6, 182, 212, 0.2)',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)',
+                padding: '2.5rem',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.4s ease'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '-50%',
+                  right: '-50%',
+                  width: '200%',
+                  height: '200%',
+                  background: 'radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 70%)'
+                }}></div>
+                
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2.5rem',
+                    marginBottom: '1.5rem',
+                    boxShadow: '0 15px 30px rgba(6, 182, 212, 0.3)'
+                  }}>
+                    ⚡
+                  </div>
+                  
+                  <h4 style={{ fontWeight: '800', color: '#1E293B', marginBottom: '1rem' }}>
+                    Automação Total
+                  </h4>
+                  
+                  <p style={{ color: '#64748B', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                    Controle automatizado de iluminação, climatização e sistemas de segurança.
+                  </p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Controle de iluminação</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Climatização inteligente</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%' }}></div>
+                      <span style={{ color: '#4A5568', fontWeight: '500', fontSize: '0.95rem' }}>Segurança automática</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* IoT Integration Call-to-Action */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05))',
+            border: '2px solid rgba(139, 92, 246, 0.2)',
+            borderRadius: '28px',
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '300px',
+              height: '300px',
+              background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+              borderRadius: '50%',
+              animation: 'pulse 4s ease-in-out infinite'
+            }}></div>
+            
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>🏭</div>
+              <h3 style={{
+                fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
+                fontWeight: '800',
+                color: '#1E293B',
+                marginBottom: '1rem'
+              }}>
+                IoT Disponível em Planos Avançados
+              </h3>
+              <p style={{
+                fontSize: '1.2rem',
+                color: '#64748B',
+                maxWidth: '600px',
+                margin: '0 auto 2rem auto',
+                lineHeight: '1.6'
+              }}>
+                Transforme seu negócio com Internet das Coisas. Sensores inteligentes, automação e analytics em tempo real.
+                <br />
+                <strong style={{ color: '#8B5CF6' }}>Disponível nos planos Profissional e Empresarial.</strong>
+              </p>
+              
+              <div className="d-flex flex-column flex-md-row gap-3 justify-content-center">
+                <a 
+                  href="#pricing"
+                  style={{
+                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                    border: 'none',
+                    borderRadius: '20px',
+                    padding: '1.2rem 2.5rem',
+                    color: 'white',
+                    fontWeight: '800',
+                    fontSize: '1.1rem',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    boxShadow: '0 20px 50px rgba(139, 92, 246, 0.4)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <span style={{ fontSize: '1.3rem' }}>🚀</span>
+                  Ver Planos com IoT
+                </a>
+                
+                <a 
+                  href="#contact"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    border: '2px solid rgba(139, 92, 246, 0.3)',
+                    borderRadius: '20px',
+                    padding: '1.2rem 2.5rem',
+                    color: '#1E293B',
+                    fontWeight: '800',
+                    fontSize: '1.1rem',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    boxShadow: '0 15px 40px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <span style={{ fontSize: '1.3rem' }}>💬</span>
+                  Consultoria IoT
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Features */}
       <section style={{ padding: '5rem 0' }} id="features">
