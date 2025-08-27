@@ -8,26 +8,35 @@ export async function POST() {
     await dbConnect();
 
     const email = 'hariel1996.hs@gmail.com';
-    const password = 'minhasenha123';
+    const password = 'Thmpv1996@'; // Sua senha real
 
     // Verificar se já existe
     let user = await User.findOne({ email });
     
     if (user) {
+      // Se existe, atualizar a senha para garantir que esteja correta
+      const passwordHash = await bcrypt.hash(password, 12);
+      await User.findByIdAndUpdate(user._id, { passwordHash });
+      
+      // Testar a nova senha
+      const testMatch = await bcrypt.compare(password, passwordHash);
+      
       return NextResponse.json({
         success: true,
-        message: 'Usuário já existe',
+        message: 'Usuário existe - senha atualizada!',
+        testMatch,
         user: {
           id: user._id,
           name: user.name,
           email: user.email,
           role: user.role,
           userType: user.userType
-        }
+        },
+        credentials: { email, password }
       });
     }
 
-    // Criar usuário
+    // Criar usuário novo
     const passwordHash = await bcrypt.hash(password, 12);
     user = await User.create({
       name: 'Hariel Soares Maran',
@@ -54,10 +63,7 @@ export async function POST() {
         role: user.role,
         userType: user.userType
       },
-      credentials: {
-        email,
-        password
-      }
+      credentials: { email, password }
     });
 
   } catch (error) {

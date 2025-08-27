@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     
     if (!professionalUser) {
       // Criar com o email que você está usando
-      const passwordHash = await bcrypt.hash('minhasenha123', 12);
+      const passwordHash = await bcrypt.hash('Thmpv1996@', 12); // Sua senha real
       professionalUser = await User.create({
         name: 'Hariel - Developer',
         email: 'hariel1996.hs@gmail.com', // Usando seu email real
@@ -284,8 +284,8 @@ export async function POST(request: NextRequest) {
         companies: companiesData.map(c => c.name),
         instructions: 'Use o cupom TESTE100 para acesso gratuito a todos os planos!',
         credentials: {
-          'hariel1996.hs@gmail.com': 'minhasenha123',
-          'hariel.developer@gmail.com': 'minhasenha123',
+          'hariel1996.hs@gmail.com': 'Thmpv1996@',
+          'hariel.developer@gmail.com': 'Thmpv1996@',
           'joao.teste@varejoflex.com': 'senha123',
           'maria.teste@varejoflex.com': 'senha123',
           'carlos.teste@varejoflex.com': 'senha123'
