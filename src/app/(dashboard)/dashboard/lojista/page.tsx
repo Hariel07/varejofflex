@@ -43,6 +43,13 @@ function LojistaDashboardContent() {
   const userIdParam = searchParams.get('userId');
   const isOwnerAccessing = user?.userType === 'owner_saas' && userIdParam;
 
+  // Debug logs
+  useEffect(() => {
+    console.log('🔍 [LOJISTA DEBUG] userType:', user?.userType);
+    console.log('🔍 [LOJISTA DEBUG] userIdParam:', userIdParam);
+    console.log('🔍 [LOJISTA DEBUG] isOwnerAccessing:', isOwnerAccessing);
+  }, [user?.userType, userIdParam, isOwnerAccessing]);
+
   const companyId = getCurrentCompanyId();
   const segment = user?.segment || "lanchonete";
   const segmentData = segmentInfo[segment as keyof typeof segmentInfo] || segmentInfo.lanchonete;
@@ -101,7 +108,10 @@ function LojistaDashboardContent() {
         }}>
           <button 
             className="btn btn-dark btn-sm rounded-pill px-4"
-            onClick={() => router.push('/dashboard/owner?tab=users')}
+            onClick={() => {
+              console.log('🔄 [BUTTON CLICK] Navigating to owner dashboard');
+              window.location.href = '/dashboard/owner?tab=users';
+            }}
             style={{
               boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
               fontWeight: '600'
