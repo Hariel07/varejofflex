@@ -126,6 +126,16 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isLojistaRoute(pathname) && user.userType !== "lojista") {
+      // Permite que owner_saas acesse dashboard de lojista para administração
+      if (user.userType === "owner_saas" && pathname.startsWith("/dashboard/lojista")) {
+        // Verifica se há parâmetro userId na URL (acesso administrativo)
+        const url = new URL(request.url);
+        const hasUserIdParam = url.searchParams.has('userId');
+        if (hasUserIdParam) {
+          console.log('[MW] Owner accessing lojista dashboard for administration');
+          return NextResponse.next();
+        }
+      }
       console.log('[MW] Blocked lojista route for non-lojista userType', user.userType);
       return NextResponse.redirect(new URL("/admin", request.url));
     }

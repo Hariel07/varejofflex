@@ -3,6 +3,7 @@
 import { useAuthUser, usePermissions, useTenantApi, useCompanyAccess } from "@/hooks/useAuth";
 import { ProtectedContent, LojistaOnly } from "@/components/auth/ProtectedContent";
 import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import FiscalPrinterWidget from "@/components/dashboard/FiscalPrinterWidget";
 import FiscalPrinterConfig from "@/components/dashboard/FiscalPrinterConfig";
 
@@ -32,9 +33,15 @@ function LojistaDashboardContent() {
   const { hasPermission } = usePermissions();
   const { getCurrentCompanyId } = useCompanyAccess();
   const { get } = useTenantApi();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [stats, setStats] = useState<CompanyStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [showFiscalConfig, setShowFiscalConfig] = useState(false);
+
+  // Verifica se é um owner acessando administrativamente
+  const userIdParam = searchParams.get('userId');
+  const isOwnerAccessing = user?.userType === 'owner_saas' && userIdParam;
 
   const companyId = getCurrentCompanyId();
   const segment = user?.segment || "lanchonete";
@@ -69,44 +76,74 @@ function LojistaDashboardContent() {
     }
   };
 
-  return (
-    <LojistaOnly fallback={
+  // Verifica acesso: lojista ou owner com userId param  
+  if (!isOwnerAccessing && user?.userType !== 'lojista') {
+    return (
       <div className="container py-5">
         <div className="alert alert-danger">
           <i className="bi bi-shield-x me-2"></i>
           Acesso negado. Esta área é restrita para lojistas.
         </div>
       </div>
-    }>
-      <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-        
-        {/* Header Premium */}
+    );
+  }
+
+  return (
+    <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+      
+      {/* Botão de retorno para Owner */}
+      {isOwnerAccessing && (
         <div style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 1050
         }}>
-          <div className="container-fluid">
-            <div className="row align-items-center py-4">
-              <div className="col-md-8">
-                <h1 className="h2 mb-1 text-white" style={{ fontWeight: '800' }}>
-                  <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }}></i>
-                  Dashboard Lojista
-                </h1>
-                <p className="text-white-50 mb-0" style={{ fontSize: '1.1rem' }}>
-                  Bem-vindo, {user?.name} • Gestão completa do seu negócio
-                </p>
-              </div>
-              <div className="col-md-4 text-end">
-                <div className={`badge bg-${segmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
-                  <span className="me-2" style={{ fontSize: '1.2rem' }}>{segmentData.icon}</span>
-                  {segmentData.name.toUpperCase()}
-                </div>
+          <button 
+            className="btn btn-dark btn-sm rounded-pill px-4"
+            onClick={() => router.push('/admin')}
+            style={{
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+              fontWeight: '600'
+            }}
+          >
+            <i className="bi bi-arrow-left me-2"></i>
+            Voltar ao Gerenciamento
+          </button>
+        </div>
+      )}
+      
+      {/* Header Premium */}
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+      }}>
+        <div className="container-fluid">
+          <div className="row align-items-center py-4">
+            <div className="col-md-8">
+              <h1 className="h2 mb-1 text-white" style={{ fontWeight: '800' }}>
+                <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }}></i>
+                Dashboard Lojista 
+                {isOwnerAccessing && <span className="badge bg-warning text-dark ms-2">Modo Admin</span>}
+              </h1>
+              <p className="text-white-50 mb-0" style={{ fontSize: '1.1rem' }}>
+                {isOwnerAccessing ? 
+                  `Visualizando dashboard do logista (User ID: ${userIdParam})` : 
+                  `Bem-vindo, ${user?.name} • Gestão completa do seu negócio`
+                }
+              </p>
+            </div>
+            <div className="col-md-4 text-end">
+              <div className={`badge bg-${segmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
+                <span className="me-2" style={{ fontSize: '1.2rem' }}>{segmentData.icon}</span>
+                {segmentData.name.toUpperCase()}
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="container-fluid py-4">
+      <div className="container-fluid py-4">
         {/* Header */}
         <div className="row mb-4">
           <div className="col">
@@ -584,7 +621,6 @@ function LojistaDashboardContent() {
         )}
         </div>
       </div>
-    </LojistaOnly>
   );
 }
 
