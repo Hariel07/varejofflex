@@ -447,10 +447,10 @@ Digite "CONFIRMAR" para prosseguir:`;
                           {user.role === 'logista' && (
                             <button
                               className="btn btn-outline-info"
-                              onClick={() => window.open(`/dashboard/lojista?userId=${user._id}`, '_blank')}
+                              onClick={() => window.location.href = `/dashboard/lojista?userId=${user._id}`}
                               title="Acessar dashboard do logista"
                             >
-                              <i className="bi bi-box-arrow-up-right"></i>
+                              <i className="bi bi-arrow-right"></i>
                             </button>
                           )}
                           
@@ -560,9 +560,9 @@ Digite "CONFIRMAR" para prosseguir:`;
                 {selectedUser.role === 'logista' && (
                   <button
                     className="btn btn-primary"
-                    onClick={() => window.open(`/dashboard/lojista?userId=${selectedUser._id}`, '_blank')}
+                    onClick={() => window.location.href = `/dashboard/lojista?userId=${selectedUser._id}`}
                   >
-                    <i className="bi bi-box-arrow-up-right me-2"></i>
+                    <i className="bi bi-arrow-right me-2"></i>
                     Acessar Dashboard
                   </button>
                 )}

@@ -1,8 +1,8 @@
 "use client";
 
 import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
 // Importação dinâmica para evitar problemas de SSR
@@ -40,11 +40,34 @@ const UserManagement = dynamic(() => import('@/components/dashboard/UserManageme
 });
 
 export default function OwnerDashboard() {
+  return (
+    <Suspense fallback={
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+    }>
+      <OwnerDashboardContent />
+    </Suspense>
+  );
+}
+
+function OwnerDashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [error, setError] = useState<string | null>(null);
+
+  // Lê o parâmetro tab da URL
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     console.log('[OWNER-PAGE] useEffect triggered, status:', status, 'session:', !!session);

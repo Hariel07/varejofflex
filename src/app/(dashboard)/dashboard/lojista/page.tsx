@@ -101,7 +101,7 @@ function LojistaDashboardContent() {
         }}>
           <button 
             className="btn btn-dark btn-sm rounded-pill px-4"
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push('/dashboard/owner?tab=users')}
             style={{
               boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
               fontWeight: '600'
