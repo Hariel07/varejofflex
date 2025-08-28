@@ -54,8 +54,39 @@ function LojistaDashboardContent() {
   const segment = user?.segment || "lanchonete";
   const segmentData = segmentInfo[segment as keyof typeof segmentInfo] || segmentInfo.lanchonete;
 
+  // Estado para armazenar dados do lojista quando owner está acessando
+  const [targetLojistaData, setTargetLojistaData] = useState<any>(null);
+  const [targetCompanyId, setTargetCompanyId] = useState<string | null>(null);
+
+  // Buscar dados do lojista específico quando owner está acessando
   useEffect(() => {
-    if (hasPermission("manage_products") && companyId) {
+    if (isOwnerAccessing && userIdParam) {
+      const fetchLojistaData = async () => {
+        try {
+          console.log('🔍 [OWNER ACCESS] Fetching data for userId:', userIdParam);
+          const response = await get(`/api/users/${userIdParam}`);
+          if (response.ok) {
+            const result = await response.json();
+            const lojistaData = result.user;
+            console.log('🔍 [OWNER ACCESS] Lojista data:', lojistaData);
+            setTargetLojistaData(lojistaData);
+            setTargetCompanyId(lojistaData.companyId);
+          }
+        } catch (error) {
+          console.error("Error fetching lojista data:", error);
+        }
+      };
+      fetchLojistaData();
+    }
+  }, [isOwnerAccessing, userIdParam, get]);
+
+  // Usar companyId do lojista alvo quando owner está acessando, senão usar o normal
+  const effectiveCompanyId = isOwnerAccessing && targetCompanyId ? targetCompanyId : companyId;
+  const effectiveSegment = isOwnerAccessing && targetLojistaData?.segment ? targetLojistaData.segment : segment;
+  const effectiveSegmentData = segmentInfo[effectiveSegment as keyof typeof segmentInfo] || segmentInfo.lanchonete;
+
+  useEffect(() => {
+    if (hasPermission("manage_products") && effectiveCompanyId) {
       loadCompanyStats();
     } else {
       // Se não há companyId, definir stats vazias e parar loading
@@ -67,11 +98,11 @@ function LojistaDashboardContent() {
       });
       setLoading(false);
     }
-  }, [hasPermission, companyId]);
+  }, [hasPermission, effectiveCompanyId]);
 
   const loadCompanyStats = async () => {
     try {
-      const response = await get(`/api/companies/${companyId}/stats`);
+      const response = await get(`/api/companies/${effectiveCompanyId}/stats`);
       if (response.ok) {
         const data = await response.json();
         setStats(data);
@@ -138,15 +169,15 @@ function LojistaDashboardContent() {
               </h1>
               <p className="text-white-50 mb-0" style={{ fontSize: '1.1rem' }}>
                 {isOwnerAccessing ? 
-                  `Visualizando dashboard do logista (User ID: ${userIdParam})` : 
+                  `Visualizando dashboard de ${targetLojistaData?.name || 'Lojista'} (${targetLojistaData?.email || userIdParam})` : 
                   `Bem-vindo, ${user?.name} • Gestão completa do seu negócio`
                 }
               </p>
             </div>
             <div className="col-md-4 text-end">
-              <div className={`badge bg-${segmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
-                <span className="me-2" style={{ fontSize: '1.2rem' }}>{segmentData.icon}</span>
-                {segmentData.name.toUpperCase()}
+              <div className={`badge bg-${effectiveSegmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
+                <span className="me-2" style={{ fontSize: '1.2rem' }}>{effectiveSegmentData.icon}</span>
+                {effectiveSegmentData.name.toUpperCase()}
               </div>
             </div>
           </div>
@@ -162,9 +193,9 @@ function LojistaDashboardContent() {
                 <h1 className="h3 mb-1">Dashboard Lojista</h1>
                 <p className="text-muted mb-0">Bem-vindo, {user?.name}</p>
               </div>
-              <div className={`badge bg-${segmentData.color} fs-6`}>
-                <span className="me-1">{segmentData.icon}</span>
-                {segmentData.name.toUpperCase()}
+              <div className={`badge bg-${effectiveSegmentData.color} fs-6`}>
+                <span className="me-1">{effectiveSegmentData.icon}</span>
+                {effectiveSegmentData.name.toUpperCase()}
               </div>
             </div>
           </div>
@@ -566,8 +597,8 @@ function LojistaDashboardContent() {
                       <div className="col-6">
                         <small className="text-muted">Segmento:</small>
                         <div>
-                          <span className={`badge bg-${segmentData.color}`}>
-                            {segmentData.icon} {segmentData.name}
+                          <span className={`badge bg-${effectiveSegmentData.color}`}>
+                            {effectiveSegmentData.icon} {effectiveSegmentData.name}
                           </span>
                         </div>
                       </div>
