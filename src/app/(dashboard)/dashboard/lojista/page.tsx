@@ -78,7 +78,35 @@ function LojistaDashboardContent() {
         </div>
       </div>
     }>
-      <div className="container-fluid py-4">
+      <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+        
+        {/* Header Premium */}
+        <div style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+        }}>
+          <div className="container-fluid">
+            <div className="row align-items-center py-4">
+              <div className="col-md-8">
+                <h1 className="h2 mb-1 text-white" style={{ fontWeight: '800' }}>
+                  <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }}></i>
+                  Dashboard Lojista
+                </h1>
+                <p className="text-white-50 mb-0" style={{ fontSize: '1.1rem' }}>
+                  Bem-vindo, {user?.name} • Gestão completa do seu negócio
+                </p>
+              </div>
+              <div className="col-md-4 text-end">
+                <div className={`badge bg-${segmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
+                  <span className="me-2" style={{ fontSize: '1.2rem' }}>{segmentData.icon}</span>
+                  {segmentData.name.toUpperCase()}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container-fluid py-4">
         {/* Header */}
         <div className="row mb-4">
           <div className="col">
@@ -106,17 +134,49 @@ function LojistaDashboardContent() {
             {/* Stats Cards */}
             <div className="row mb-4">
               <div className="col-md-3 mb-3">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center">
-                      <div className="flex-shrink-0">
-                        <div className="bg-primary bg-opacity-10 p-3 rounded">
-                          <i className="bi bi-box text-primary fs-4"></i>
-                        </div>
+                <div 
+                  className="card border-0 h-100"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+                  }}
+                >
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-start justify-content-between mb-3">
+                      <div 
+                        className="rounded-circle p-3"
+                        style={{
+                          background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                          width: '60px',
+                          height: '60px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 8px 20px rgba(59, 130, 246, 0.3)'
+                        }}
+                      >
+                        <i className="bi bi-box text-white" style={{ fontSize: '1.4rem' }}></i>
                       </div>
-                      <div className="ms-3">
-                        <h6 className="card-title mb-1">Produtos</h6>
-                        <h3 className="mb-0">{stats?.totalProducts || 0}</h3>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-muted small mb-1">Produtos Cadastrados</div>
+                      <div className="h4 mb-1" style={{ fontWeight: '800', color: '#2d3748' }}>
+                        {stats?.totalProducts || 0}
+                      </div>
+                      <div className="small text-muted">
+                        Itens no cardápio
                       </div>
                     </div>
                   </div>
@@ -124,17 +184,49 @@ function LojistaDashboardContent() {
               </div>
 
               <div className="col-md-3 mb-3">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center">
-                      <div className="flex-shrink-0">
-                        <div className="bg-success bg-opacity-10 p-3 rounded">
-                          <i className="bi bi-cart-check text-success fs-4"></i>
-                        </div>
+                <div 
+                  className="card border-0 h-100"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+                  }}
+                >
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-start justify-content-between mb-3">
+                      <div 
+                        className="rounded-circle p-3"
+                        style={{
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          width: '60px',
+                          height: '60px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
+                        }}
+                      >
+                        <i className="bi bi-cart-check text-white" style={{ fontSize: '1.4rem' }}></i>
                       </div>
-                      <div className="ms-3">
-                        <h6 className="card-title mb-1">Pedidos</h6>
-                        <h3 className="mb-0">{stats?.totalOrders || 0}</h3>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-muted small mb-1">Total de Pedidos</div>
+                      <div className="h4 mb-1" style={{ fontWeight: '800', color: '#2d3748' }}>
+                        {stats?.totalOrders || 0}
+                      </div>
+                      <div className="small text-muted">
+                        Pedidos realizados
                       </div>
                     </div>
                   </div>
@@ -142,17 +234,49 @@ function LojistaDashboardContent() {
               </div>
 
               <div className="col-md-3 mb-3">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center">
-                      <div className="flex-shrink-0">
-                        <div className="bg-warning bg-opacity-10 p-3 rounded">
-                          <i className="bi bi-currency-dollar text-warning fs-4"></i>
-                        </div>
+                <div 
+                  className="card border-0 h-100"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(251, 146, 60, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+                  }}
+                >
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-start justify-content-between mb-3">
+                      <div 
+                        className="rounded-circle p-3"
+                        style={{
+                          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                          width: '60px',
+                          height: '60px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 8px 20px rgba(245, 158, 11, 0.3)'
+                        }}
+                      >
+                        <i className="bi bi-currency-dollar text-white" style={{ fontSize: '1.4rem' }}></i>
                       </div>
-                      <div className="ms-3">
-                        <h6 className="card-title mb-1">Receita Mensal</h6>
-                        <h3 className="mb-0">R$ {stats?.monthlyRevenue?.toLocaleString() || "0"}</h3>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-muted small mb-1">Receita Mensal</div>
+                      <div className="h4 mb-1" style={{ fontWeight: '800', color: '#2d3748' }}>
+                        R$ {stats?.monthlyRevenue?.toLocaleString() || "0"}
+                      </div>
+                      <div className="small text-muted">
+                        Faturamento do mês
                       </div>
                     </div>
                   </div>
@@ -160,17 +284,49 @@ function LojistaDashboardContent() {
               </div>
 
               <div className="col-md-3 mb-3">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center">
-                      <div className="flex-shrink-0">
-                        <div className="bg-info bg-opacity-10 p-3 rounded">
-                          <i className="bi bi-clock text-info fs-4"></i>
-                        </div>
+                <div 
+                  className="card border-0 h-100"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(6, 182, 212, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+                  }}
+                >
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-start justify-content-between mb-3">
+                      <div 
+                        className="rounded-circle p-3"
+                        style={{
+                          background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                          width: '60px',
+                          height: '60px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 8px 20px rgba(6, 182, 212, 0.3)'
+                        }}
+                      >
+                        <i className="bi bi-clock text-white" style={{ fontSize: '1.4rem' }}></i>
                       </div>
-                      <div className="ms-3">
-                        <h6 className="card-title mb-1">Pendentes</h6>
-                        <h3 className="mb-0">{stats?.pendingOrders || 0}</h3>
+                    </div>
+                    <div>
+                      <div className="fw-bold text-muted small mb-1">Pedidos Pendentes</div>
+                      <div className="h4 mb-1" style={{ fontWeight: '800', color: '#2d3748' }}>
+                        {stats?.pendingOrders || 0}
+                      </div>
+                      <div className="small text-muted">
+                        Aguardando atenção
                       </div>
                     </div>
                   </div>
@@ -426,6 +582,7 @@ function LojistaDashboardContent() {
             </div>
           </>
         )}
+        </div>
       </div>
     </LojistaOnly>
   );
