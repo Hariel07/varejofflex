@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { dbConnect } from '@/lib/db';
 import User from '@/models/User';
+import Company from '@/models/Company'; // Importar o modelo Company
 
 export async function POST(request: NextRequest) {
   try {
