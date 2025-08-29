@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
     await dbConnect();
     console.log(`[TEST-LOGIN] Database connected`);
 
-    // Busca o usuário
+    // Busca o usuário sem populate primeiro
     const userDoc = await User.findOne({
       email: email.toLowerCase(),
       isActive: true,
-    }).populate('companyId').lean();
+    }).lean();
 
     if (!userDoc) {
       console.log(`[TEST-LOGIN] User not found or inactive`);
@@ -40,8 +40,19 @@ export async function POST(request: NextRequest) {
       role: (userDoc as any).role,
       userType: (userDoc as any).userType,
       isActive: (userDoc as any).isActive,
-      hasCompany: !!(userDoc as any).companyId
+      companyId: (userDoc as any).companyId?.toString()
     });
+
+    // Busca a company separadamente se existir
+    let companyData = null;
+    if ((userDoc as any).companyId) {
+      try {
+        companyData = await Company.findById((userDoc as any).companyId).lean();
+        console.log(`[TEST-LOGIN] Company found:`, !!companyData);
+      } catch (error) {
+        console.log(`[TEST-LOGIN] Error fetching company:`, error);
+      }
+    }
 
     // Testa a senha
     console.log(`[TEST-LOGIN] Testing password...`);
@@ -77,7 +88,8 @@ export async function POST(request: NextRequest) {
       email: String((userDoc as any).email),
       role: String(role),
       userType: String(userType),
-      companyId: (userDoc as any).companyId?._id ? String((userDoc as any).companyId._id) : null,
+      companyId: (userDoc as any).companyId ? String((userDoc as any).companyId) : null,
+      hasCompanyData: !!companyData,
     };
 
     console.log(`[TEST-LOGIN] Authentication successful, user object:`, authUser);
