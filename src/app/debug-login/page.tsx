@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export default function DebugLoginPage() {
   const [email, setEmail] = useState('carlos.teste@varejoflex.com');
-  const [password, setPassword] = useState('Thmpv1996@');
+  const [password, setPassword] = useState('123456'); // Tentar senha mais simples primeiro
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -71,6 +71,40 @@ export default function DebugLoginPage() {
               >
                 {loading ? 'Testing...' : 'Test Login'}
               </button>
+              
+              <div className="mt-3">
+                <h6>Testar senhas comuns:</h6>
+                <div className="btn-group-vertical w-100" role="group">
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => setPassword('123456')}
+                  >
+                    Testar: 123456
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => setPassword('Thmpv1996@')}
+                  >
+                    Testar: Thmpv1996@
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => setPassword('senha123')}
+                  >
+                    Testar: senha123
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => setPassword('admin123')}
+                  >
+                    Testar: admin123
+                  </button>
+                </div>
+              </div>
               
               {result && (
                 <div className="mt-4">
