@@ -14,6 +14,8 @@ type Product = {
   category?: string;
   image?: string;
   status: 'draft' | 'published' | 'archived';
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 const fmtBRL = (v: number) =>
