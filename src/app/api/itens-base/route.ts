@@ -1,140 +1,137 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { dbConnect } from "@/lib/db";
-import ItemBase from "@/models/ItemBase";
-import { 
-  withTenantApi, 
-  createApiResponse, 
-  buildTenantFilter,
-  addTenantContext
-} from "@/lib/api-utils";
-import { PERMISSIONS } from "@/lib/permissions";
+import { dbConnect } from '@/lib/db';
+import User from '@/models/User';
+import ItemBase from '@/models/ItemBase';
 
-/**
- * GET /api/itens-base - Lista itens base
- */
-export const GET = withTenantApi(async (user, request) => {
+// GET - Listar itens base do usuário
+export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     await dbConnect();
     
-    const url = new URL(request.url);
-    const categoria = url.searchParams.get('categoria') || '';
-    const search = url.searchParams.get('search') || '';
-    const controlaEstoque = url.searchParams.get('controlaEstoque');
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category');
+    const search = searchParams.get('search') || '';
+    const activeOnly = searchParams.get('activeOnly') === 'true';
+
+    let query: any = { userId: user._id.toString() };
     
-    const filter = buildTenantFilter(user.tenantContext);
-    let query: any = { ...filter, ativo: true };
-    
-    if (categoria && categoria !== 'all') {
-      query.categoria = categoria;
+    if (category && category !== 'all') {
+      query.category = category;
     }
     
-    if (controlaEstoque !== null) {
-      query.controlaEstoque = controlaEstoque === 'true';
+    if (activeOnly) {
+      query.isActive = true;
     }
     
     if (search) {
       query.$or = [
-        { nome: { $regex: search, $options: 'i' } },
-        { descricao: { $regex: search, $options: 'i' } },
-        { codigo: { $regex: search, $options: 'i' } }
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { category: { $regex: search, $options: 'i' } }
       ];
     }
-    
-    const itens = await ItemBase.find(query)
-      .sort({ categoria: 1, nome: 1 })
-      .lean();
-    
-    return createApiResponse(itens, {
-      message: `Found ${itens.length} itens`,
-    });
-  } catch (error) {
-    console.error("GET /api/itens-base error:", error);
-    return createApiResponse(null, {
-      status: 500,
-      error: "FETCH_ERROR",
-      message: "Failed to fetch itens",
-    });
-  }
-});
 
-/**
- * POST /api/itens-base - Cria novo item base
- */
-export const POST = withTenantApi(async (user, request) => {
+    const itensBase = await ItemBase.find(query)
+      .sort({ name: 1 })
+      .lean();
+
+    return NextResponse.json({
+      success: true,
+      itensBase
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar itens base:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
+  }
+}
+
+// POST - Criar novo item base
+export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const { hasPermission } = await import("@/lib/permissions");
-    if (!hasPermission(user.tenantContext, PERMISSIONS.MANAGE_INVENTORY)) {
-      return createApiResponse(null, {
-        status: 403,
-        error: "PERMISSION_DENIED",
-        message: "No permission to create itens",
-      });
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
     const body = await request.json();
-    
-    // Validações básicas
-    if (!body.nome || !body.unidade || !body.categoria) {
-      return createApiResponse(null, {
-        status: 400,
-        error: "VALIDATION_ERROR",
-        message: "Nome, unidade e categoria são obrigatórios",
-      });
+    const { 
+      name,
+      description,
+      category,
+      unit,
+      basePrice,
+      tags
+    } = body;
+
+    if (!name?.trim()) {
+      return NextResponse.json({ 
+        error: 'Nome é obrigatório' 
+      }, { status: 400 });
     }
 
-    // Verificar se já existe item com o mesmo nome
-    const filter = buildTenantFilter(user.tenantContext);
-    const existingItem = await ItemBase.findOne({
-      ...filter,
-      nome: { $regex: `^${body.nome}$`, $options: 'i' },
-      ativo: true
-    });
+    await dbConnect();
     
-    if (existingItem) {
-      return createApiResponse(null, {
-        status: 409,
-        error: "DUPLICATE_NAME",
-        message: "Já existe um item com este nome",
-      });
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Verificar código se fornecido
-    if (body.codigo) {
-      const existingCode = await ItemBase.findOne({
-        ...filter,
-        codigo: body.codigo,
-        ativo: true
-      });
-      
-      if (existingCode) {
-        return createApiResponse(null, {
-          status: 409,
-          error: "DUPLICATE_CODE",
-          message: "Já existe um item com este código",
-        });
-      }
-    }
-    
-    // Adiciona contexto do tenant aos dados
-    const itemData = addTenantContext(body, user.tenantContext);
-    
-    // Cria o item
-    const item = await ItemBase.create(itemData);
-    
-    return createApiResponse(item, {
-      status: 201,
-      message: "Item criado com sucesso",
+    // Verificar se nome já existe
+    const existing = await ItemBase.findOne({
+      userId: user._id.toString(),
+      name: name.trim()
     });
+    if (existing) {
+      return NextResponse.json({ 
+        error: 'Já existe um item base com este nome' 
+      }, { status: 409 });
+    }
+
+    // Criar item base
+    const itemBaseData: any = {
+      name: name.trim(),
+      description: description?.trim(),
+      category: category?.trim() || 'Geral',
+      unit: unit?.trim() || 'un',
+      basePrice: basePrice ? parseFloat(basePrice) : 0,
+      tags: tags || [],
+      userId: user._id.toString()
+    };
+
+    if ((user as any).companyId) {
+      itemBaseData.companyId = (user as any).companyId.toString();
+    }
+
+    const itemBase = new ItemBase(itemBaseData);
+    await itemBase.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'Item base criado com sucesso',
+      itemBase
+    });
+
   } catch (error) {
-    console.error("POST /api/itens-base error:", error);
-    return createApiResponse(null, {
-      status: 500,
-      error: "CREATE_ERROR",
-      message: "Failed to create item",
-    });
+    console.error('Erro ao criar item base:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
-});
+}

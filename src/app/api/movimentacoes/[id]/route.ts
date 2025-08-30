@@ -1,209 +1,145 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { dbConnect } from '@/lib/db';
+import User from '@/models/User';
 import Movimentacao from '@/models/Movimentacao';
-import ItemBase from '@/models/ItemBase';
-import { auth } from '@/lib/auth';
 
+// GET - Buscar movimentação específica
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     await dbConnect();
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
     const movimentacao = await Movimentacao.findOne({
       _id: params.id,
-      companyId: session.user.companyId
-    })
-      .populate('fornecedor', 'nome tipo')
-      .populate('itens.item', 'nome unidadeMedida categoria');
+      userId: user._id.toString()
+    });
 
     if (!movimentacao) {
-      return NextResponse.json(
-        { error: 'Movimentação não encontrada' },
-        { status: 404 }
-      );
+      return NextResponse.json({ 
+        error: 'Movimentação não encontrada' 
+      }, { status: 404 });
     }
 
-    return NextResponse.json(movimentacao);
+    return NextResponse.json({
+      success: true,
+      movimentacao
+    });
+
   } catch (error) {
     console.error('Erro ao buscar movimentação:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
+// PUT - Atualizar movimentação
+export async function PUT(
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const data = await req.json();
+    const body = await request.json();
 
-    // Buscar movimentação atual
-    const movimentacaoAtual = await Movimentacao.findOne({
-      _id: params.id,
-      companyId: session.user.companyId
-    });
-
-    if (!movimentacaoAtual) {
-      return NextResponse.json(
-        { error: 'Movimentação não encontrada' },
-        { status: 404 }
-      );
-    }
-
-    // Reverter estoque da movimentação anterior (se necessário)
-    if (movimentacaoAtual.tipo === 'entrada') {
-      for (const item of movimentacaoAtual.itens) {
-        const itemBase = await ItemBase.findById(item.item);
-        if (itemBase && itemBase.controleEstoque) {
-          itemBase.estoqueAtual = Math.max(0, (itemBase.estoqueAtual || 0) - item.quantidade);
-          await itemBase.save();
-        }
-      }
-    } else if (movimentacaoAtual.tipo === 'saida') {
-      for (const item of movimentacaoAtual.itens) {
-        const itemBase = await ItemBase.findById(item.item);
-        if (itemBase && itemBase.controleEstoque) {
-          itemBase.estoqueAtual = (itemBase.estoqueAtual || 0) + item.quantidade;
-          await itemBase.save();
-        }
-      }
-    }
-
-    // Calcular valor total se não informado
-    let valorTotal = data.valorTotal || 0;
-    if (!valorTotal && data.itens && data.itens.some((item: any) => item.valorUnitario)) {
-      valorTotal = data.itens.reduce((total: number, item: any) => {
-        return total + (item.quantidade * (item.valorUnitario || 0));
-      }, 0);
-    }
-
-    // Atualizar movimentação
-    const movimentacaoAtualizada = await Movimentacao.findByIdAndUpdate(
-      params.id,
-      { ...data, valorTotal },
-      { new: true, runValidators: true }
-    );
-
-    // Aplicar novo estoque
-    if (data.itens && data.tipo) {
-      if (data.tipo === 'entrada') {
-        for (const item of data.itens) {
-          const itemBase = await ItemBase.findById(item.item);
-          if (itemBase && itemBase.controleEstoque) {
-            itemBase.estoqueAtual = (itemBase.estoqueAtual || 0) + item.quantidade;
-            
-            // Atualizar preço médio se informado
-            if (item.valorUnitario) {
-              const estoqueAnterior = itemBase.estoqueAtual - item.quantidade;
-              if (estoqueAnterior > 0) {
-                const valorAnterior = (itemBase.precoMedioCompra || 0) * estoqueAnterior;
-                const valorNovo = item.valorUnitario * item.quantidade;
-                const novoPrecoMedio = (valorAnterior + valorNovo) / itemBase.estoqueAtual;
-                itemBase.precoMedioCompra = novoPrecoMedio;
-              } else {
-                itemBase.precoMedioCompra = item.valorUnitario;
-              }
-            }
-            
-            await itemBase.save();
-          }
-        }
-      } else if (data.tipo === 'saida') {
-        for (const item of data.itens) {
-          const itemBase = await ItemBase.findById(item.item);
-          if (itemBase && itemBase.controleEstoque) {
-            itemBase.estoqueAtual = Math.max(0, (itemBase.estoqueAtual || 0) - item.quantidade);
-            await itemBase.save();
-          }
-        }
-      }
-    }
-
-    // Buscar movimentação atualizada com dados populados
-    const movimentacaoFinal = await Movimentacao.findById(params.id)
-      .populate('fornecedor', 'nome tipo')
-      .populate('itens.item', 'nome unidadeMedida categoria');
-
-    return NextResponse.json(movimentacaoFinal);
-  } catch (error) {
-    console.error('Erro ao atualizar movimentação:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
     await dbConnect();
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Buscar movimentação atual
     const movimentacao = await Movimentacao.findOne({
       _id: params.id,
-      companyId: session.user.companyId
+      userId: user._id.toString()
     });
 
     if (!movimentacao) {
-      return NextResponse.json(
-        { error: 'Movimentação não encontrada' },
-        { status: 404 }
-      );
+      return NextResponse.json({ 
+        error: 'Movimentação não encontrada' 
+      }, { status: 404 });
     }
 
-    // Reverter estoque da movimentação
-    if (movimentacao.tipo === 'entrada') {
-      for (const item of movimentacao.itens) {
-        const itemBase = await ItemBase.findById(item.item);
-        if (itemBase && itemBase.controleEstoque) {
-          itemBase.estoqueAtual = Math.max(0, (itemBase.estoqueAtual || 0) - item.quantidade);
-          await itemBase.save();
-        }
-      }
-    } else if (movimentacao.tipo === 'saida') {
-      for (const item of movimentacao.itens) {
-        const itemBase = await ItemBase.findById(item.item);
-        if (itemBase && itemBase.controleEstoque) {
-          itemBase.estoqueAtual = (itemBase.estoqueAtual || 0) + item.quantidade;
-          await itemBase.save();
-        }
-      }
-    }
+    // Atualizar campos permitidos
+    if (body.observations !== undefined) movimentacao.observations = body.observations;
+    if (body.status !== undefined) movimentacao.status = body.status;
+    if (body.reason !== undefined) movimentacao.reason = body.reason;
 
-    // Excluir movimentação
-    await Movimentacao.findByIdAndDelete(params.id);
+    await movimentacao.save();
 
-    return NextResponse.json({ message: 'Movimentação excluída com sucesso' });
+    return NextResponse.json({
+      success: true,
+      message: 'Movimentação atualizada com sucesso',
+      movimentacao
+    });
+
   } catch (error) {
-    console.error('Erro ao excluir movimentação:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao atualizar movimentação:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
+  }
+}
+
+// DELETE - Deletar movimentação
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
+    await dbConnect();
+    
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    const result = await Movimentacao.findOneAndDelete({
+      _id: params.id,
+      userId: user._id.toString()
+    });
+
+    if (!result) {
+      return NextResponse.json({ 
+        error: 'Movimentação não encontrada' 
+      }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Movimentação deletada com sucesso'
+    });
+
+  } catch (error) {
+    console.error('Erro ao deletar movimentação:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }

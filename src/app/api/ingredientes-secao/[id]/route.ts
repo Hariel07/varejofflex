@@ -1,162 +1,162 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { dbConnect } from '@/lib/db';
+import User from '@/models/User';
 import IngredienteSecao from '@/models/IngredienteSecao';
-import { auth } from '@/lib/auth';
 
+// GET - Buscar ingrediente-seção específico
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const ingrediente = await IngredienteSecao.findOne({
-      _id: params.id,
-      companyId: session.user.companyId
-    })
-      .populate('secao', 'nome cor icone')
-      .populate('itemBase', 'nome unidadeMedida categoria precoMedioCompra estoqueAtual controleEstoque');
-
-    if (!ingrediente) {
-      return NextResponse.json(
-        { error: 'Ingrediente não encontrado' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(ingrediente);
-  } catch (error) {
-    console.error('Erro ao buscar ingrediente:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
     await dbConnect();
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    const data = await req.json();
-
-    // Verificar se o ingrediente existe
-    const ingredienteExistente = await IngredienteSecao.findOne({
+    const ingredienteSecao = await IngredienteSecao.findOne({
       _id: params.id,
-      companyId: session.user.companyId
+      userId: user._id.toString()
     });
 
-    if (!ingredienteExistente) {
-      return NextResponse.json(
-        { error: 'Ingrediente não encontrado' },
-        { status: 404 }
-      );
+    if (!ingredienteSecao) {
+      return NextResponse.json({ 
+        error: 'Ingrediente-seção não encontrado' 
+      }, { status: 404 });
     }
 
-    // Se está mudando o item base ou seção, verificar duplicatas
-    if ((data.itemBase && data.itemBase !== ingredienteExistente.itemBase.toString()) ||
-        (data.secao && data.secao !== ingredienteExistente.secao.toString())) {
-      
-      const secaoId = data.secao || ingredienteExistente.secao;
-      const itemBaseId = data.itemBase || ingredienteExistente.itemBase;
-      
-      const duplicata = await IngredienteSecao.findOne({
-        companyId: session.user.companyId,
-        secao: secaoId,
-        itemBase: itemBaseId,
-        _id: { $ne: params.id }
-      });
+    return NextResponse.json({
+      success: true,
+      ingredienteSecao
+    });
 
-      if (duplicata) {
-        return NextResponse.json(
-          { error: 'Este item já está cadastrado como ingrediente nesta seção' },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Preparar dados para atualização
-    const dadosAtualizacao = { ...data };
-    if (data.nomeIngrediente) {
-      dadosAtualizacao.nomeIngrediente = data.nomeIngrediente.trim();
-    }
-
-    const ingredienteAtualizado = await IngredienteSecao.findByIdAndUpdate(
-      params.id,
-      dadosAtualizacao,
-      { new: true, runValidators: true }
-    )
-      .populate('secao', 'nome cor icone')
-      .populate('itemBase', 'nome unidadeMedida categoria precoMedioCompra estoqueAtual controleEstoque');
-
-    return NextResponse.json(ingredienteAtualizado);
   } catch (error) {
-    console.error('Erro ao atualizar ingrediente:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao buscar ingrediente-seção:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
 
+// PUT - Atualizar ingrediente-seção
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { 
+      displayOrder,
+      isVisible,
+      isFeatured,
+      customName,
+      customDescription,
+      customPrice,
+      markup,
+      status
+    } = body;
+
+    await dbConnect();
+    
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    const ingredienteSecao = await IngredienteSecao.findOne({
+      _id: params.id,
+      userId: user._id.toString()
+    });
+
+    if (!ingredienteSecao) {
+      return NextResponse.json({ 
+        error: 'Ingrediente-seção não encontrado' 
+      }, { status: 404 });
+    }
+
+    // Atualizar campos
+    if (displayOrder !== undefined) ingredienteSecao.displayOrder = displayOrder;
+    if (isVisible !== undefined) ingredienteSecao.isVisible = isVisible;
+    if (isFeatured !== undefined) ingredienteSecao.isFeatured = isFeatured;
+    if (customName !== undefined) ingredienteSecao.customName = customName;
+    if (customDescription !== undefined) ingredienteSecao.customDescription = customDescription;
+    if (customPrice !== undefined) ingredienteSecao.customPrice = customPrice;
+    if (markup !== undefined) ingredienteSecao.markup = markup;
+    if (status !== undefined) ingredienteSecao.status = status;
+    
+    ingredienteSecao.lastModifiedBy = user._id.toString();
+
+    await ingredienteSecao.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'Ingrediente-seção atualizado com sucesso',
+      ingredienteSecao
+    });
+
+  } catch (error) {
+    console.error('Erro ao atualizar ingrediente-seção:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
+  }
+}
+
+// DELETE - Deletar ingrediente-seção
 export async function DELETE(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    // Verificar se o ingrediente existe
-    const ingrediente = await IngredienteSecao.findOne({
-      _id: params.id,
-      companyId: session.user.companyId
-    });
-
-    if (!ingrediente) {
-      return NextResponse.json(
-        { error: 'Ingrediente não encontrado' },
-        { status: 404 }
-      );
+    await dbConnect();
+    
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // TODO: Verificar se este ingrediente é usado em alguma receita intermediária
-    // const ReceitaIntermediaria = require('@/models/ReceitaIntermediaria');
-    // const receitasUsando = await ReceitaIntermediaria.find({
-    //   'ingredientes.ingrediente': params.id
-    // });
-    // if (receitasUsando.length > 0) {
-    //   return NextResponse.json(
-    //     { error: 'Não é possível excluir este ingrediente pois ele é usado em receitas' },
-    //     { status: 400 }
-    //   );
-    // }
+    const result = await IngredienteSecao.findOneAndDelete({
+      _id: params.id,
+      userId: user._id.toString()
+    });
 
-    await IngredienteSecao.findByIdAndDelete(params.id);
+    if (!result) {
+      return NextResponse.json({ 
+        error: 'Ingrediente-seção não encontrado' 
+      }, { status: 404 });
+    }
 
-    return NextResponse.json({ message: 'Ingrediente excluído com sucesso' });
+    return NextResponse.json({
+      success: true,
+      message: 'Ingrediente-seção removido com sucesso'
+    });
+
   } catch (error) {
-    console.error('Erro ao excluir ingrediente:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao deletar ingrediente-seção:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }

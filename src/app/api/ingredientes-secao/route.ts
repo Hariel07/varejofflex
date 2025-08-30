@@ -1,132 +1,174 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { dbConnect } from '@/lib/db';
+import User from '@/models/User';
 import IngredienteSecao from '@/models/IngredienteSecao';
-import ItemBase from '@/models/ItemBase';
+import Ingredient from '@/models/Ingredient';
 import Secao from '@/models/Secao';
-import { auth } from '@/lib/auth';
 
-export async function GET(req: NextRequest) {
+// GET - Listar ingredientes-seção do usuário
+export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    // Verificar autenticação
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const secaoId = searchParams.get('secao');
-
-    // Construir filtros
-    const filtros: any = { companyId: session.user.companyId };
+    await dbConnect();
     
-    if (secaoId) {
-      filtros.secao = secaoId;
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    const ingredientes = await IngredienteSecao.find(filtros)
-      .populate('secao', 'nome cor icone')
-      .populate('itemBase', 'nome unidadeMedida categoria precoMedioCompra estoqueAtual controleEstoque')
-      .sort({ 'secao.nome': 1, nomeIngrediente: 1 });
+    const { searchParams } = new URL(request.url);
+    const secaoId = searchParams.get('secaoId');
+    const ingredientId = searchParams.get('ingredientId');
+    const visibleOnly = searchParams.get('visibleOnly') === 'true';
+    const featuredOnly = searchParams.get('featuredOnly') === 'true';
 
-    return NextResponse.json(ingredientes);
+    let query: any = { userId: user._id.toString() };
+    
+    if (secaoId) {
+      query.secaoId = secaoId;
+    }
+    
+    if (ingredientId) {
+      query.ingredientId = ingredientId;
+    }
+    
+    if (visibleOnly) {
+      query.isVisible = true;
+    }
+    
+    if (featuredOnly) {
+      query.isFeatured = true;
+    }
+
+    const ingredientesSecoes = await IngredienteSecao.find(query)
+      .sort({ displayOrder: 1, createdAt: 1 })
+      .lean();
+
+    return NextResponse.json({
+      success: true,
+      ingredientesSecoes
+    });
+
   } catch (error) {
-    console.error('Erro ao buscar ingredientes de seção:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao buscar ingredientes-seções:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
 
-export async function POST(req: NextRequest) {
+// POST - Criar nova ligação ingrediente-seção
+export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    // Verificar autenticação
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const data = await req.json();
+    const body = await request.json();
+    const { 
+      ingredientId,
+      secaoId,
+      displayOrder,
+      isVisible = true,
+      isFeatured = false,
+      customName,
+      customDescription,
+      customPrice,
+      markup
+    } = body;
+
+    if (!ingredientId || !secaoId) {
+      return NextResponse.json({ 
+        error: 'ID do ingrediente e da seção são obrigatórios' 
+      }, { status: 400 });
+    }
+
+    await dbConnect();
     
-    // Validações básicas
-    if (!data.secao || !data.itemBase) {
-      return NextResponse.json(
-        { error: 'Seção e Item Base são obrigatórios' },
-        { status: 400 }
-      );
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    if (!data.nomeIngrediente || data.nomeIngrediente.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Nome do ingrediente é obrigatório' },
-        { status: 400 }
-      );
+    // Verificar se ingrediente existe
+    const ingredient = await Ingredient.findOne({
+      _id: ingredientId,
+      userId: user._id.toString()
+    });
+    if (!ingredient) {
+      return NextResponse.json({ 
+        error: 'Ingrediente não encontrado' 
+      }, { status: 404 });
     }
 
-    // Verificar se a seção existe
+    // Verificar se seção existe
     const secao = await Secao.findOne({
-      _id: data.secao,
-      companyId: session.user.companyId
+      _id: secaoId,
+      userId: user._id.toString()
     });
-
     if (!secao) {
-      return NextResponse.json(
-        { error: 'Seção não encontrada' },
-        { status: 400 }
-      );
+      return NextResponse.json({ 
+        error: 'Seção não encontrada' 
+      }, { status: 404 });
     }
 
-    // Verificar se o item base existe
-    const itemBase = await ItemBase.findOne({
-      _id: data.itemBase,
-      companyId: session.user.companyId
+    // Verificar se já existe a ligação
+    const existing = await IngredienteSecao.findOne({
+      userId: user._id.toString(),
+      ingredientId,
+      secaoId
     });
-
-    if (!itemBase) {
-      return NextResponse.json(
-        { error: 'Item base não encontrado' },
-        { status: 400 }
-      );
+    if (existing) {
+      return NextResponse.json({ 
+        error: 'Ingrediente já está vinculado a esta seção' 
+      }, { status: 409 });
     }
 
-    // Verificar se já existe um ingrediente com o mesmo item base na mesma seção
-    const ingredienteExistente = await IngredienteSecao.findOne({
-      companyId: session.user.companyId,
-      secao: data.secao,
-      itemBase: data.itemBase
-    });
+    // Criar ligação
+    const ingredienteSecaoData: any = {
+      ingredientId,
+      ingredientName: ingredient.name,
+      secaoId,
+      secaoName: secao.name,
+      displayOrder: displayOrder || 0,
+      isVisible,
+      isFeatured,
+      userId: user._id.toString(),
+      createdBy: user._id.toString(),
+      lastModifiedBy: user._id.toString()
+    };
 
-    if (ingredienteExistente) {
-      return NextResponse.json(
-        { error: 'Este item já está cadastrado como ingrediente nesta seção' },
-        { status: 400 }
-      );
+    if (customName) ingredienteSecaoData.customName = customName;
+    if (customDescription) ingredienteSecaoData.customDescription = customDescription;
+    if (customPrice && customPrice > 0) ingredienteSecaoData.customPrice = customPrice;
+    if (markup && markup > 0) ingredienteSecaoData.markup = markup;
+
+    if ((user as any).companyId) {
+      ingredienteSecaoData.companyId = (user as any).companyId.toString();
     }
 
-    // Criar ingrediente de seção
-    const ingrediente = new IngredienteSecao({
-      ...data,
-      companyId: session.user.companyId,
-      nomeIngrediente: data.nomeIngrediente.trim()
+    const ingredienteSecao = new IngredienteSecao(ingredienteSecaoData);
+    await ingredienteSecao.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'Ingrediente vinculado à seção com sucesso',
+      ingredienteSecao
     });
 
-    await ingrediente.save();
-
-    // Buscar ingrediente criado com dados populados
-    const ingredienteCriado = await IngredienteSecao.findById(ingrediente._id)
-      .populate('secao', 'nome cor icone')
-      .populate('itemBase', 'nome unidadeMedida categoria precoMedioCompra estoqueAtual controleEstoque');
-
-    return NextResponse.json(ingredienteCriado, { status: 201 });
   } catch (error) {
-    console.error('Erro ao criar ingrediente de seção:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao criar ingrediente-seção:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }

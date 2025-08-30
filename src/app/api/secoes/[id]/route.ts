@@ -1,150 +1,170 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { dbConnect } from '@/lib/db';
+import User from '@/models/User';
 import Secao from '@/models/Secao';
-import { auth } from '@/lib/auth';
 
+// GET - Buscar seção específica
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     await dbConnect();
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
     const secao = await Secao.findOne({
       _id: params.id,
-      companyId: session.user.companyId
+      userId: user._id.toString()
     });
 
     if (!secao) {
-      return NextResponse.json(
-        { error: 'Seção não encontrada' },
-        { status: 404 }
-      );
+      return NextResponse.json({ 
+        error: 'Seção não encontrada' 
+      }, { status: 404 });
     }
 
-    return NextResponse.json(secao);
+    return NextResponse.json({
+      success: true,
+      secao
+    });
+
   } catch (error) {
     console.error('Erro ao buscar seção:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
+// PUT - Atualizar seção
+export async function PUT(
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    const data = await req.json();
+    const body = await request.json();
+    const { name, description, icon, color, order, segment, isActive } = body;
 
-    // Verificar se a seção existe
-    const secaoExistente = await Secao.findOne({
-      _id: params.id,
-      companyId: session.user.companyId
-    });
-
-    if (!secaoExistente) {
-      return NextResponse.json(
-        { error: 'Seção não encontrada' },
-        { status: 404 }
-      );
+    if (!name?.trim()) {
+      return NextResponse.json({ 
+        error: 'Nome é obrigatório' 
+      }, { status: 400 });
     }
 
-    // Verificar se o novo nome já existe em outra seção
-    if (data.nome && data.nome.trim() !== secaoExistente.nome) {
-      const nomeJaExiste = await Secao.findOne({
-        companyId: session.user.companyId,
-        nome: data.nome.trim(),
+    await dbConnect();
+    
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    }
+
+    const secao = await Secao.findOne({
+      _id: params.id,
+      userId: user._id.toString()
+    });
+
+    if (!secao) {
+      return NextResponse.json({ 
+        error: 'Seção não encontrada' 
+      }, { status: 404 });
+    }
+
+    // Verificar se nome já existe (exceto para esta seção)
+    if (name.trim() !== secao.name) {
+      const existing = await Secao.findOne({
+        userId: user._id.toString(),
+        name: name.trim(),
         _id: { $ne: params.id }
       });
-
-      if (nomeJaExiste) {
-        return NextResponse.json(
-          { error: 'Já existe uma seção com este nome' },
-          { status: 400 }
-        );
+      if (existing) {
+        return NextResponse.json({ 
+          error: 'Já existe uma seção com este nome' 
+        }, { status: 409 });
       }
     }
 
-    // Preparar dados para atualização
-    const dadosAtualizacao = { ...data };
-    if (data.nome) {
-      dadosAtualizacao.nome = data.nome.trim();
-    }
+    // Atualizar campos
+    secao.name = name.trim();
+    if (description !== undefined) secao.description = description?.trim();
+    if (icon !== undefined) secao.icon = icon?.trim();
+    if (color !== undefined) secao.color = color?.trim();
+    if (order !== undefined) secao.order = order;
+    if (segment !== undefined) secao.segment = segment?.trim();
+    if (isActive !== undefined) secao.isActive = isActive;
 
-    const secaoAtualizada = await Secao.findByIdAndUpdate(
-      params.id,
-      dadosAtualizacao,
-      { new: true, runValidators: true }
-    );
+    await secao.save();
 
-    return NextResponse.json(secaoAtualizada);
+    return NextResponse.json({
+      success: true,
+      message: 'Seção atualizada com sucesso',
+      secao
+    });
+
   } catch (error) {
     console.error('Erro ao atualizar seção:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
 
+// DELETE - Deletar seção
 export async function DELETE(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    const session = await getServerSession(authOptions);
     
-    const session = await auth();
-    if (!session?.user?.companyId) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    // Verificar se a seção existe
-    const secao = await Secao.findOne({
-      _id: params.id,
-      companyId: session.user.companyId
-    });
-
-    if (!secao) {
-      return NextResponse.json(
-        { error: 'Seção não encontrada' },
-        { status: 404 }
-      );
+    await dbConnect();
+    
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // TODO: Verificar se existem ingredientes vinculados a esta seção
-    // const IngredienteSecao = require('@/models/IngredienteSecao');
-    // const ingredientesVinculados = await IngredienteSecao.find({ secao: params.id });
-    // if (ingredientesVinculados.length > 0) {
-    //   return NextResponse.json(
-    //     { error: 'Não é possível excluir esta seção pois existem ingredientes vinculados' },
-    //     { status: 400 }
-    //   );
-    // }
+    const result = await Secao.findOneAndDelete({
+      _id: params.id,
+      userId: user._id.toString()
+    });
 
-    await Secao.findByIdAndDelete(params.id);
+    if (!result) {
+      return NextResponse.json({ 
+        error: 'Seção não encontrada' 
+      }, { status: 404 });
+    }
 
-    return NextResponse.json({ message: 'Seção excluída com sucesso' });
+    return NextResponse.json({
+      success: true,
+      message: 'Seção deletada com sucesso'
+    });
+
   } catch (error) {
-    console.error('Erro ao excluir seção:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Erro ao deletar seção:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }
