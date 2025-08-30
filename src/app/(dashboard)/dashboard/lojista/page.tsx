@@ -528,65 +528,154 @@ function LojistaDashboardContent() {
                     <h5 className="card-title mb-0">Ações Rápidas</h5>
                   </div>
                   <div className="card-body">
-                    <div className="d-grid gap-2">
-                      <ProtectedContent permission="manage_products">
-                        <a 
-                          href="/dashboard/lojista/produtos"
-                          className="btn btn-primary text-decoration-none"
-                        >
-                          <i className="bi bi-box me-2"></i>
-                          Gerenciar Produtos
-                        </a>
-                      </ProtectedContent>
-                      
-                      <ProtectedContent permission="manage_ingredients">
-                        <a 
-                          href="/dashboard/lojista/ingredientes"
-                          className="btn btn-outline-success text-decoration-none"
-                        >
-                          <i className="bi bi-egg me-2"></i>
-                          Ingredientes
-                        </a>
-                      </ProtectedContent>
-                      
-                      <ProtectedContent permission="manage_recipes">
-                        <a 
-                          href="/dashboard/lojista/receitas"
-                          className="btn btn-outline-warning text-decoration-none"
-                        >
-                          <i className="bi bi-book me-2"></i>
-                          Receitas
-                        </a>
-                      </ProtectedContent>
-                      
-                      <ProtectedContent permission="manage_costs">
-                        <a 
-                          href="/dashboard/lojista/custos"
-                          className="btn btn-outline-info text-decoration-none"
-                        >
-                          <i className="bi bi-calculator me-2"></i>
-                          Gestão de Custos
-                        </a>
-                      </ProtectedContent>
-                      
-                      <ProtectedContent permission="view_orders">
-                        <button className="btn btn-outline-primary">
-                          <i className="bi bi-cart me-2"></i>
-                          Ver Pedidos
-                        </button>
-                      </ProtectedContent>
+                    <div className="d-grid gap-3">
+                      {/* Seção: Gestão de Produtos */}
+                      <div className="border-bottom pb-3 mb-3">
+                        <h6 className="text-muted mb-2">📦 GESTÃO DE PRODUTOS</h6>
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_products">
+                              <a 
+                                href="/dashboard/lojista/produtos"
+                                className="btn btn-primary btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-box me-1"></i>
+                                Produtos Finais
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_secoes">
+                              <a 
+                                href="/dashboard/lojista/secoes"
+                                className="btn btn-outline-primary btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-grid me-1"></i>
+                                Seções
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                        </div>
+                      </div>
 
-                      <ProtectedContent permission="manage_company_settings">
-                        <button className="btn btn-outline-primary">
-                          <i className="bi bi-gear me-2"></i>
-                          Configurações
-                        </button>
-                      </ProtectedContent>
+                      {/* Seção: Estoque e Compras */}
+                      <div className="border-bottom pb-3 mb-3">
+                        <h6 className="text-muted mb-2">📋 ESTOQUE & COMPRAS</h6>
+                        <div className="row g-2">
+                          <div className="col-12 mb-2">
+                            <ProtectedContent permission="manage_fornecedores">
+                              <a 
+                                href="/dashboard/lojista/gestao-custos"
+                                className="btn btn-primary btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-graph-up-arrow me-1"></i>
+                                Gestão de Custos - Visão Geral
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_fornecedores">
+                              <a 
+                                href="/dashboard/lojista/fornecedores"
+                                className="btn btn-success btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-truck me-1"></i>
+                                Fornecedores
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_itens_base">
+                              <a 
+                                href="/dashboard/lojista/itens-base"
+                                className="btn btn-outline-success btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-archive me-1"></i>
+                                Itens Base
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-12">
+                            <ProtectedContent permission="manage_movimentacoes">
+                              <a 
+                                href="/dashboard/lojista/movimentacoes"
+                                className="btn btn-outline-success btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-arrow-left-right me-1"></i>
+                                Movimentações (Entrada/Saída)
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                        </div>
+                      </div>
 
-                      <button className="btn btn-outline-success">
-                        <i className="bi bi-share me-2"></i>
-                        Compartilhar Cardápio
-                      </button>
+                      {/* Seção: Produção */}
+                      <div className="border-bottom pb-3 mb-3">
+                        <h6 className="text-muted mb-2">👨‍🍳 PRODUÇÃO</h6>
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_ingredients">
+                              <a 
+                                href="/dashboard/lojista/ingredientes"
+                                className="btn btn-warning btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-egg me-1"></i>
+                                Ingredientes
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-6">
+                            <ProtectedContent permission="manage_recipes">
+                              <a 
+                                href="/dashboard/lojista/receitas"
+                                className="btn btn-outline-warning btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-book me-1"></i>
+                                Receitas
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Seção: Análises */}
+                      <div className="border-bottom pb-3 mb-3">
+                        <h6 className="text-muted mb-2">📊 ANÁLISES</h6>
+                        <div className="row g-2">
+                          <div className="col-12">
+                            <ProtectedContent permission="manage_costs">
+                              <a 
+                                href="/dashboard/lojista/custos"
+                                className="btn btn-info btn-sm w-100 text-decoration-none"
+                              >
+                                <i className="bi bi-calculator me-1"></i>
+                                Gestão de Custos
+                              </a>
+                            </ProtectedContent>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Seção: Vendas */}
+                      <div className="mb-3">
+                        <h6 className="text-muted mb-2">💰 VENDAS</h6>
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <ProtectedContent permission="view_orders">
+                              <button className="btn btn-outline-primary btn-sm w-100">
+                                <i className="bi bi-cart me-1"></i>
+                                Pedidos
+                              </button>
+                            </ProtectedContent>
+                          </div>
+                          <div className="col-6">
+                            <button className="btn btn-outline-success btn-sm w-100">
+                              <i className="bi bi-share me-1"></i>
+                              Cardápio
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

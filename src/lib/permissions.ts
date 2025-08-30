@@ -52,10 +52,14 @@ export const PERMISSIONS = {
   COSTS_ANALYSIS: "costs:analysis",
   MANAGE_COSTS: "manage_costs",
   
-  // Permissões de Estoque
+  // Permissões de Estoque e Compras
   INVENTORY_VIEW: "inventory:view",
   INVENTORY_EDIT: "inventory:edit",
   MANAGE_INVENTORY: "manage_inventory",
+  MANAGE_FORNECEDORES: "manage_fornecedores",
+  MANAGE_ITENS_BASE: "manage_itens_base",
+  MANAGE_MOVIMENTACOES: "manage_movimentacoes",
+  MANAGE_SECOES: "manage_secoes",
   
   // Permissões de Vendas/PDV
   SALES_VIEW: "sales:view",
@@ -203,10 +207,14 @@ export const ROLE_PERMISSIONS: Record<Role, string[]> = {
     PERMISSIONS.COSTS_EDIT,
     PERMISSIONS.COSTS_ANALYSIS,
     PERMISSIONS.MANAGE_COSTS,
-    // Estoque
+    // Estoque e Compras
     PERMISSIONS.INVENTORY_VIEW,
     PERMISSIONS.INVENTORY_EDIT,
     PERMISSIONS.MANAGE_INVENTORY,
+    PERMISSIONS.MANAGE_FORNECEDORES,
+    PERMISSIONS.MANAGE_ITENS_BASE,
+    PERMISSIONS.MANAGE_MOVIMENTACOES,
+    PERMISSIONS.MANAGE_SECOES,
     // Vendas
     PERMISSIONS.SALES_VIEW,
     PERMISSIONS.SALES_CREATE,
