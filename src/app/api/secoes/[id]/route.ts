@@ -8,7 +8,7 @@ import Secao from '@/models/Secao';
 // GET - Buscar seção específica
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -24,6 +24,7 @@ export async function GET(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const secao = await Secao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -51,7 +52,7 @@ export async function GET(
 // PUT - Atualizar seção
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -76,6 +77,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const secao = await Secao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -129,7 +131,7 @@ export async function PUT(
 // DELETE - Deletar seção
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -145,6 +147,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const result = await Secao.findOneAndDelete({
       _id: params.id,
       userId: user._id.toString()

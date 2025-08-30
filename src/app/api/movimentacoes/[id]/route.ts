@@ -8,7 +8,7 @@ import Movimentacao from '@/models/Movimentacao';
 // GET - Buscar movimentação específica
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -24,6 +24,7 @@ export async function GET(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const movimentacao = await Movimentacao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -51,7 +52,7 @@ export async function GET(
 // PUT - Atualizar movimentação
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -69,6 +70,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const movimentacao = await Movimentacao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -104,7 +106,7 @@ export async function PUT(
 // DELETE - Deletar movimentação
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -120,6 +122,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const result = await Movimentacao.findOneAndDelete({
       _id: params.id,
       userId: user._id.toString()

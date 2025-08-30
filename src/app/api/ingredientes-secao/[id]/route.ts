@@ -8,7 +8,7 @@ import IngredienteSecao from '@/models/IngredienteSecao';
 // GET - Buscar ingrediente-seção específico
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -24,6 +24,7 @@ export async function GET(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const ingredienteSecao = await IngredienteSecao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -51,7 +52,7 @@ export async function GET(
 // PUT - Atualizar ingrediente-seção
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -79,6 +80,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const ingredienteSecao = await IngredienteSecao.findOne({
       _id: params.id,
       userId: user._id.toString()
@@ -121,7 +123,7 @@ export async function PUT(
 // DELETE - Deletar ingrediente-seção
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -137,6 +139,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    const params = await context.params;
     const result = await IngredienteSecao.findOneAndDelete({
       _id: params.id,
       userId: user._id.toString()
