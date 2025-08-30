@@ -10,6 +10,7 @@ export interface IProduct {
   image?: string;
   category?: string;
   active: boolean;
+  status: 'draft' | 'published' | 'archived'; // Status do produto
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +25,11 @@ const ProductSchema = new Schema<IProduct>(
     image: { type: String },
     category: { type: String }, // ex.: "Burgers"
     active: { type: Boolean, default: true },
+    status: { 
+      type: String, 
+      enum: ['draft', 'published', 'archived'], 
+      default: 'draft' 
+    }, // Status do produto
   },
   { timestamps: true }
 );
@@ -32,5 +38,7 @@ ProductSchema.index({ companyId: 1, name: 1 });
 ProductSchema.index({ tenantId: 1, name: 1 }); // mantido para compatibilidade
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ active: 1 });
+ProductSchema.index({ status: 1 });
+ProductSchema.index({ companyId: 1, status: 1 });
 
 export default models.Product || model<IProduct>("Product", ProductSchema);

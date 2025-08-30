@@ -34,12 +34,12 @@ export const authOptions: AuthOptions = {
           await dbConnect();
           console.log(`[AUTH-${timestamp}] ✅ Database connected successfully`);
 
-          // Busca o usuário e popula a company se existir
+          // Busca o usuário (sem populate para evitar problemas no serverless)
           console.log(`[AUTH-${timestamp}] 🔍 Searching for user: ${credentials.email.toLowerCase()}`);
           const userDoc = await User.findOne({
             email: credentials.email.toLowerCase(),
             isActive: true,
-          }).populate('companyId').lean();
+          }).lean();
 
           const userExists = !!userDoc;
           console.log(`[AUTH-${timestamp}] 👤 User search result:`, {
@@ -87,7 +87,7 @@ export const authOptions: AuthOptions = {
             email: String((userDoc as any).email),
             role: String(role),
             userType: String(userType),
-            companyId: (userDoc as any).companyId?._id ? String((userDoc as any).companyId._id) : null,
+            companyId: (userDoc as any).companyId ? String((userDoc as any).companyId) : null,
           };
           
           console.log(`[AUTH-${timestamp}] 🎯 Returning authenticated user:`, {
@@ -190,12 +190,12 @@ export const authOptions: AuthOptions = {
           await dbConnect();
           
           console.log(`[SESSION-${timestamp}] 🔍 Fetching user document: ${userId}`);
-          const userDoc = await User.findById(userId).populate('companyId').lean();
+          const userDoc = await User.findById(userId).lean();
           
           if (userDoc) {
             baseUser.name = (userDoc as any).name;
             baseUser.email = (userDoc as any).email;
-            baseUser.companyId = (userDoc as any).companyId?._id?.toString();
+            baseUser.companyId = (userDoc as any).companyId?.toString();
             
             console.log(`[SESSION-${timestamp}] 👤 User document found:`, {
               name: baseUser.name,

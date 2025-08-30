@@ -172,6 +172,11 @@ export function useTenantApi() {
       method: "PUT",
       body: JSON.stringify(data),
     });
+  const patch = (url: string, data: any) => 
+    makeRequest(url, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
   const del = (url: string) => makeRequest(url, { method: "DELETE" });
   
   return {
@@ -179,6 +184,7 @@ export function useTenantApi() {
     get,
     post,
     put,
+    patch,
     delete: del,
   };
 }

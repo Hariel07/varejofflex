@@ -64,7 +64,15 @@ export const GET = withTenantApi(async (user, request) => {
     
     // Modo tenant (sistema original)
     const filter = buildTenantFilter(user.tenantContext);
-    let query = { ...filter, active: true };
+    const url = new URL(request.url);
+    const includePreview = url.searchParams.get('preview') === 'true';
+    const isOwnerAccess = url.searchParams.get('ownerAccess') === 'true';
+    
+    let query = { 
+      ...filter, 
+      active: true,
+      ...(includePreview || isOwnerAccess ? {} : { status: 'published' })
+    };
     
     const products = await Product.find(query)
       .sort({ category: 1, name: 1 })

@@ -530,10 +530,43 @@ function LojistaDashboardContent() {
                   <div className="card-body">
                     <div className="d-grid gap-2">
                       <ProtectedContent permission="manage_products">
-                        <button className="btn btn-primary">
-                          <i className="bi bi-plus-circle me-2"></i>
-                          Novo Produto
-                        </button>
+                        <a 
+                          href="/dashboard/lojista/produtos"
+                          className="btn btn-primary text-decoration-none"
+                        >
+                          <i className="bi bi-box me-2"></i>
+                          Gerenciar Produtos
+                        </a>
+                      </ProtectedContent>
+                      
+                      <ProtectedContent permission="manage_ingredients">
+                        <a 
+                          href="/dashboard/lojista/ingredientes"
+                          className="btn btn-outline-success text-decoration-none"
+                        >
+                          <i className="bi bi-egg me-2"></i>
+                          Ingredientes
+                        </a>
+                      </ProtectedContent>
+                      
+                      <ProtectedContent permission="manage_recipes">
+                        <a 
+                          href="/dashboard/lojista/receitas"
+                          className="btn btn-outline-warning text-decoration-none"
+                        >
+                          <i className="bi bi-book me-2"></i>
+                          Receitas
+                        </a>
+                      </ProtectedContent>
+                      
+                      <ProtectedContent permission="manage_costs">
+                        <a 
+                          href="/dashboard/lojista/custos"
+                          className="btn btn-outline-info text-decoration-none"
+                        >
+                          <i className="bi bi-calculator me-2"></i>
+                          Gestão de Custos
+                        </a>
                       </ProtectedContent>
                       
                       <ProtectedContent permission="view_orders">
