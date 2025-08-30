@@ -163,7 +163,7 @@ function LojistaDashboardContent() {
           <div className="row align-items-center py-4">
             <div className="col-md-8">
               <h1 className="h2 mb-1 text-white" style={{ fontWeight: '800' }}>
-                <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }}></i>
+                <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }} aria-hidden="true">🏪</i>
                 Dashboard Lojista 
                 {isOwnerAccessing && <span className="badge bg-warning text-dark ms-2">Modo Admin</span>}
               </h1>
@@ -185,22 +185,6 @@ function LojistaDashboardContent() {
       </div>
 
       <div className="container-fluid py-4">
-        {/* Header */}
-        <div className="row mb-4">
-          <div className="col">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h1 className="h3 mb-1">Dashboard Lojista</h1>
-                <p className="text-muted mb-0">Bem-vindo, {user?.name}</p>
-              </div>
-              <div className={`badge bg-${effectiveSegmentData.color} fs-6`}>
-                <span className="me-1">{effectiveSegmentData.icon}</span>
-                {effectiveSegmentData.name.toUpperCase()}
-              </div>
-            </div>
-          </div>
-        </div>
-
         {loading ? (
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -693,6 +677,39 @@ function LojistaDashboardContent() {
                         ESTOQUE & INGREDIENTES
                       </h6>
                       <div className="row g-3">
+                        <div className="col-md-3 col-sm-6">
+                          <a 
+                            href="/dashboard/lojista/categorias"
+                            className="text-decoration-none"
+                          >
+                            <div 
+                              className="card border-0 h-100 text-center bg-light"
+                              style={{
+                                borderRadius: '12px',
+                                transition: 'all 0.3s ease',
+                                cursor: 'pointer',
+                                border: '2px solid #e5e7eb'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#8b5cf6';
+                                e.currentTarget.style.boxShadow = '0 8px 16px rgba(139, 92, 246, 0.2)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e5e7eb';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            >
+                              <div className="card-body p-3">
+                                <span className="d-block text-warning mb-2" style={{ fontSize: '1.5rem' }}>🏷️</span>
+                                <h6 className="text-dark mb-1" style={{ fontWeight: '600' }}>Categorias</h6>
+                                <small className="text-muted">Organize produtos</small>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+
                         <div className="col-md-3 col-sm-6">
                           <ProtectedContent permission="manage_ingredients">
                             <a 

@@ -195,8 +195,8 @@ export default function ProductManagement() {
         <div className="col">
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h1 className="h3 mb-1">
-                <i className="bi bi-box me-2"></i>
+              <h1 className="h3 mb-1" style={{ color: '#1f2937', fontWeight: '700' }}>
+                <i className="bi bi-box me-2" aria-hidden="true" style={{ color: '#3b82f6' }}>📦</i>
                 Gestão de Produtos
               </h1>
               <p className="text-muted mb-0">Crie, edite e gerencie seus produtos</p>
