@@ -1,453 +1,294 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuthUser, useTenantApi } from '@/hooks/useAuth';
-import { ProtectedContent } from '@/components/auth/ProtectedContent';
-
-interface Fornecedor {
-  _id: string;
-  nome: string;
-  tipo: 'nota_branca' | 'nota_fiscal';
-}
-
-interface ItemBase {
-  _id: string;
-  nome: string;
-  unidadeMedida: string;
-  categoria: string;
-}
-
-interface MovimentacaoItem {
-  item: ItemBase;
-  quantidade: number;
-  valorUnitario?: number;
-  valorTotal?: number;
-  observacoes?: string;
-}
 
 interface Movimentacao {
   _id: string;
-  tipo: 'entrada' | 'saida';
-  dataMovimentacao: string;
-  fornecedor?: Fornecedor;
-  itens: MovimentacaoItem[];
-  valorTotal?: number;
-  tipoDocumento?: 'nota_branca' | 'nota_fiscal';
-  numeroDocumento?: string;
-  observacoes?: string;
-  createdAt: string;
+  type: 'entrada' | 'saida' | 'transferencia' | 'ajuste';
+  description: string;
+  value: number;
+  date: string;
+  category: string;
+  reference?: string;
+  isProcessed: boolean;
 }
 
 export default function MovimentacoesPage() {
-  const { user } = useAuthUser();
-  const { get, post } = useTenantApi();
-  
   const [movimentacoes, setMovimentacoes] = useState<Movimentacao[]>([]);
-  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
-  const [itensBase, setItensBase] = useState<ItemBase[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [tipoFilter, setTipoFilter] = useState<'all' | 'entrada' | 'saida'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
-    loadData();
-  }, []);
+    fetchMovimentacoes();
+  }, [selectedType, selectedCategory]);
 
-  useEffect(() => {
-    if (tipoFilter !== 'all') {
-      loadMovimentacoes();
-    }
-  }, [tipoFilter]);
-
-  const loadData = async () => {
+  const fetchMovimentacoes = async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams();
+      if (selectedType !== 'all') params.set('type', selectedType);
+      if (selectedCategory !== 'all') params.set('category', selectedCategory);
+      if (searchTerm) params.set('search', searchTerm);
+
+      const response = await fetch(`/api/movimentacoes?${params}`);
+      const data = await response.json();
       
-      // Carregar dados em paralelo
-      const [movimentacoesRes, fornecedoresRes, itensRes] = await Promise.all([
-        get('/api/movimentacoes'),
-        get('/api/fornecedores'),
-        get('/api/itens-base')
-      ]);
-
-      if (movimentacoesRes.ok) {
-        const data = await movimentacoesRes.json();
-        setMovimentacoes(data || []);
-      }
-
-      if (fornecedoresRes.ok) {
-        const data = await fornecedoresRes.json();
-        setFornecedores(data || []);
-      }
-
-      if (itensRes.ok) {
-        const data = await itensRes.json();
-        setItensBase(data || []);
+      if (data.success && Array.isArray(data.movimentacoes)) {
+        setMovimentacoes(data.movimentacoes);
+      } else {
+        setMovimentacoes([]);
       }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('Erro ao buscar movimentações:', error);
+      setMovimentacoes([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadMovimentacoes = async () => {
-    try {
-      const params = tipoFilter !== 'all' ? `?tipo=${tipoFilter}` : '';
-      const response = await get(`/api/movimentacoes${params}`);
-      if (response.ok) {
-        const data = await response.json();
-        setMovimentacoes(data || []);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar movimentações:', error);
+  const filteredMovimentacoes = movimentacoes.filter(mov =>
+    mov.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    mov.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    mov.reference?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const types = ['all', 'entrada', 'saida', 'transferencia', 'ajuste'];
+  const categories = ['all', ...Array.from(new Set(movimentacoes.map(mov => mov.category)))];
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'entrada': return 'bg-green-100 text-green-700';
+      case 'saida': return 'bg-red-100 text-red-700';
+      case 'transferencia': return 'bg-blue-100 text-blue-700';
+      case 'ajuste': return 'bg-yellow-100 text-yellow-700';
+      default: return 'bg-gray-100 text-gray-700';
     }
   };
 
-  const getTipoBadge = (tipo: string) => {
-    return tipo === 'entrada' 
-      ? <span className="badge bg-success">Entrada</span>
-      : <span className="badge bg-danger">Saída</span>;
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'entrada': return '⬆️';
+      case 'saida': return '⬇️';
+      case 'transferencia': return '↔️';
+      case 'ajuste': return '⚖️';
+      default: return '📝';
+    }
   };
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('pt-BR');
-  };
+  const totalEntradas = movimentacoes
+    .filter(mov => mov.type === 'entrada')
+    .reduce((acc, mov) => acc + mov.value, 0);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
-
-  if (loading) {
-    return (
-      <div className="container py-5">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Carregando movimentações...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const totalSaidas = movimentacoes
+    .filter(mov => mov.type === 'saida')
+    .reduce((acc, mov) => acc + mov.value, 0);
 
   return (
-    <ProtectedContent permission="manage_movimentacoes">
-      <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-        <div className="container-fluid py-4">
-          {/* Header */}
-          <div className="row mb-4">
-            <div className="col">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h1 className="h3 mb-1">
-                    <i className="bi bi-arrow-left-right me-2"></i>
-                    Movimentações de Estoque
-                  </h1>
-                  <p className="text-muted mb-0">Controle entradas e saídas de estoque</p>
-                </div>
-                <button 
-                  className="btn btn-success"
-                  onClick={() => setShowForm(!showForm)}
-                >
-                  <i className="bi bi-plus-circle me-2"></i>
-                  {showForm ? 'Cancelar' : 'Nova Movimentação'}
-                </button>
-              </div>
-            </div>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Movimentações</h1>
+          <p className="text-gray-600 mt-1">Gerencie todas as movimentações do sistema</p>
+        </div>
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+          + Nova Movimentação
+        </button>
+      </div>
 
-          {/* Resumo */}
-          <div className="row mb-4">
-            <div className="col-md-3">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0">
-                      <i className="bi bi-arrow-down-circle-fill text-success fs-2"></i>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <div className="fw-bold fs-4">
-                        {movimentacoes.filter(m => m.tipo === 'entrada').length}
-                      </div>
-                      <div className="text-muted small">Entradas</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0">
-                      <i className="bi bi-arrow-up-circle-fill text-danger fs-2"></i>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <div className="fw-bold fs-4">
-                        {movimentacoes.filter(m => m.tipo === 'saida').length}
-                      </div>
-                      <div className="text-muted small">Saídas</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0">
-                      <i className="bi bi-truck text-primary fs-2"></i>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <div className="fw-bold fs-4">{fornecedores.length}</div>
-                      <div className="text-muted small">Fornecedores</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0">
-                      <i className="bi bi-box-seam text-warning fs-2"></i>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <div className="fw-bold fs-4">{itensBase.length}</div>
-                      <div className="text-muted small">Itens Base</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Filtros */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Buscar movimentações..."
+            value={searchTerm}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {types.map((type) => (
+            <button
+              key={type}
+              onClick={() => setSelectedType(type)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedType === type
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {type === 'all' ? 'Todos' : type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedCategory === category
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {category === 'all' ? 'Todas Categorias' : category}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          {/* Filtros */}
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <div className="d-flex gap-2">
-                <button 
-                  className={`btn btn-sm ${tipoFilter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
-                  onClick={() => setTipoFilter('all')}
-                >
-                  Todas
-                </button>
-                <button 
-                  className={`btn btn-sm ${tipoFilter === 'entrada' ? 'btn-success' : 'btn-outline-success'}`}
-                  onClick={() => setTipoFilter('entrada')}
-                >
-                  Entradas
-                </button>
-                <button 
-                  className={`btn btn-sm ${tipoFilter === 'saida' ? 'btn-danger' : 'btn-outline-danger'}`}
-                  onClick={() => setTipoFilter('saida')}
-                >
-                  Saídas
-                </button>
-              </div>
+      {/* Estatísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total Movimentações</p>
+              <p className="text-2xl font-bold">{movimentacoes.length}</p>
             </div>
+            <span className="text-3xl">📊</span>
           </div>
-
-          {/* Lista de Movimentações */}
-          <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header">
-                  <h5 className="card-title mb-0">
-                    Movimentações ({movimentacoes.length})
-                  </h5>
-                </div>
-                <div className="card-body">
-                  {movimentacoes.length === 0 ? (
-                    <div className="text-center py-5">
-                      <i className="bi bi-arrow-left-right fs-1 text-muted mb-3"></i>
-                      <h5 className="text-muted mb-3">Nenhuma movimentação registrada</h5>
-                      <p className="text-muted mb-4">
-                        Para começar a controlar seu estoque, você precisa:
-                      </p>
-                      <div className="row justify-content-center">
-                        <div className="col-md-8">
-                          <div className="row text-start">
-                            <div className="col-md-6 mb-3">
-                              <div className="card border-0 bg-light">
-                                <div className="card-body py-3">
-                                  <div className="d-flex">
-                                    <i className="bi bi-truck text-primary me-3 fs-4"></i>
-                                    <div>
-                                      <h6 className="mb-1">1. Cadastrar Fornecedores</h6>
-                                      <small className="text-muted">
-                                        Registre seus fornecedores de matéria-prima
-                                      </small>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6 mb-3">
-                              <div className="card border-0 bg-light">
-                                <div className="card-body py-3">
-                                  <div className="d-flex">
-                                    <i className="bi bi-box-seam text-warning me-3 fs-4"></i>
-                                    <div>
-                                      <h6 className="mb-1">2. Cadastrar Itens Base</h6>
-                                      <small className="text-muted">
-                                        Defina os produtos que você compra
-                                      </small>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6 mb-3">
-                              <div className="card border-0 bg-light">
-                                <div className="card-body py-3">
-                                  <div className="d-flex">
-                                    <i className="bi bi-arrow-down-circle text-success me-3 fs-4"></i>
-                                    <div>
-                                      <h6 className="mb-1">3. Registrar Entradas</h6>
-                                      <small className="text-muted">
-                                        Registre compras de matéria-prima
-                                      </small>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6 mb-3">
-                              <div className="card border-0 bg-light">
-                                <div className="card-body py-3">
-                                  <div className="d-flex">
-                                    <i className="bi bi-arrow-up-circle text-danger me-3 fs-4"></i>
-                                    <div>
-                                      <h6 className="mb-1">4. Controlar Saídas</h6>
-                                      <small className="text-muted">
-                                        Registre consumo na produção
-                                      </small>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <button 
-                          className="btn btn-success me-3"
-                          onClick={() => window.location.href = '/dashboard/lojista/fornecedores'}
-                        >
-                          <i className="bi bi-truck me-2"></i>
-                          Cadastrar Fornecedores
-                        </button>
-                        <button 
-                          className="btn btn-warning"
-                          onClick={() => window.location.href = '/dashboard/lojista/itens-base'}
-                        >
-                          <i className="bi bi-box-seam me-2"></i>
-                          Cadastrar Itens Base
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="table-responsive">
-                      <table className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Fornecedor</th>
-                            <th>Itens</th>
-                            <th>Valor Total</th>
-                            <th>Documento</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {movimentacoes.map(mov => (
-                            <tr key={mov._id}>
-                              <td>
-                                <div>
-                                  <div className="fw-bold">
-                                    {formatDate(mov.dataMovimentacao)}
-                                  </div>
-                                  <small className="text-muted">
-                                    {formatDate(mov.createdAt)}
-                                  </small>
-                                </div>
-                              </td>
-                              <td>{getTipoBadge(mov.tipo)}</td>
-                              <td>
-                                {mov.fornecedor ? (
-                                  <div>
-                                    <div>{mov.fornecedor.nome}</div>
-                                    <span className={`badge badge-sm ${
-                                      mov.fornecedor.tipo === 'nota_branca' 
-                                        ? 'bg-warning text-dark' 
-                                        : 'bg-success'
-                                    }`}>
-                                      {mov.fornecedor.tipo === 'nota_branca' 
-                                        ? 'Nota Branca' 
-                                        : 'Nota Fiscal'}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <span className="text-muted">-</span>
-                                )}
-                              </td>
-                              <td>
-                                <div>
-                                  <div className="fw-bold">
-                                    {mov.itens.length} {mov.itens.length === 1 ? 'item' : 'itens'}
-                                  </div>
-                                  {mov.itens.slice(0, 2).map((item, idx) => (
-                                    <small key={idx} className="text-muted d-block">
-                                      {item.quantidade} {item.item.unidadeMedida} - {item.item.nome}
-                                    </small>
-                                  ))}
-                                  {mov.itens.length > 2 && (
-                                    <small className="text-muted">
-                                      +{mov.itens.length - 2} outros
-                                    </small>
-                                  )}
-                                </div>
-                              </td>
-                              <td>
-                                {mov.valorTotal ? formatCurrency(mov.valorTotal) : '-'}
-                              </td>
-                              <td>
-                                {mov.numeroDocumento ? (
-                                  <div>
-                                    <div className="fw-bold">{mov.numeroDocumento}</div>
-                                    <span className={`badge badge-sm ${
-                                      mov.tipoDocumento === 'nota_branca' 
-                                        ? 'bg-warning text-dark' 
-                                        : 'bg-success'
-                                    }`}>
-                                      {mov.tipoDocumento === 'nota_branca' 
-                                        ? 'Nota Branca' 
-                                        : 'Nota Fiscal'}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <span className="text-muted">-</span>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-              </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total Entradas</p>
+              <p className="text-2xl font-bold text-green-600">
+                R$ {totalEntradas.toFixed(2)}
+              </p>
             </div>
+            <span className="text-3xl">⬆️</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total Saídas</p>
+              <p className="text-2xl font-bold text-red-600">
+                R$ {totalSaidas.toFixed(2)}
+              </p>
+            </div>
+            <span className="text-3xl">⬇️</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Saldo</p>
+              <p className={`text-2xl font-bold ${
+                totalEntradas - totalSaidas >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                R$ {(totalEntradas - totalSaidas).toFixed(2)}
+              </p>
+            </div>
+            <span className="text-3xl">💰</span>
           </div>
         </div>
       </div>
-    </ProtectedContent>
+
+      {/* Lista de Movimentações */}
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando movimentações...</p>
+        </div>
+      ) : filteredMovimentacoes.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <span className="text-6xl">📊</span>
+          <h3 className="text-lg font-medium text-gray-900 mb-2 mt-4">
+            Nenhuma movimentação encontrada
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Comece registrando sua primeira movimentação
+          </p>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+            + Adicionar Movimentação
+          </button>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tipo
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Descrição
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Categoria
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Valor
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Data
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredMovimentacoes.map((mov) => (
+                  <tr key={mov._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{getTypeIcon(mov.type)}</span>
+                        <span className={`px-2 py-1 text-xs rounded-full ${getTypeColor(mov.type)}`}>
+                          {mov.type.charAt(0).toUpperCase() + mov.type.slice(1)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {mov.description}
+                        </div>
+                        {mov.reference && (
+                          <div className="text-sm text-gray-500">
+                            Ref: {mov.reference}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                        {mov.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`text-sm font-bold ${
+                        mov.type === 'entrada' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {mov.type === 'entrada' ? '+' : '-'} R$ {mov.value.toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(mov.date).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        mov.isProcessed 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {mov.isProcessed ? 'Processado' : 'Pendente'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

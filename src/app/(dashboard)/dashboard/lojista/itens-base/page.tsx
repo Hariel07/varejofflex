@@ -1,610 +1,227 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuthUser, useTenantApi } from '@/hooks/useAuth';
-import { ProtectedContent } from '@/components/auth/ProtectedContent';
-
-interface Fornecedor {
-  _id: string;
-  nome: string;
-  tipo: 'nota_branca' | 'nota_fiscal';
-}
 
 interface ItemBase {
   _id: string;
-  nome: string;
-  descricao?: string;
-  categoria: string;
-  unidadeMedida: 'kg' | 'g' | 'l' | 'ml' | 'un' | 'cx' | 'pct' | 'dz';
-  codigoBarras?: string;
-  fornecedorPadrao?: Fornecedor;
-  precoMedioCompra?: number;
-  controleEstoque: boolean;
-  estoqueMinimo?: number;
-  estoqueAtual: number;
-  localizacao?: string;
-  observacoes?: string;
-  ativo: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ItemBaseFormData {
-  nome: string;
-  descricao: string;
-  categoria: string;
-  unidadeMedida: 'kg' | 'g' | 'l' | 'ml' | 'un' | 'cx' | 'pct' | 'dz';
-  codigoBarras: string;
-  fornecedorPadrao: string;
-  precoMedioCompra: string;
-  controleEstoque: boolean;
-  estoqueMinimo: string;
-  localizacao: string;
-  observacoes: string;
+  name: string;
+  description?: string;
+  category: string;
+  unit: string;
+  basePrice: number;
+  tags: string[];
+  isActive: boolean;
 }
 
 export default function ItensBasePage() {
-  const { user } = useAuthUser();
-  const { get, post, patch } = useTenantApi();
-  
-  const [itens, setItens] = useState<ItemBase[]>([]);
-  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
+  const [itensBase, setItensBase] = useState<ItemBase[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [editingItem, setEditingItem] = useState<ItemBase | null>(null);
-  const [categoriaFilter, setCategoriaFilter] = useState<string>('all');
-  const [categorias, setCategorias] = useState<string[]>([]);
-  
-  const [formData, setFormData] = useState<ItemBaseFormData>({
-    nome: '',
-    descricao: '',
-    categoria: '',
-    unidadeMedida: 'kg',
-    codigoBarras: '',
-    fornecedorPadrao: '',
-    precoMedioCompra: '',
-    controleEstoque: false,
-    estoqueMinimo: '',
-    localizacao: '',
-    observacoes: ''
-  });
-
-  const unidadesMedida = [
-    { value: 'kg', label: 'Quilogramas (kg)' },
-    { value: 'g', label: 'Gramas (g)' },
-    { value: 'l', label: 'Litros (l)' },
-    { value: 'ml', label: 'Mililitros (ml)' },
-    { value: 'un', label: 'Unidades (un)' },
-    { value: 'cx', label: 'Caixas (cx)' },
-    { value: 'pct', label: 'Pacotes (pct)' },
-    { value: 'dz', label: 'Dúzias (dz)' }
-  ];
-
-  const categoriasComuns = [
-    'Carnes',
-    'Aves',
-    'Peixes e Frutos do Mar',
-    'Vegetais',
-    'Frutas',
-    'Grãos e Cereais',
-    'Laticínios',
-    'Pães e Massas',
-    'Temperos e Condimentos',
-    'Bebidas',
-    'Doces e Sobremesas',
-    'Óleos e Gorduras',
-    'Embalagens',
-    'Limpeza',
-    'Outros'
-  ];
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
-    loadData();
-  }, []);
+    fetchItensBase();
+  }, [selectedCategory]);
 
-  useEffect(() => {
-    const categoriasUnicas = [...new Set(itens.map(item => item.categoria).filter(Boolean))];
-    setCategorias(categoriasUnicas);
-  }, [itens]);
-
-  const loadData = async () => {
+  const fetchItensBase = async () => {
     try {
       setLoading(true);
-      
-      // Carregar fornecedores
-      const fornecedoresResponse = await get('/api/fornecedores');
-      if (fornecedoresResponse.ok) {
-        const fornecedoresData = await fornecedoresResponse.json();
-        setFornecedores(fornecedoresData || []);
-      }
+      const params = new URLSearchParams();
+      if (selectedCategory !== 'all') params.set('category', selectedCategory);
+      if (searchTerm) params.set('search', searchTerm);
 
-      // Carregar itens base
-      const params = categoriaFilter !== 'all' ? `?categoria=${encodeURIComponent(categoriaFilter)}` : '';
-      const itensResponse = await get(`/api/itens-base${params}`);
-      if (itensResponse.ok) {
-        const itensData = await itensResponse.json();
-        setItens(itensData || []);
+      const response = await fetch(`/api/itens-base?${params}`);
+      const data = await response.json();
+      
+      if (data.success && Array.isArray(data.itensBase)) {
+        setItensBase(data.itensBase);
+      } else {
+        setItensBase([]);
       }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('Erro ao buscar itens base:', error);
+      setItensBase([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (categoriaFilter !== 'all') {
-      loadData();
-    }
-  }, [categoriaFilter]);
+  const filteredItens = itensBase.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const payload = {
-        ...formData,
-        precoMedioCompra: formData.precoMedioCompra ? parseFloat(formData.precoMedioCompra) : undefined,
-        estoqueMinimo: formData.estoqueMinimo ? parseInt(formData.estoqueMinimo) : undefined,
-        fornecedorPadrao: formData.fornecedorPadrao || undefined
-      };
+  const categories = ['all', ...Array.from(new Set(itensBase.map(item => item.category)))];
 
-      let response;
-      if (editingItem) {
-        response = await patch(`/api/itens-base/${editingItem._id}`, payload);
-      } else {
-        response = await post('/api/itens-base', payload);
-      }
+  return (
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Itens Base</h1>
+          <p className="text-gray-600 mt-1">Gerencie os itens base do seu sistema</p>
+        </div>
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+          + Novo Item Base
+        </button>
+      </div>
 
-      if (response.ok) {
-        await loadData();
-        resetForm();
-        alert('Item salvo com sucesso!');
-      } else {
-        const error = await response.json();
-        alert(error.message || 'Erro ao salvar item');
-      }
-    } catch (error) {
-      console.error('Erro ao salvar item:', error);
-      alert('Erro ao salvar item');
-    }
-  };
+      {/* Filtros */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Buscar itens base..."
+            value={searchTerm}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                selectedCategory === category
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {category === 'all' ? 'Todas' : category}
+            </button>
+          ))}
+        </div>
+      </div>
 
-  const resetForm = () => {
-    setFormData({
-      nome: '',
-      descricao: '',
-      categoria: '',
-      unidadeMedida: 'kg',
-      codigoBarras: '',
-      fornecedorPadrao: '',
-      precoMedioCompra: '',
-      controleEstoque: false,
-      estoqueMinimo: '',
-      localizacao: '',
-      observacoes: ''
-    });
-    setEditingItem(null);
-    setShowForm(false);
-  };
-
-  const editItem = (item: ItemBase) => {
-    setFormData({
-      nome: item.nome,
-      descricao: item.descricao || '',
-      categoria: item.categoria,
-      unidadeMedida: item.unidadeMedida,
-      codigoBarras: item.codigoBarras || '',
-      fornecedorPadrao: item.fornecedorPadrao?._id || '',
-      precoMedioCompra: item.precoMedioCompra?.toString() || '',
-      controleEstoque: item.controleEstoque,
-      estoqueMinimo: item.estoqueMinimo?.toString() || '',
-      localizacao: item.localizacao || '',
-      observacoes: item.observacoes || ''
-    });
-    setEditingItem(item);
-    setShowForm(true);
-  };
-
-  const getStatusEstoque = (item: ItemBase) => {
-    if (!item.controleEstoque) {
-      return <span className="badge bg-secondary">Sem controle</span>;
-    }
-    
-    if (item.estoqueMinimo && item.estoqueAtual <= item.estoqueMinimo) {
-      return <span className="badge bg-danger">Estoque baixo</span>;
-    }
-    
-    if (item.estoqueAtual === 0) {
-      return <span className="badge bg-warning text-dark">Em falta</span>;
-    }
-    
-    return <span className="badge bg-success">Disponível</span>;
-  };
-
-  const formatUnidade = (unidade: string) => {
-    const unidadeObj = unidadesMedida.find(u => u.value === unidade);
-    return unidadeObj?.label || unidade;
-  };
-
-  if (loading) {
-    return (
-      <div className="container py-5">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Carregando itens...</span>
+      {/* Estatísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total de Itens</p>
+              <p className="text-2xl font-bold">{itensBase.length}</p>
+            </div>
+            <span className="text-3xl">📦</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Categorias</p>
+              <p className="text-2xl font-bold">{categories.length - 1}</p>
+            </div>
+            <span className="text-3xl">🏷️</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Ativos</p>
+              <p className="text-2xl font-bold">
+                {itensBase.filter(item => item.isActive).length}
+              </p>
+            </div>
+            <span className="text-3xl">✅</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Valor Médio</p>
+              <p className="text-2xl font-bold">
+                R$ {itensBase.length > 0 
+                  ? (itensBase.reduce((acc, item) => acc + item.basePrice, 0) / itensBase.length).toFixed(2)
+                  : '0,00'
+                }
+              </p>
+            </div>
+            <span className="text-3xl">💰</span>
           </div>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <ProtectedContent permission="manage_itens_base">
-      <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-        <div className="container-fluid py-4">
-          {/* Header */}
-          <div className="row mb-4">
-            <div className="col">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h1 className="h3 mb-1">
-                    <i className="bi bi-box-seam me-2"></i>
-                    Itens Base
-                  </h1>
-                  <p className="text-muted mb-0">Gerencie itens que podem ser comprados de fornecedores</p>
-                </div>
-                <button 
-                  className="btn btn-success"
-                  onClick={() => setShowForm(!showForm)}
-                >
-                  <i className="bi bi-plus-circle me-2"></i>
-                  {showForm ? 'Cancelar' : 'Novo Item'}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Filtros */}
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <select 
-                className="form-select"
-                value={categoriaFilter}
-                onChange={(e) => setCategoriaFilter(e.target.value)}
-              >
-                <option value="all">Todas as categorias</option>
-                {categorias.map(categoria => (
-                  <option key={categoria} value={categoria}>{categoria}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Formulário */}
-          {showForm && (
-            <div className="row mb-4">
-              <div className="col-12">
-                <div className="card">
-                  <div className="card-header">
-                    <h5 className="card-title mb-0">
-                      {editingItem ? 'Editar Item' : 'Novo Item Base'}
-                    </h5>
-                  </div>
-                  <div className="card-body">
-                    <form onSubmit={handleSubmit}>
-                      {/* Informações Básicas */}
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">Nome do Item *</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.nome}
-                            onChange={(e) => setFormData({...formData, nome: e.target.value})}
-                            required
-                          />
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">Categoria *</label>
-                          <div className="d-flex">
-                            <select
-                              className="form-select me-2"
-                              value={formData.categoria}
-                              onChange={(e) => setFormData({...formData, categoria: e.target.value})}
-                              required
-                            >
-                              <option value="">Selecione ou digite nova</option>
-                              {categoriasComuns.map(cat => (
-                                <option key={cat} value={cat}>{cat}</option>
-                              ))}
-                            </select>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Nova categoria"
-                              value={formData.categoria}
-                              onChange={(e) => setFormData({...formData, categoria: e.target.value})}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-12 mb-3">
-                          <label className="form-label">Descrição</label>
-                          <textarea
-                            className="form-control"
-                            rows={2}
-                            value={formData.descricao}
-                            onChange={(e) => setFormData({...formData, descricao: e.target.value})}
-                            placeholder="Descrição detalhada do item..."
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col-md-4 mb-3">
-                          <label className="form-label">Unidade de Medida *</label>
-                          <select
-                            className="form-select"
-                            value={formData.unidadeMedida}
-                            onChange={(e) => setFormData({...formData, unidadeMedida: e.target.value as any})}
-                            required
-                          >
-                            {unidadesMedida.map(unidade => (
-                              <option key={unidade.value} value={unidade.value}>
-                                {unidade.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="col-md-4 mb-3">
-                          <label className="form-label">Código de Barras</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.codigoBarras}
-                            onChange={(e) => setFormData({...formData, codigoBarras: e.target.value})}
-                          />
-                        </div>
-                        <div className="col-md-4 mb-3">
-                          <label className="form-label">Localização</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.localizacao}
-                            onChange={(e) => setFormData({...formData, localizacao: e.target.value})}
-                            placeholder="Ex: Geladeira, Freezer, Estoque"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Fornecedor e Preço */}
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">Fornecedor Padrão</label>
-                          <select
-                            className="form-select"
-                            value={formData.fornecedorPadrao}
-                            onChange={(e) => setFormData({...formData, fornecedorPadrao: e.target.value})}
-                          >
-                            <option value="">Selecione um fornecedor</option>
-                            {fornecedores.map(fornecedor => (
-                              <option key={fornecedor._id} value={fornecedor._id}>
-                                {fornecedor.nome} 
-                                <span className="text-muted">
-                                  ({fornecedor.tipo === 'nota_branca' ? 'Nota Branca' : 'Nota Fiscal'})
-                                </span>
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">Preço Médio de Compra</label>
-                          <div className="input-group">
-                            <span className="input-group-text">R$</span>
-                            <input
-                              type="number"
-                              step="0.01"
-                              className="form-control"
-                              value={formData.precoMedioCompra}
-                              onChange={(e) => setFormData({...formData, precoMedioCompra: e.target.value})}
-                              placeholder="0,00"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Controle de Estoque */}
-                      <div className="row">
-                        <div className="col-12 mb-3">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="controleEstoque"
-                              checked={formData.controleEstoque}
-                              onChange={(e) => setFormData({...formData, controleEstoque: e.target.checked})}
-                            />
-                            <label className="form-check-label" htmlFor="controleEstoque">
-                              Controlar estoque deste item
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-
-                      {formData.controleEstoque && (
-                        <div className="row">
-                          <div className="col-md-6 mb-3">
-                            <label className="form-label">Estoque Mínimo</label>
-                            <input
-                              type="number"
-                              className="form-control"
-                              value={formData.estoqueMinimo}
-                              onChange={(e) => setFormData({...formData, estoqueMinimo: e.target.value})}
-                              placeholder="Quantidade mínima para alerta"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="row">
-                        <div className="col-12 mb-3">
-                          <label className="form-label">Observações</label>
-                          <textarea
-                            className="form-control"
-                            rows={3}
-                            value={formData.observacoes}
-                            onChange={(e) => setFormData({...formData, observacoes: e.target.value})}
-                            placeholder="Observações sobre o item..."
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex gap-2 mt-4">
-                        <button
-                          type="submit"
-                          className="btn btn-success"
-                          disabled={!formData.nome || !formData.categoria}
-                        >
-                          <i className="bi bi-save me-2"></i>
-                          {editingItem ? 'Atualizar' : 'Salvar'} Item
-                        </button>
-                        
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={resetForm}
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Lista de Itens */}
-          <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header">
-                  <h5 className="card-title mb-0">
-                    Itens Base ({itens.length})
-                  </h5>
-                </div>
-                <div className="card-body">
-                  {itens.length === 0 ? (
-                    <div className="text-center py-4">
-                      <i className="bi bi-box-seam fs-1 text-muted mb-3"></i>
-                      <p className="text-muted">Nenhum item base cadastrado ainda.</p>
-                      <button 
-                        className="btn btn-success"
-                        onClick={() => setShowForm(true)}
-                      >
-                        Cadastrar Primeiro Item
-                      </button>
+      {/* Lista de Itens */}
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando itens base...</p>
+        </div>
+      ) : filteredItens.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <span className="text-6xl">📦</span>
+          <h3 className="text-lg font-medium text-gray-900 mb-2 mt-4">
+            Nenhum item base encontrado
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Comece adicionando seu primeiro item base
+          </p>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+            + Adicionar Item Base
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredItens.map((item) => (
+            <div key={item._id} className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                        {item.category}
+                      </span>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        item.isActive 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        {item.isActive ? 'Ativo' : 'Inativo'}
+                      </span>
                     </div>
-                  ) : (
-                    <div className="table-responsive">
-                      <table className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Item</th>
-                            <th>Categoria</th>
-                            <th>Unidade</th>
-                            <th>Estoque</th>
-                            <th>Fornecedor</th>
-                            <th>Preço Médio</th>
-                            <th>Ações</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {itens.map(item => (
-                            <tr key={item._id}>
-                              <td>
-                                <div>
-                                  <div className="fw-bold">{item.nome}</div>
-                                  {item.descricao && (
-                                    <small className="text-muted">
-                                      {item.descricao.length > 50 
-                                        ? item.descricao.substring(0, 50) + '...' 
-                                        : item.descricao}
-                                    </small>
-                                  )}
-                                  {item.codigoBarras && (
-                                    <small className="text-muted d-block">
-                                      <i className="bi bi-upc-scan"></i> {item.codigoBarras}
-                                    </small>
-                                  )}
-                                </div>
-                              </td>
-                              <td>
-                                <span className="badge bg-light text-dark">{item.categoria}</span>
-                              </td>
-                              <td>{formatUnidade(item.unidadeMedida)}</td>
-                              <td>
-                                <div>
-                                  {getStatusEstoque(item)}
-                                  {item.controleEstoque && (
-                                    <div className="small text-muted">
-                                      Atual: {item.estoqueAtual} {item.unidadeMedida}
-                                      {item.estoqueMinimo && (
-                                        <span> | Mín: {item.estoqueMinimo}</span>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </td>
-                              <td>
-                                {item.fornecedorPadrao ? (
-                                  <div className="small">
-                                    <div>{item.fornecedorPadrao.nome}</div>
-                                    <span className={`badge badge-sm ${
-                                      item.fornecedorPadrao.tipo === 'nota_branca' 
-                                        ? 'bg-warning text-dark' 
-                                        : 'bg-success'
-                                    }`}>
-                                      {item.fornecedorPadrao.tipo === 'nota_branca' 
-                                        ? 'Nota Branca' 
-                                        : 'Nota Fiscal'}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <span className="text-muted">-</span>
-                                )}
-                              </td>
-                              <td>
-                                {item.precoMedioCompra 
-                                  ? `R$ ${item.precoMedioCompra.toFixed(2)}`
-                                  : '-'}
-                              </td>
-                              <td>
-                                <div className="btn-group btn-group-sm">
-                                  <button
-                                    className="btn btn-outline-primary"
-                                    onClick={() => editItem(item)}
-                                    title="Editar"
-                                  >
-                                    <i className="bi bi-pencil"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="space-y-3">
+                  {item.description && (
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-600">
+                      <span className="font-medium">Unidade:</span> {item.unit}
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      R$ {item.basePrice.toFixed(2)}
+                    </div>
+                  </div>
+
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags.slice(0, 3).map((tag, index) => (
+                        <span key={index} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                      {item.tags.length > 3 && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          +{item.tags.length - 3}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </div>
-    </ProtectedContent>
+      )}
+    </div>
   );
 }
