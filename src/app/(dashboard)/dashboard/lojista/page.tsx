@@ -127,13 +127,13 @@ function LojistaDashboardContent() {
   }
 
   return (
-    <div className="min-vh-100" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+    <div className="container-fluid py-4">
       
       {/* Botão de retorno para Owner */}
       {isOwnerAccessing && (
         <div style={{
           position: 'fixed',
-          top: '20px',
+          top: '80px',
           right: '20px',
           zIndex: 1050
         }}>
@@ -154,37 +154,44 @@ function LojistaDashboardContent() {
         </div>
       )}
       
-      {/* Header Premium */}
-      <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
-      }}>
-        <div className="container-fluid">
-          <div className="row align-items-center py-4">
-            <div className="col-md-8">
-              <h1 className="h2 mb-1 text-white" style={{ fontWeight: '800' }}>
-                <i className="bi bi-shop me-3" style={{ fontSize: '2rem' }} aria-hidden="true">🏪</i>
-                Dashboard Lojista 
-                {isOwnerAccessing && <span className="badge bg-warning text-dark ms-2">Modo Admin</span>}
-              </h1>
-              <p className="text-white-50 mb-0" style={{ fontSize: '1.1rem' }}>
-                {isOwnerAccessing ? 
-                  `Visualizando dashboard de ${targetLojistaData?.name || 'Lojista'} (${targetLojistaData?.email || userIdParam})` : 
-                  `Bem-vindo, ${user?.name} • Gestão completa do seu negócio`
-                }
-              </p>
-            </div>
-            <div className="col-md-4 text-end">
-              <div className={`badge bg-${effectiveSegmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1rem' }}>
-                <span className="me-2" style={{ fontSize: '1.2rem' }}>{effectiveSegmentData.icon}</span>
-                {effectiveSegmentData.name.toUpperCase()}
+      {/* Welcome Section */}
+      <div className="row mb-4">
+        <div className="col">
+          <div 
+            className="card border-0"
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            }}
+          >
+            <div className="card-body p-4">
+              <div className="row align-items-center">
+                <div className="col-md-8">
+                  <h1 className="h3 mb-2" style={{ fontWeight: '700', color: '#1e293b' }}>
+                    <span className="me-3" style={{ fontSize: '2rem' }}>🏪</span>
+                    Bem-vindo ao seu Dashboard
+                    {isOwnerAccessing && <span className="badge bg-warning text-dark ms-2">Modo Admin</span>}
+                  </h1>
+                  <p className="text-muted mb-0" style={{ fontSize: '1.1rem' }}>
+                    {isOwnerAccessing ? 
+                      `Visualizando dashboard de ${targetLojistaData?.name || 'Lojista'} (${targetLojistaData?.email || userIdParam})` : 
+                      `Olá, ${user?.name}! Gerencie seu negócio de forma completa e eficiente`
+                    }
+                  </p>
+                </div>
+                <div className="col-md-4 text-end">
+                  <div className={`badge bg-${effectiveSegmentData.color} px-4 py-3 rounded-pill`} style={{ fontSize: '1.1rem' }}>
+                    <span className="me-2" style={{ fontSize: '1.3rem' }}>{effectiveSegmentData.icon}</span>
+                    {effectiveSegmentData.name.toUpperCase()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="container-fluid py-4">
         {loading ? (
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -1116,7 +1123,6 @@ function LojistaDashboardContent() {
           </>
         )}
         </div>
-      </div>
   );
 }
 
