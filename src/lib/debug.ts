@@ -31,11 +31,18 @@ export function validateMongoUri(uri?: string): boolean {
     return false;
   }
 
+  // Verificar se é uma URI válida do MongoDB (local ou Atlas)
+  const isValidLocal = uri.startsWith('mongodb://localhost:') || uri.startsWith('mongodb://127.0.0.1:');
+  const isValidAtlas = uri.startsWith('mongodb+srv://') && uri.includes('.mongodb.net');
+  
   if (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://')) {
-    console.error('❌ MongoDB URI has invalid format:', uri.substring(0, 30) + '...');
+    console.error('❌ MongoDB URI has invalid format. Expected format:');
+    console.error('   Local: mongodb://localhost:27017/database');
+    console.error('   Atlas: mongodb+srv://username:password@cluster.mongodb.net/database');
     return false;
   }
 
-  console.log('✅ MongoDB URI format is valid');
+  const dbType = isValidLocal ? 'LOCAL' : (isValidAtlas ? 'ATLAS' : 'UNKNOWN');
+  console.log(`✅ MongoDB URI format is valid (${dbType})`);
   return true;
 }
