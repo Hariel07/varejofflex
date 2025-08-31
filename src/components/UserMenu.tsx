@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuthUser } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 interface UserMenuProps {
   className?: string;
@@ -55,7 +56,7 @@ export default function UserMenu({ className = '' }: UserMenuProps) {
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const { user, logout } = useAuthUser();
+  const { user } = useAuthUser();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -85,11 +86,11 @@ export default function UserMenu({ className = '' }: UserMenuProps) {
       // Dados do perfil (simulando - em produção viria da API)
       setUserProfile({
         name: user?.name || '',
-        lastName: user?.lastName || '',
+        lastName: '', // Não disponível no AuthUser
         email: user?.email || '',
-        phone: user?.phone || 'Não informado',
-        location: user?.location || 'Não informado',
-        avatar: user?.avatar || '',
+        phone: 'Não informado', // Não disponível no AuthUser
+        location: 'Não informado', // Não disponível no AuthUser
+        avatar: '', // Não disponível no AuthUser
         companyName: user?.companyName || 'Empresa não informada',
         segment: user?.segment || 'lanchonete'
       });
@@ -157,8 +158,10 @@ export default function UserMenu({ className = '' }: UserMenuProps) {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      router.push('/login');
+      await signOut({ 
+        callbackUrl: '/login',
+        redirect: true 
+      });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
@@ -194,27 +197,18 @@ export default function UserMenu({ className = '' }: UserMenuProps) {
         }}
       >
         <div className="d-flex align-items-center">
-          {user.avatar ? (
-            <img
-              src={user.avatar}
-              alt="Avatar"
-              className="rounded-circle me-2"
-              style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-            />
-          ) : (
-            <div
-              className="rounded-circle me-2 d-flex align-items-center justify-content-center text-white"
-              style={{
-                width: '40px',
-                height: '40px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                fontSize: '1.2rem',
-                fontWeight: 'bold'
-              }}
-            >
-              {user.name?.charAt(0).toUpperCase() || 'U'}
-            </div>
-          )}
+          <div
+            className="rounded-circle me-2 d-flex align-items-center justify-content-center text-white"
+            style={{
+              width: '40px',
+              height: '40px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              fontSize: '1.2rem',
+              fontWeight: 'bold'
+            }}
+          >
+            {user.name?.charAt(0).toUpperCase() || 'U'}
+          </div>
           <div className="text-start d-none d-md-block">
             <div className="text-dark fw-semibold" style={{ fontSize: '0.9rem' }}>
               {user.name}
@@ -250,27 +244,18 @@ export default function UserMenu({ className = '' }: UserMenuProps) {
           >
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center">
-                {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="Avatar"
-                    className="rounded-circle me-3"
-                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <div
-                    className="rounded-circle me-3 d-flex align-items-center justify-content-center"
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      fontSize: '1.5rem',
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                )}
+                <div
+                  className="rounded-circle me-3 d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {user.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
                 <div>
                   <h6 className="mb-0 text-white">{user.name}</h6>
                   <small className="text-white-50">{user.email}</small>
